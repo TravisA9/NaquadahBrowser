@@ -19,8 +19,8 @@ JavaScript is used to query HTML and SVG and modify it on the fly in order to ma
 		},
 
 	"styles":{
-				"Button":{...},
-				"ColoredBox":{...}
+				"Button":{styles...},
+				"ColoredBox":{styles...}
 			},
 
 	"body":[
@@ -30,11 +30,12 @@ JavaScript is used to query HTML and SVG and modify it on the fly in order to ma
 				"width":100, 
 				"height":50, 
 				"color":"firebrick",
-				"border":{...},
-				"font":{...},
+				"border":{styles...},
+				"font":{styles...},
 				"text":"Some text"
-
-			}
+			},
+			more elements...
+			
 			]
 }
 ```
