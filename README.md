@@ -18,7 +18,7 @@ JavaScript is used to query HTML and SVG and modify it on the fly in order to ma
 	"body":[...]
 }	
 ```
- ###The head may look something like this
+ ### The head may look something like this
 ```
 	"head":{
 			"title":"MyPageTitle",
