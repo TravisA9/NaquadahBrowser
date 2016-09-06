@@ -8,4 +8,23 @@ As an example, an App may contain different front end scripts and languages that
 JavaScript is used to query HTML and SVG and modify it on the fly in order to make the web interactive. Templating/data binding engines are also build because of the often large quantity of repetetive content or content that must be pulled from a database and inserted at the user's request. Instead of makeing endless scripts to interface with HTML, it is my opinion that the solution is to abandon it and use the language that EMCA script already speaks. This will permit templating, restructuring, inserting, seperation of concerns and so much more.
 
 ## How To Install 
-First you will need to have  [Julia](http://julialang.org/downloads/) installed
+First you will need to have  [Julia](http://julialang.org/downloads/) installed.
+
+You will also have to add package dependancies for this project. You can past these into the Julia Console.
+'''
+Pkg.add("Gtk")
+Pkg.add("JSON")
+Pkg.add("Cairo")
+Pkg.add("Requests")
+Pkg.add("Gtk.ShortNames")
+Pkg.add("Graphics")
+Pkg.add("ImageView")
+Pkg.add("ImageMagick")
+Pkg.add("Images")
+'''
+
+Finally, you can start the application with the corresponding comand:
+Windows: '''include("Browser\StartBrowser.jl")'''
+Linux: '''include("Browser/StartBrowser.jl")'''
+similar for Mac.
+
