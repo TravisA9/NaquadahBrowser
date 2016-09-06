@@ -8,9 +8,18 @@ As an example, an App may contain different front end scripts and languages that
 
 JavaScript is used to query HTML and SVG and modify it on the fly in order to make the web interactive. Templating/data binding engines are also needed because of the often large quantity of repetetive content or content that must be pulled from a database and inserted at the user's request. Instead of makeing endless scripts to interface with HTML, it is my opinion that the solution is to abandon it and use the language that EMCA script already speaks. This will permit templating, restructuring, inserting, seperation of concerns and so much more.
 
-### Sample Web Page
+# Sample Web Page
+
+### General structure
 ```
 {
+	"head":{...},
+	"styles":{...},
+	"body":[...]
+}	
+```
+ ###The head may look something like this
+```
 	"head":{
 			"title":"MyPageTitle",
 			"favicon":"http://myapp/favicon.ico"
@@ -18,13 +27,18 @@ JavaScript is used to query HTML and SVG and modify it on the fly in order to ma
 		   	"keywords":"web tech,browser concept,Json Pages",
 		   	"author":"Travis Deane Ashworth",
 		  	"links":[{"url":"http://myapp/somescript.js"}]
-		},
-
+		}
+```
+### The styles section stores frequently used styles (similer to CSS)
+```
 	"styles":{
-				"Button":{styles...},
-				"ColoredBox":{styles...}
-			},
+			"Button":{styles...},
+			"ColoredBox":{styles...}
+		}
+```
 
+### The body describes general structure (similer to HTML and SVG)
+```
 	"body":[
 			{">":"div", 
 				"display":"inlineBlock", 
@@ -47,7 +61,6 @@ JavaScript is used to query HTML and SVG and modify it on the fly in order to ma
 					"color":"blue"}
 			}
 	]
-}
 ```
 As you can see there are three major sections to a Json page and these may be one file or spread across several files. It may be modified by script as well.
 
