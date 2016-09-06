@@ -23,8 +23,11 @@ Pkg.add("ImageMagick")
 Pkg.add("Images")
 ```
 
-Finally, you can start the application with the corresponding comand:
+Finally, you can start the application with the corresponding command:
+
 Windows: ```include("Browser\StartBrowser.jl")```
+
 Linux: ```include("Browser/StartBrowser.jl")```
+
 similar for Mac.
 
