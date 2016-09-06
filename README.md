@@ -48,6 +48,7 @@ JavaScript is used to query HTML and SVG and modify it on the fly in order to ma
 	]
 }
 ```
+As you can see there are three major sections to a Json page and these may be one file or spread across several files. It may be modified by script as well.
 
 ## How To Install 
 First you will need to have  [Julia](http://julialang.org/downloads/) installed.
@@ -92,5 +93,14 @@ Perhaps the reason that no one has attempted to fix the problems with the web is
 Is there a solution? I believe that there are a couple of ways to prevent this. A bridge must be built until a proper transition has been made. To do this, compatability packages need to be made. This would also create some new opertunities for those who wish to write the code needed to build such bridges.
 One would be needed to parse the Json to create HTML, SVG and CSS from the Json. There are already some JS libraries that do some of that.
 The second, would be to write HTML, SVG and CSS parsers for the Naquadah Browser. This could be in JS and parse them to a Json file or they could be written in Julia as an addition to the browser itself.
+
+# TODO:
+Integrate v8 engine
+Text and Drop shadows
+Transitions
+Integrated page editor (perhaps WYSIWYG)
+Optimize speed
+Compile distributable binaries for major OSs
+
 
 
