@@ -34,9 +34,17 @@ JavaScript is used to query HTML and SVG and modify it on the fly in order to ma
 				"font":{styles...},
 				"text":"Some text"
 			},
-			more elements...
-			
-			]
+			{">":"circle",
+				"display":"inlineBlock", 
+				"center":[25,25],
+    				"radius":25,		
+    				"color":"lightgreen",
+				"border":{"width":"thick", 
+					"style":"solid", 
+					"radius":7,
+					"color":"blue"}
+			}
+	]
 }
 ```
 
