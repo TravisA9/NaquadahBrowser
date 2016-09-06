@@ -96,11 +96,17 @@ The second, would be to write HTML, SVG and CSS parsers for the Naquadah Browser
 
 # TODO:
 Integrate v8 engine
+
 Text and Drop shadows
+
 Transitions
+
 Integrated page editor (perhaps WYSIWYG)
+
 Optimize speed
+
 Compile distributable binaries for major OSs
+
 
 
 
