@@ -1,6 +1,6 @@
 # Naquadah Browser 
 A reconceptualised browser built in Julia programming Language from the ground up. Naquadah currently uses Cairo for graphics and GTK for the GUI.
-![window](doc/figures/Browser.png)
+![window](doc/figures/Browser-1.png)
 # Concept
 Although, parsing of HTML, SVG and CSS may eventually be added, this browser was designed to test a new simplified concept for web pages. The Naquadah browser currently downloads pages that are written in Json format. The idea is that by using one language that is well suited for modern web applications much of the bloat and complication can be eliminated, easing and simplifying the design of pages and Apps.
 
