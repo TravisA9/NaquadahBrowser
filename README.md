@@ -14,10 +14,10 @@ JavaScript is used to query HTML and SVG and modify it on the fly in order to ma
 		   	"charset":"utf-8",
 		   	"keywords":"web tech,browser concept,Json Pages,fragmented web tech",
 		   	"author":"Travis Deane Ashworth",
-		  	"links":{"url":"http://someplace/test.json"}
+		  	"links":[{"url":"http://myapp/somescript.js"}]
 		},
 
-	"style":{
+	"styles":{
 				"Button":{...},
 				"ColoredBox":{...}
 			},
@@ -67,12 +67,12 @@ Mantain a measure of compatability with principal features of web standars. I be
 
 
 # Considerations
-## Code
+### Code
 Julia is a great choice for this project because it can be optimized to run very fast. Little attention has been given to speed at this point. For instance data types are not specified in many cases and this creates overhead. Currently more emphasis has been given to adding broad functionality and to determining the structure of the project.
 
 ### Compatability
-Perhaps the reason that no one has attempted to fix the problems with the web is to avoid fragmenting it. If we start doing things differently then we end up with two sections of the internet; the HTML version and the Json version. Many large companies have invested great sums of money into developing their web pages and apps and it would be very unfortunate to create a problem in this area. 
-Is there a solution? I believe that there are a couple of ways to preven this. A bridge must be built until a proper transition has been made. To do this compatability packages need to be made. This would also create some new opertunities for those who wish to write the code needed to build the bridges.
+Perhaps the reason that no one has attempted to fix the problems with the web is to avoid fragmenting it. If we start doing things differently then we risk end up with two sections of the internet; the HTML version and the Json version. Many large companies have invested great sums of money into developing their web pages and apps and it would be very unfortunate to create a problem in this area. 
+Is there a solution? I believe that there are a couple of ways to prevent this. A bridge must be built until a proper transition has been made. To do this, compatability packages need to be made. This would also create some new opertunities for those who wish to write the code needed to build such bridges.
 One would be needed to parse the Json to create HTML, SVG and CSS from the Json. There are already some JS libraries that do some of that.
 The second, would be to write HTML, SVG and CSS parsers for the Naquadah Browser. This could be in JS and parse them to a Json file or they could be written in Julia as an addition to the browser itself.
 
