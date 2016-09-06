@@ -99,7 +99,13 @@ Integrate v8 engine
 
 Text and Drop shadows
 
+Clipping
+
+Float
+
 Transitions
+
+Fix Text layout
 
 Integrated page editor (perhaps WYSIWYG)
 
