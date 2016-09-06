@@ -13,21 +13,21 @@ First you will need to have  [Julia](http://julialang.org/downloads/) installed.
 You will also have to add package dependancies for this project. You can past these into the Julia Console.
 ```
 Pkg.add("Gtk")
+Pkg.add("Gtk.ShortNames")
 Pkg.add("JSON")
 Pkg.add("Cairo")
 Pkg.add("Requests")
-Pkg.add("Gtk.ShortNames")
 Pkg.add("Graphics")
 Pkg.add("ImageView")
 Pkg.add("ImageMagick")
 Pkg.add("Images")
 ```
 
-Finally, you can start the application with the corresponding command:
+Finally, you can start the application with one of the following commands:
 
 Windows: ```include("Browser\StartBrowser.jl")```
 
-Linux: ```include("Browser/StartBrowser.jl")```
+Linux:   ```include("Browser/StartBrowser.jl")```
 
 similar for Mac.
 
