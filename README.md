@@ -122,6 +122,8 @@ Transitions
 
 Fix Text layout
 
+Generate proper images from blobs
+
 Integrated page editor (perhaps WYSIWYG)
 
 Optimize speed
