@@ -11,7 +11,7 @@ JavaScript is used to query HTML and SVG and modify it on the fly in order to ma
 First you will need to have  [Julia](http://julialang.org/downloads/) installed.
 
 You will also have to add package dependancies for this project. You can past these into the Julia Console.
-'''
+```
 Pkg.add("Gtk")
 Pkg.add("JSON")
 Pkg.add("Cairo")
@@ -21,10 +21,10 @@ Pkg.add("Graphics")
 Pkg.add("ImageView")
 Pkg.add("ImageMagick")
 Pkg.add("Images")
-'''
+```
 
 Finally, you can start the application with the corresponding comand:
-Windows: '''include("Browser\StartBrowser.jl")'''
-Linux: '''include("Browser/StartBrowser.jl")'''
+Windows: ```include("Browser\StartBrowser.jl")```
+Linux: ```include("Browser/StartBrowser.jl")```
 similar for Mac.
 
