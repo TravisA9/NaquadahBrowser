@@ -11,8 +11,9 @@ JavaScript is used to query HTML and SVG and modify it on the fly in order to ma
 {
 	"head":{
 			"title":"MyPageTitle",
+			"favicon":"http://myapp/favicon.ico"
 		   	"charset":"utf-8",
-		   	"keywords":"web tech,browser concept,Json Pages,fragmented web tech",
+		   	"keywords":"web tech,browser concept,Json Pages",
 		   	"author":"Travis Deane Ashworth",
 		  	"links":[{"url":"http://myapp/somescript.js"}]
 		},
@@ -63,7 +64,13 @@ Linux:   ```include("Browser/StartBrowser.jl")```
 similar for Mac.
 
 # Goals
-Mantain a measure of compatability with principal features of web standars. I believe that a lot of thought was put into the design and functionality of the WWW and that in general it is a good model to follow
+Mantain a measure of compatability with principal features of web standards. I believe that a lot of thought was put into the design and functionality of the WWW and that in general it is a good model to follow
+
+Simplify as much as possible while increasing functionality.
+
+Take advantage of opertunities to add select functionality that may not be feasable in an ordinary browser.
+
+Make Naquadah easy to modify and repurpose. Naquadah is made to be used. It may be modified for standalone apps, mobile devices and more. The more it is used, the more it will be developed.
 
 
 # Considerations
