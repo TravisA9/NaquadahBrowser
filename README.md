@@ -19,7 +19,7 @@ JavaScript is used to query HTML and SVG and modify it on the fly in order to ma
 }	
 ```
 
-The head may look something like this
+The head may look something like this.
 ```
 	"head":{
 			"title":"MyPageTitle",
@@ -31,7 +31,7 @@ The head may look something like this
 		}
 ```
 
-The styles section stores frequently used styles (similer to CSS)
+The styles section stores frequently used styles (similer to CSS).
 ```
 	"styles":{
 			"Button":{styles...},
@@ -39,7 +39,7 @@ The styles section stores frequently used styles (similer to CSS)
 		}
 ```
 
-The body describes general structure (similer to HTML and SVG)
+The body describes general structure (similer to HTML and SVG) and may also contain style information.
 ```
 	"body":[
 			{">":"div", 
@@ -55,7 +55,8 @@ The body describes general structure (similer to HTML and SVG)
 				"center":[25,25],
 				"border":{"width":"thick", 
 					"style":"solid", 
-					"color":"blue"}
+					"color":"blue"},
+				"nodes":[...]
 			}
 	]
 ```
