@@ -53,7 +53,7 @@ As you can see there are three major sections to a Json page and these may be on
 ## How To Install 
 First you will need to have  [Julia](http://julialang.org/downloads/) installed.
 
-You will also have to add package dependancies for this project. You can past these into the Julia Console.
+You will also have to add package dependancies for this project. You can paste these into the Julia Console.
 ```
 Pkg.add("Gtk")
 Pkg.add("Gtk.ShortNames")
