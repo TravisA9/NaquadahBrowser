@@ -58,9 +58,8 @@ The body describes general structure (similer to HTML and SVG)
     				"radius":25,		
     				"color":"lightgreen",
 				"border":{"width":"thick", 
-					"style":"solid", 
-					"radius":7,
-					"color":"blue"}
+					  "style":"solid", 
+					  "color":"blue"}
 			}
 	]
 ```
