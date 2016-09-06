@@ -43,20 +43,16 @@ The body describes general structure (similer to HTML and SVG)
 ```
 	"body":[
 			{">":"div", 
-				"display":"inlineBlock", 
-				"onhover":"doSomething()",
-				"width":100, 
-				"height":50, 
-				"color":"firebrick",
-				"border":{styles...},
-				"font":{styles...},
+				"class":"Button", 
+				"mousedown":"doSomething()",
 				"text":"Some text"
 			},
 			{">":"circle",
+				"onhover":"doSomethingElse()",
 				"display":"inlineBlock", 
-				"center":[25,25],
     				"radius":25,		
     				"color":"lightgreen",
+				"center":[25,25],
 				"border":{"width":"thick", 
 					"style":"solid", 
 					"color":"blue"}
