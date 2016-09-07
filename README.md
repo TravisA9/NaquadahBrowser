@@ -129,8 +129,9 @@ Optimize speed
 
 Compile distributable binaries for major OSs
 
-# -
+# Overview
 
+![window](doc/figures/MindMup.png)
 
 travisashworth2007@gmail.com
 
