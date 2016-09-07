@@ -95,6 +95,8 @@ Take advantage of opertunities to add select functionality that may not be feasa
 
 Make Naquadah easy to modify and repurpose. Naquadah is made to be used. It may be modified for standalone apps, mobile devices and more. The more it is used, the more it will be developed.
 
+Experiment with reactively connecting to databases for real-time page updates.
+
 
 # Considerations
 ### Code
