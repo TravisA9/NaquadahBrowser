@@ -2,7 +2,13 @@
 
 What is Naquadah?
 
->A reconceptualised browser built in Julia programming Language from the ground up. Naquadah currently uses Cairo for graphics and GTK for the GUI.
+A reconceptualised browser built in Julia programming Language from the ground up. 
+
+>Naquadah currently uses Cairo for graphics and GTK for the GUI.
+
+####What makes it Different?
+
+It does not need multiple Markup Languages such as: HTML, XML, SVG, CSS, etc, to represent content. It can be made with just Json.
 
 ![window](doc/figures/Browser-2.png)
 # Concept
