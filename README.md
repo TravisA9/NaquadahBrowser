@@ -102,7 +102,7 @@ Experiment with reactively connecting to databases for real-time page updates.
 
 # Considerations
 ### Code
-Julia is a great choice for this project because it can be optimized to run very fast. So far, ittle attention has been given to speed. For instance data types have not yet been specified in many cases and this creates overhead causing much slower code execution. Currently more emphasis has been given to adding broad functionality and to determining the structure of the project So expect much better speed in the future.
+Julia is a great choice for this project because it can be optimized to run very fast. So far, little attention has been given to speed. For instance data types have not yet been specified in many cases and this creates overhead causing much slower code execution. Currently more emphasis has been given to adding broad functionality and to determining the structure of the project So expect much better speed in the future.
 
 ### Compatability
 Perhaps the reason that no one has attempted to fix the problems with the web is to avoid fragmenting it. If we start doing things differently then we risk end up with two sections of the internet; the HTML version and the Json version. Many large companies have invested great sums of money into developing their web pages and apps and it would be very unfortunate to create a problem in this area. 
