@@ -87,9 +87,11 @@ Linux:   ```include("Browser/StartBrowser.jl")```
 similar for Mac.
 
 # Goals
+Mantain modularity in order to be adaptable. If in the future there is good reason to switch out something such as the graphics interface, it should be easy to do so without reworking all the code.
+
 Mantain a measure of compatability with principal features of web standards. I believe that a lot of thought was put into the design and functionality of the WWW and that in general it is a good model to follow
 
-Simplify as much as possible while increasing functionality.
+Simplify as much as possible while increasing functionality. It is pointless to build another browser if it does not offer good fetures.
 
 Take advantage of opertunities to add select functionality that may not be feasable in an ordinary browser.
 
