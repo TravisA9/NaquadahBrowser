@@ -75,9 +75,9 @@ The body describes general structure (similer to HTML and SVG) and may also cont
 As you can see there are three major sections to a Json page and these may be one file or spread across several files. It may be modified by script as well.
 
 ## How To Install 
-First you will need to have  [Julia](http://julialang.org/downloads/) installed.
+* First you will need to have  [Julia](http://julialang.org/downloads/) installed.
 
-You will also have to add package dependancies for this project. You can paste the following into the Julia Console and press enter.
+* You will also have to add package **dependancies** for this project. You can paste the following into the Julia Console and press enter.
 ```
 Pkg.add("Gtk")
 Pkg.add("Gtk.ShortNames")
@@ -90,7 +90,7 @@ Pkg.add("ImageMagick")
 Pkg.add("Images")
 ```
 
-Finally, you can start the application with one of the following commands:
+* Finally, (assuming you have downloaded/cloned this project) you can start the application with one of the following commands:
 
 Windows: ```include("Browser\StartBrowser.jl")```
 
