@@ -1,3 +1,8 @@
+# TODO: decide on an implementation and clean up this mess!
+#       Probably the best way to do this is to create one function 
+#       which will return an element of type-X with its default atributes.
+
+
 type ElementAttributes
 		Font
 		FontFamily	
