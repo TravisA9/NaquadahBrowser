@@ -1,3 +1,7 @@
+# This is just a dictionary of traditional elements and their properties.
+# This is here as an outline. The objective is for the browser to be as
+# complyant to web standards as possible.
+
 <input>	accept
 <a area>	download
 <a area base form>	target
