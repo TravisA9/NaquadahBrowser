@@ -6,19 +6,21 @@ A reconceptualised web browser built in Julia programming Language from the grou
 
 >Naquadah currently uses Cairo for graphics and GTK for the GUI.
 
-####What makes it Different?
-
-It does not need multiple Markup Languages such as: HTML, XML, SVG, CSS, etc, to represent content. It can be made with just Json.
-
 ![window](doc/figures/Browser-2.png)
-# Concept
-Although, parsing of HTML, SVG and CSS may eventually be added, this browser was designed to test a new simplified concept for web pages. The Naquadah browser currently downloads and renders pages that are written in Json format. The idea is that by using one language that is well suited for modern web applications much of the bloat and complication can be eliminated, easing and simplifying the design of pages and Apps.
 
-As an example, an App may contain different front end scripts and languages that all need to be parsed, queried and stitched together, This adds complexity to any project and bloat to both the browser and the project itself. Json is a very widely used format and, importantly, is used by JavaScript. Data is also sent and recieved by many servers and databases so it seems to be the best option. HTML was origionally designed for interactive documents on the web and was well designed for that purpose. Due to the way the web is now used, it is my opinion that HTML no longer meets the challange. Put simply, the internet is no longer a web of linked pages but rather, a web of linked applications. Even what appear to be traditional web pages now employ scripts, databiding, querying and so on.
+Yes, Naquadah is the name of a mineral from the sci-fi series Stargate. The browser named in honor of that great series is not yet any more stable than the mineral. The objective is to build a browser capable of simplifying web design (front and back end) and removing unneeded complications.
 
-JavaScript is used to query HTML and SVG and modify it on the fly in order to make the web interactive. Templating/data binding engines are also needed because of the often large quantity of repetetive content or content that must be pulled from a database and inserted at the user's request. Instead of makeing endless scripts to interface with HTML, it is my opinion that the solution is to abandon it and use the language that EMCA script already speaks. This will permit templating, restructuring, inserting, seperation of concerns and so much more.
+As the www developed and changed many things were added in order to fill in the gaps. For each new piece added to the puzzle there were more complications introduced ...as if it were a big patch-work quilt where each piece has to be stitched together. If you want a traditional web page with only text, images and links then you can stick to HTML. However, if you want any real functionality you have to code. That usually means that the HTML has to be queried and modified, triggering a series of changes such as re-flow and repaint in the browser. But it is not that simple at all because HTML is not the only language being parsed in most cases. In many web pages XML, SVG, etc. are also used. Then there are other considerations such as what version of the markup is being used. Don't forget the CSS too! It is no surprise then that there are so many languages and packages for querying, parsing, patching or generating pages. They are mostly attempts at data binding and stitching the parts together.
+ 
+Unfortunately, it is usually necessary to use, not just one, but several of these tools on any given project. This means that there is much overhead... more code, more languages, greater development costs, more complicated setup. The costs effect the server, the browser, the developer, the owner, and the user.
 
-# Sample Web Page
+##Here is Naquadah's solution:
+* Code in EMCA script (JavaScript)
+* Data in Json
+* That's all!
+
+
+# Example of a Web Page as Json
 
 ### General structure
 ```
