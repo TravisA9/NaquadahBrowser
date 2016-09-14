@@ -1,4 +1,4 @@
-using Naquadah
+using NaquadahBrowser
 using Base.Test
 
 # write your own tests here
