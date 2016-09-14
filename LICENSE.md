@@ -1,4 +1,4 @@
-The Naquadah.jl package is licensed under the MIT "Expat" License:
+The NaquadahBrowser.jl package is licensed under the MIT "Expat" License:
 
 > Copyright (c) 2016: Travis Deane Ashworth.
 > 
