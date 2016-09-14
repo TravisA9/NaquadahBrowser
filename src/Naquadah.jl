@@ -1,6 +1,6 @@
 # to publish on github
 # http://www.stochasticlifestyle.com/finalizing-julia-package-documentation-testing-coverage-publishing/
-module Naquadah
+module NaquadahBrowser
 
 # package code goes here
 # run with examples:
