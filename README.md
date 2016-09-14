@@ -77,13 +77,13 @@ As you can see there are three major sections to a Json page and these may be on
 ## How To Install 
 1.  Install [Julia](http://julialang.org/downloads/) installed.
 
-*You can clone NaquadahBrowser
+2. Clone NaquadahBrowser thusly:
 
 ```
 julia> Pkg.clone("https://github.com/TravisA9/NaquadahBrowser.git")
 ```
 
-* You may also have to add package **dependancies** for this project. You can paste the following into the Julia Console and press enter.
+3. You may also have to add package **dependancies** for this project. You can paste the following into the Julia Console and press enter.
 ```
 Pkg.add("Gtk")
 Pkg.add("JSON")
@@ -94,7 +94,7 @@ Pkg.add("ImageMagick")
 Pkg.add("Images")
 ```
 
-* Finally, (assuming you have downloaded/cloned this project) you can start the application with the following commands:
+44 Finally, (assuming you have downloaded/cloned this project) you can start the application with the following commands:
 ```
 julia> using NaquadahBrowser
 ```
