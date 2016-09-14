@@ -35,7 +35,7 @@ The head may look something like this.
 ```JSON
 	"head":{
 			"title":"MyPageTitle",
-			"favicon":"http://myapp/favicon.ico"
+			"favicon":"http://myapp/favicon.ico",
 		   	"charset":"utf-8",
 		   	"keywords":"web tech,browser concept,Json Pages",
 		   	"author":"Travis Deane Ashworth",
@@ -74,16 +74,14 @@ The body describes general structure (similer to HTML and SVG) and may also cont
 ```
 As you can see there are three major sections to a Json page and these may be one file or spread across several files. It may be modified by script as well.
 
-## How To Install 
-*  Install [Julia](http://julialang.org/downloads/). Go to your terminal and type 
+## How To Install Install [Julia](http://julialang.org/downloads/). To start julia up go to your terminal and type:
 ```
 $  julia
 ```
-to start julia up.
 * Clone NaquadahBrowser thusly: 
 ```julia
-* julia> Pkg.clone("https://github.com/TravisA9/NaquadahBrowser.git") 
- ```
+ julia> Pkg.clone("https://github.com/TravisA9/NaquadahBrowser.git") 
+```
 * You may also have to add package **dependancies** for this project. You can paste the following into the Julia Console and press enter. 
 ```julia
 Pkg.add("Gtk")
@@ -95,9 +93,9 @@ Pkg.add("ImageMagick")
 Pkg.add("Images") 
 ```
 4. Finally, you can start the application with the following command: 
- ```
- julia julia> using NaquadahBrowser 
- ```
+```julia 
+ julia> using NaquadahBrowser 
+```
 
 If you close the window you can restart it like this:
 ```julia
