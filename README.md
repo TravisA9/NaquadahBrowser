@@ -84,7 +84,6 @@ Pkg.add("JSON")
 Pkg.add("Cairo")
 Pkg.add("Requests")
 Pkg.add("Graphics")
-Pkg.add("ImageView")
 Pkg.add("ImageMagick")
 Pkg.add("Images")
 ```
