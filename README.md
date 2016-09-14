@@ -23,7 +23,7 @@ Unfortunately, it is usually necessary to use, not just one, but several of thes
 # Example of a Web Page as Json
 
 ### General structure
-```
+```JSON
 {
 	"head":{...},
 	"styles":{...},
@@ -32,7 +32,7 @@ Unfortunately, it is usually necessary to use, not just one, but several of thes
 ```
 
 The head may look something like this.
-```
+```Json
 	"head":{
 			"title":"MyPageTitle",
 			"favicon":"http://myapp/favicon.ico"
@@ -44,7 +44,7 @@ The head may look something like this.
 ```
 
 The styles section stores frequently used styles (similer to CSS).
-```
+```json
 	"styles":{
 			"Button":{styles...},
 			"ColoredBox":{styles...}
@@ -77,7 +77,7 @@ As you can see there are three major sections to a Json page and these may be on
 ## How To Install 
 1.  Install [Julia](http://julialang.org/downloads/). Go to your terminal and type ```julia``` to start julia up.
 2. Clone NaquadahBrowser thusly: ``` julia> Pkg.clone("https://github.com/TravisA9/NaquadahBrowser.git") ```
-3. You may also have to add package **dependancies** for this project. You can paste the following into the Julia Console and press enter. ```
+3. You may also have to add package **dependancies** for this project. You can paste the following into the Julia Console and press enter. ```julia
 Pkg.add("Gtk")
 Pkg.add("JSON")
 Pkg.add("Cairo")
