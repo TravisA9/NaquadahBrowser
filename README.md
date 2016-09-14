@@ -75,7 +75,7 @@ The body describes general structure (similer to HTML and SVG) and may also cont
 As you can see there are three major sections to a Json page and these may be one file or spread across several files. It may be modified by script as well.
 
 ## How To Install 
-1.  Install [Julia](http://julialang.org/downloads/) installed.
+1.  Install [Julia](http://julialang.org/downloads/). Go to your terminal and type ```julia``` to start julia up.
 2. Clone NaquadahBrowser thusly:
 ```
 julia> Pkg.clone("https://github.com/TravisA9/NaquadahBrowser.git")
@@ -90,10 +90,11 @@ Pkg.add("Graphics")
 Pkg.add("ImageMagick")
 Pkg.add("Images")
 ```
-4. Finally, (assuming you have downloaded/cloned this project) you can start the application with the following commands:
+4. Finally, you can start the application with the following command:
 ```
 julia> using NaquadahBrowser
 ```
+
 If you close the window you can restart it like this:
 ```
 julia> Start()
