@@ -90,13 +90,14 @@ Pkg.add("ImageMagick")
 Pkg.add("Images")
 ```
 
-* Finally, (assuming you have downloaded/cloned this project) you can start the application with one of the following commands:
-
-Windows: ```include("Browser\StartBrowser.jl")```
-
-Linux:   ```include("Browser/StartBrowser.jl")```
-
-similar for Mac.
+* Finally, (assuming you have downloaded/cloned this project) you can start the application with the following commands:
+```
+julia> using Naquadah
+```
+If you close the window you can restart it like this:
+```
+julia> Start()
+```
 
 # Goals
 Mantain modularity in order to be adaptable. If in the future there is good reason to switch out something such as the graphics interface, it should be easy to do so without reworking all the code.
