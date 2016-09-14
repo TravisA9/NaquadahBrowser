@@ -74,7 +74,7 @@ The body describes general structure (similer to HTML and SVG) and may also cont
 ```
 As you can see there are three major sections to a Json page and these may be one file or spread across several files. It may be modified by script as well.
 
-## How To Install 
+## How To Get Started 
 * First install [Julia](http://julialang.org/downloads/). To start julia up go to your terminal and type:
 ```
 $  julia
