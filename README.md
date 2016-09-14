@@ -8,7 +8,7 @@ A reconceptualised web browser built in Julia programming Language from the grou
 
 ![window](doc/figures/Browser-2.png)
 
-Yes, Naquadah is the name of a mineral from the sci-fi series Stargate. The browser named in honor of that great series is not yet any more stable than the mineral. The objective is to build a browser capable of simplifying web design (front and back end) and removing unneeded complications.
+Yes, Naquadah is the name of a mineral from the sci-fi series Stargate. The browser named after that great series is not yet any more stable than the mineral itself. The objective is to build a browser capable of simplifying web design (front and back end) and removing unneeded complications.
 
 As the www developed and changed many things were added in order to fill in the gaps. For each new piece added to the puzzle there were more complications introduced ...as if it were a big patch-work quilt where each piece has to be stitched together. If you want a traditional web page with only text, images and links then you can stick to HTML. However, if you want any real functionality you have to code. That usually means that the HTML has to be queried and modified, triggering a series of changes such as re-flow and repaint in the browser. But it is not that simple at all because HTML is not the only language being parsed in most cases. In many web pages XML, SVG, etc. are also used. Then there are other considerations such as what version of the markup is being used. Don't forget the CSS too! It is no surprise then that there are so many languages and packages for querying, parsing, patching or generating pages. They are mostly attempts at data binding and stitching the parts together.
  
