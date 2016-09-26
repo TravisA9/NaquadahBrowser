@@ -1,23 +1,24 @@
 # inheritable flags should go first
 # This includes atributes that are toggled before and after drawing all children
 #=
-const OpacityAll = 
-const Antialias = 
-const FillWinding = 
-const FillEvenOdd = 
+const OpacityAll =
+const Antialias =
+const FillWinding =
+const FillEvenOdd =
 # fill-rule:nonzero
-const IsDashed = 
-const CapBut = 
-const CapRound = 
-const CapSquare = 
+const IsDashed =
+const CapBut =
+const CapRound =
+const CapSquare =
 
-const Clip = 
+const Clip =
 
-const Scale = 
-const Transform = 
-const Translate = 
+const Scale =
+const Transform =
+const Translate =
 =#
 # Flags for Elements
+# TODO: reorder, renumber and regroup...
 const HasBorder     = 1
 const BordersSame   = 2
 const HasMargin     = 3
@@ -61,6 +62,7 @@ const IsPath        = 22
 				#   A = elliptical Arc          Z = closepath
 
 
+
 const IsDashed = 31
 const CapBut = 32
 const CapRound = 33
@@ -68,6 +70,9 @@ const CapSquare = 34
 const OverflowClip = 35
 const OverflowScrollx = 36
 const OverflowScrolly = 37
+
+const IsUnderlined = 38
+const UnderlineOnHover = 39
 
 #=
 const  = 31
