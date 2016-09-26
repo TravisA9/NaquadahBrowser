@@ -30,16 +30,16 @@ type Page
              Page() = new()
 end
 #=---------------------------------=#
-#Page_request = "" 
+#Page_request = ""
 # TODO: rewrite!
 # ======================================================================================
 # add tab and initiate session...
-# CALLED FROM: 
+# CALLED FROM:
 # ======================================================================================
 
 function MakeUserInterface(win, doc)   # win, notebook
     # SEE: https://github.com/tknopp/Julietta.jl/blob/master/src/maintoolbar.jl
- 
+
     a = @Entry()  # a widget for entering text
     setproperty!(a, :margin, 5)
     setproperty!(a, :text, doc.url)
@@ -49,6 +49,11 @@ function MakeUserInterface(win, doc)   # win, notebook
     g = @Grid() # Maybe @Box(:v) instead
 
     scroller = Gtk.@ScrolledWindow(canvas);
+#vadjustment() = ccall((:gtk_get_vadjustment),Ptr{GObject}))
+#maximize(win::GtkWindow) = ccall((:gtk_window_maximize,libgtk),Void,(Ptr{GObject},),win)
+#a = getproperty(scroller, :vadjustment, true)
+#println("Scrolling... ",a) #window.handle.get_vadjustment()
+
 
     g[2,1] = a    # Cartesian coordinates, g[x,y] hexpand=FALSE
     g[1:2,2] = scroller  # spans both columns
@@ -57,8 +62,38 @@ function MakeUserInterface(win, doc)   # win, notebook
     setproperty!(g, :column_spacing, 15)  # introduce a 15-pixel gap between columns
     result = match(r"(\w+:\/\/)([-a-zA-Z0-9.]+)", doc.url)
 #----------------------------------------
-    label = @Label(doc.head["title"]) # result[2]
-    imClose = @Image(stock_id="gtk-close",size=:MENU)
+# Temporary image while I figure out how to fix the icon problem that was
+# created with julia 0.5 changes
+label = @Label(doc.head["title"]) # result[2]
+#println(typeof(@__FILE__()))
+  f = split(@__FILE__(),r"src/")
+  imagePath = string(f[1], "src/data/close.png")
+# Produces: /path/to/.julia/v0.5/NaquadahBrowser/src/data/close.png
+
+#...............................................................................
+# WARNING! the images library broke on the 0.5 release so this is going to
+# be messy until they get it fixed or I find another solution.
+     closeImg = load(imagePath)
+     data = convert(Array, closeImg.data)   # say, dat is a Matrix of size (256, 256)
+    # new_dat = Images.imresize(data, (25,25))
+    # pageIcon = @Image(@Pixbuf(data=img, has_alpha=true))
+
+    imClose = @Image(@Pixbuf(data=closeImg.data, has_alpha=true))
+    closeButton = @Button()
+    setproperty!(closeButton, :margin, 3)
+    setproperty!(closeButton, :padding, 1)
+    push!(closeButton,imClose)
+    #----------------------------------------
+    # Outline for close tab event!
+    #----------------------------------------
+    #  b = @Button("Press me")
+    #  win = @Window(b, "Callbacks")
+    #  id = signal_connect(b, "clicked") do widget
+    #      println("Button was clicked!")
+    #  end
+
+    # AND: signal_handler_disconnect(b, id)
+    #----------------------------------------
 
 # "https://assets-cdn.github.com/favicon.ico"
 # "http://travis.net16.net/GitHub.png"
@@ -73,7 +108,7 @@ function MakeUserInterface(win, doc)   # win, notebook
     # println("spatialorder...",img.properties.spatialorder)
 #GdkPixbuf(data=img,has_alpha=true)
 #==#
-# image = CairoRGBSurface(img.data, 26, 26); img.data, 
+# image = CairoRGBSurface(img.data, 26, 26); img.data,
 # image = CairoARGBSurface(26, 26);
 # println(image)
 #println("My Blob...",img.properties)
@@ -99,35 +134,36 @@ function MakeUserInterface(win, doc)   # win, notebook
     # IObuffer():  http://stackoverflow.com/questions/24229984/reading-data-from-url
     dat = convert(Array, img.data)   # say, dat is a Matrix of size (256, 256)
     new_dat = Images.imresize(dat, (25,25))
-    pageIcon = @Image(@Pixbuf(data=new_dat, has_alpha=true))
+    # pageIcon = @Image(@Pixbuf(data=new_dat, has_alpha=true))
 
 #     @Pixbuf(data=dat, has_alpha=true)
 # set_source_rgba(ctx, r::Real, g::Real, b::Real, a::Real) =
 # image(ctx, s::CairoSurface, x, y, w, h)
 
     hbox = @Box(:h)
-    push!(hbox,pageIcon)
+    # push!(hbox,pageIcon)
     push!(hbox,label)
-    push!(hbox,imClose)
-    push!(win.notebook, g, hbox)    
+    push!(hbox,closeButton)
+    push!(win.notebook, g, hbox)
     showall(scroller)
-    showall(pageIcon)
-    showall(imClose)
+    # showall(pageIcon)
+    # showall(imClose)
+    showall(closeButton)
     showall(label)
     showall(win.handle)
-#----------------------------------------   
+#----------------------------------------
     push!(win.tabs,PageUI(win.handle,canvas,a,label,scroller))
     handler_id = signal_connect(a, "activate")do object
-        println("From event")
-        Page_request = getproperty(object,:text,AbstractString)         
+        # println("From event")
+        Page_request = getproperty(object,:text,AbstractString)
         FetchPage(Page_request)
     end
     doc.ui = win.tabs[end]
     win.activeTab = win.tabs[end]
-end 
+end
 # ======================================================================================
 # FIX: Attempt to Create an image from blob
-# CALLED FROM: 
+# CALLED FROM:
 # ======================================================================================
 function ImageFromBlob(URL)
     fetch = get(URL; timeout = 5.0)
@@ -139,4 +175,3 @@ function ImageFromBlob(URL)
     # println(img.data)
     return img
 end
-
