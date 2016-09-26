@@ -1,7 +1,7 @@
 # Values can transition but options/settings can logically only change
 # Values that can change or transition
-# color, width, height, top, left, right, bottom
-# 
+# color, width, height, top, left, right, bottom box area
+#
 #=---------------------------------=#
 type Event
   target::Any
@@ -22,7 +22,7 @@ end
 
 # ======================================================================================
 # Attatch mouse (and other) events
-# CALLED FROM: 
+# CALLED FROM:
 # ======================================================================================
 function AttatchEvents(document)
 	    canvas = document.ui.canvas
@@ -41,7 +41,7 @@ function AttatchEvents(document)
                  if e.subtype == "link"
                     # This may later be used to open page in another tab
                     #document = MakePage((window)..., e.target.href)
-                    # ccall((:gtk_widget_queue_draw,libgtk), Void, (Ptr{GObject},), document.canvas) 
+                    # ccall((:gtk_widget_queue_draw,liboxtk), Void, (Ptr{GObject},), document.canvas)
                     FetchPage(get(e.target.href,""))
                 #   reveal(widget)
                 else
@@ -49,8 +49,8 @@ function AttatchEvents(document)
                 end
                 focusNode = e.target
             end
-        end    
-    end 
+        end
+    end
     canvas.mouse.button1release = @guarded (widget, event) -> begin
        # print("Button 1 Released( $(event.x), $(event.y) ) ")
     end
@@ -99,7 +99,7 @@ function AttatchEvents(document)
 # end
    #  handler_id = signal_connect(a, "activate")do object
    #      println("From event")
-   #      Page_request = getproperty(object,:text,AbstractString)         
+   #      Page_request = getproperty(object,:text,AbstractString)
    #      FetchPage(Page_request)
    #  end
 
@@ -125,6 +125,11 @@ function AttatchEvents(document)
                             # print(", onmouseover ", e.func)
                         end
                         if e.subtype == "hover" && document.hoverNode == 0
+                          # toggle underñline if "normal" link
+                          if e.target.flags[UnderlineOnHover] == true
+                            e.target.flags[IsUnderlined] = true
+                          end
+
                             ModifyNode(e.target,false)
                             DrawNode(ctx,e.target)
                             reveal(widget)
@@ -141,7 +146,7 @@ function AttatchEvents(document)
                     end
                     document.hoverNode = e.target
                 end
-            end 
+            end
 
 
                 # onmouseout
@@ -154,12 +159,17 @@ function AttatchEvents(document)
                     #if == "hover" end
 
                         # println(document.hoverNode)
+
+                        # toggle underñline if "normal" link
+                        if document.hoverNode.flags[UnderlineOnHover] == true
+                          document.hoverNode.flags[IsUnderlined] = false
+                        end
                         ModifyNode(document.hoverNode,true)
                         DrawNode(ctx,document.hoverNode)
                         reveal(widget)
                     #splotch(ctx,widget,event,0.0,1.0,0.0)
                     document.hoverNode = 0
-                   
+
                 end
 
 
@@ -184,15 +194,15 @@ function AttatchEvents(document)
 end
 # ======================================================================================
 # Test if mouse is in bounds
-# CALLED FROM: 
+# CALLED FROM:
 # ======================================================================================
 function OverTarget(event,target)
-    t = target.total
-    return event.x > t.left && event.x < t.left+t.right && event.y > t.top && event.y < t.bottom+t.top
+    t = target.box
+    return event.x > t.left && event.x < t.left+t.width && event.y > t.top && event.y < t.height+t.top
 end
 # ======================================================================================
 # Draw a splotch
-# CALLED FROM: 
+# CALLED FROM:
 # ======================================================================================
 function splotch(ctx,event,r,g,b)
             deg = (pi/180.0)
@@ -205,7 +215,7 @@ function splotch(ctx,event,r,g,b)
         set_source_rgb(ctx, r, g, b)
         arc(ctx, event.x, event.y, 2, 0, 2pi) # 0, 2pi
         stroke(ctx)
-       
+
         #set_line_width(ctx, 3);
         set_source_rgba(ctx, r, g, b, 0.7)
         arc(ctx, event.x, event.y, 5, s1, e1) # 0, 2pi
@@ -214,8 +224,8 @@ function splotch(ctx,event,r,g,b)
         stroke(ctx)
         arc(ctx, event.x, event.y, 5, s3, e3) # 0, 2pi
         stroke(ctx)
-        # arc_negative(cr, xc, yc, node.shape.radius, 
-        #     node.shape.angle[1] * (pi/180.0), 
+        # arc_negative(cr, xc, yc, node.shape.radius,
+        #     node.shape.angle[1] * (pi/180.0),
         #     node.shape.angle[2] * (pi/180.0));
 
         #set_line_width(ctx, 2);
@@ -235,7 +245,7 @@ function splotch(ctx,event,r,g,b)
         stroke(ctx)
         arc(ctx, event.x, event.y, 11, s3, e3)
         stroke(ctx)
-       
+
 
 end
 
@@ -248,7 +258,7 @@ end
                     flag = true #something was found
                     document.hoverNode = e.target
                     # onmousemove
-                    if isequal(document.hoverNode, e.target) 
+                    if isequal(document.hoverNode, e.target)
                         if e.subtype == "onmousemove"
                             #document.hoverNode = e.target
                             #print(", onmousemove ", e.func)
@@ -269,5 +279,5 @@ end
                         print(", onmouseout ", e.func)
                     end
                 end
-            end   
+            end
 =#

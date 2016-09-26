@@ -2,13 +2,15 @@
 # Border
 # Line, Circle, LineNode
 # Text
-# Box
+# MyBox
 # MyElement
 # Row
 #======================================================================================#
 
-# THOUGHTS: it may be best to only store esential data like left, top, right, bottom 
+# THOUGHTS: it may be best to only store esential data like left, top, right, bottom
 #           and create methods to derive width, height, center, etc.
+#
+# BoundingMyBox from graphics.jl
 #=---------------------------------=#
 type Border
     left::Float32
@@ -32,19 +34,19 @@ type Line
 end
 #=---------------------------------=#
 type Text
-    lines::Array # It would be a good idea to store a "space" value to indicate the space remaining 
-                 # for each line That will facilitate text alighnment and justification later on    
-      top::Float32
+     lines::Array
+     top::Float32
      left::Float32
 
-    color::Array
+     color::Array
      size::Float16
      style::String
      weight::String
      lineHeight::Float16
      align::String # TODO: this should really be a flag to make things go faster!
      family::String
-     Text() = new([],0,0,[],0,"normal","normal",0,"left","SANS")
+     Text() = new([],0,0,[],1,"normal","normal",1,"left","SANS")
+     #Text(lines,top,left,color,size,style,weight,lineHeight,align,family) = new(lines,top,left,color,size,style,weight,lineHeight,align,family)
     # Text(lines,top, left,color) = new(left,right, top,bottom, width,height, [],[])
 end
 #=---------------------------------=#
@@ -62,30 +64,61 @@ type LineNode # data to draw line
     LineNode(coords, length, angle) = new(coords, length, angle)
 end
 #=---------------------------------=#
-type Box
+type MyBox
     left::Float32
     right::Float32
     top::Float32
     bottom::Float32
     width::Float32
     height::Float32
-    Box(left,right, top,bottom, width,height) = new(left,right, top,bottom, width,height)
+    MyBox(left,right, top,bottom, width,height) = new(left,right, top,bottom, width,height)
 end
 #=---------------------------------=#
-# This type and its compoents vary greatly. 
+# Not unlike GdkRectangle in cairo's gdk.jl
+type Box
+    left::Float64
+    width::Float64
+    top::Float64
+    height::Float64
+    Box(left,width, top,height) = new(left,width, top,height)
+end
+ #get(area) = area.xmax
+ #getheight(area) = area.ymax
+ getcenterx(area::Box) = area.left + (area.width /2)
+ getcentery(area::Box) = area.top  + (area.height /2)
+
+ Right(area::Box)  = area.left + area.width
+ Bottom(area::Box) = area.top  + area.height
+
+#=---------------------------------=#
+type Walls
+    left::Float64
+    right::Float64
+    top::Float64
+    bottom::Float64
+    Walls(left,right, top,bottom) = new(left,right, top,bottom)
+end
+
+#=---------------------------------=#
+type Point
+    x::Float64
+    y::Float64
+    Point(x,y) = new(x,y)
+end
+# This type and its compoents vary greatly.
 # I am still deciding which is the best way to deal with the variability
 # without slowing or complicating things.
 # Nullable is ok but I'm not yet convinced...
-type MyElement 
-    total::Box         # Background area and total width and height (the two should probably be seperated!)
+type MyElement
+    area::Box   # We will derive all our positioning values from here.
+    box::Box         # Background area and box width and height (the two should probably be seperated!)
     content::Box       # Content area Values
 
-    margin::Nullable{Box}        # Margin Values
-    padding::Nullable{Box}       # Padding values
+    margin::Nullable{MyBox}        # Margin Values
+    padding::Nullable{MyBox}       # Padding values
     border::Nullable{Border}     # Border Values
     text::Nullable{Text}         # This is an uninstantiated text PsudoNode
     href::Nullable{String}   # Link?
-    # href::Nullable{ASCIIString}   # Link?
 
     shape::Any
 
@@ -103,23 +136,22 @@ type MyElement
         parent::Any        # parent MyElement
         node::Array        # children of type MyElement
         DOM::Any        # Link to dictionary counterpart
-    MyElement()  = new( Box(0,0,0,0,0,0), Box(0,0,0,0,0,0),
-                        Nullable{Box}(), Nullable{Box}(),
+    MyElement()  = new( Box(0,0,0,0), Box(0,0,0,0), Box(0,0,0,0),
+                        Nullable{MyBox}(), Nullable{MyBox}(),
                         Nullable{Border}(), Nullable{Text}(),
-                        # Nullable{UTF8String}(), 
-                        Nullable{String}(), 
-                        # Nullable{ASCIIString}(), 
-                        0,                       
+                        Nullable{String}(),
+                        0,
                         0,0,0, 0,0,
-                        falses(40),
-                        0,[],  
+                        falses(64),
+                        0,[],
                         0,[],0)
+    # BoundingMyBox() = BoundingMyBox(NaN, NaN, NaN, NaN)
 end
 #=---------------------------------=#
 # I think that 'Row' is only needed temporarily and could be pushed and popped
 #=---------------------------------=#
 type Row
     left::Array
-    right::Array    
+    right::Array
     Row(left,right, top,bottom, width,height) = new(left,right, top,bottom, width,height)
 end

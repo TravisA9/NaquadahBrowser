@@ -48,7 +48,7 @@ function FetchPage(URL)
 
         document.node = []
         push!(document.node, MyElement()) 
-        document.node[1].padding = Box(10,10, 10,10, 20,20)
+        document.node[1].padding = MyBox(10,10, 10,10, 20,20)
 
         if haskey(pageContent, "body")
             document.node[1].DOM = Dict("nodes" => pageContent["body"]) 

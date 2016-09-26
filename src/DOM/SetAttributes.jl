@@ -1,37 +1,55 @@
 # ======================================================================================
 # Create Modify a node
 # A time dependent spudo node function will also be needed for transitions.
-# CALLED FROM: 
+# CALLED FROM:
+# xmin left   ymin top   width width   height height box area text-color
 # ======================================================================================
 function ModifyNode(node,origional)
     # Alter node
     if origional == false
             if haskey( node.DOM, "hover")
                 hover = node.DOM["hover"]
+
                 if haskey( hover, "color")
                     node.color = GetTheColor(node,hover["color"])
                 end
+                if haskey(hover, "text-decoration")
+                  if hover["text-decoration"] == "underline"
+                    node.flags[IsUnderlined] = true
+                  end
+                end
+
+
             end
     # clean node
     else
             if haskey( node.DOM, "hover")
                 hover = node.DOM["hover"]
+
                 if haskey( hover, "color")
                     node.color = GetTheColor(node,node.DOM["color"])
                 end
-            end   
+                if haskey(hover, "text-decoration") # || haskey(node.DOM["font"]["text-decoration"],"underline")
+                  if !haskey(node.DOM["font"], "text-decoration")
+                    node.flags[IsUnderlined] = false
+                  end
+                end
+
+            end
     end
+
+
 end
 # ======================================================================================
-# Set attributes of source( E ) to node 
-# CALLED FROM: 
+# Set attributes of source( E ) to node
+# CALLED FROM: BoxDesign(document,node,E) in BuildDOM.jl
 # ======================================================================================
 function SetAllAttributes(document,node,E)
 # EVENTS:.................................................
 # It may be helpful to backengineer the whole events thing
-# I believe Cairo.jl determines events from flags, which would be 
+# I believe Cairo.jl determines events from flags, which would be
 # better to use anyway... cairo.jl's work may just be bloatware
-if haskey(E, ">") 
+if haskey(E, ">")
             tag = E[">"]
     if tag == "a"
         push!(document.events.mousedown, Event(node,E["href"],"link"))
@@ -62,6 +80,7 @@ if haskey(E, ">")
     if tag == "path"
         node.flags[IsPath] = true
     end
+
     if tag == "line"
         node.flags[IsLine] = true
         # node.shape = LineNode([]) # LineNode(coords)
@@ -106,21 +125,21 @@ end
 
 # Event(target, func, subtype)
 if haskey(E, "mousedown")
-    push!(document.events.mousedown, Event(node,E["mousedown"],"")) 
+    push!(document.events.mousedown, Event(node,E["mousedown"],""))
 end
 # onmousemove, onmouseover, onmouseout
 
 if haskey(E, "hover")
-    push!(document.events.hover, Event(node,"hover","hover")) 
+    push!(document.events.hover, Event(node,"hover","hover"))
 end
 if haskey(E, "onmousemove")
-    push!(document.events.hover, Event(node,E["onmousemove"],"onmousemove")) 
+    push!(document.events.hover, Event(node,E["onmousemove"],"onmousemove"))
 end
 if haskey(E, "onmouseover")
-    push!(document.events.hover, Event(node,E["onmouseover"],"onmouseover")) 
+    push!(document.events.hover, Event(node,E["onmouseover"],"onmouseover"))
 end
 if haskey(E, "onmouseout")
-    push!(document.events.hover, Event(node,E["onmouseout"],"onmouseout")) 
+    push!(document.events.hover, Event(node,E["onmouseout"],"onmouseout"))
 end
 
 if haskey(E, "opacity")
@@ -130,21 +149,23 @@ end
 #......................................................................
 # TODO: Test if has width/height, if not...
 #       Test if has text or content which would implicitly determine width/height
-#       By determining how much space is available and how much is needed 
+#       By determining how much space is available and how much is needed
 #       to accomodate the node's contents.
             if haskey(E, "width")
-                node.total.width  =   E["width"]
+                # node.bg.width  =   E["width"]
+                node.area.width  =   E["width"]
             end
             if haskey(E, "height")
-                node.total.height  =   E["height"]
+                # node.bg.height  =   E["height"]
+                node.area.height  =   E["height"]
             end
             #......................................................................
             # FLAGS: const Absolute = 10, Relative = 11, Fixed = 12
             if haskey(E, "position")
                 SetPosition(E["position"], node.flags)
-            end 
+            end
             #......................................................................
-            # FLAGS: 
+            # FLAGS:
             if haskey(E, "display")
                 SetDisplay(E["display"], node.flags)
             end
@@ -160,7 +181,7 @@ end
                 end
             #......................................................................
             # COLOR
-            if haskey(E, "color")      
+            if haskey(E, "color")
                     node.flags[HasColor] = true
                      node.color = GetTheColor(node,E["color"])
             end
@@ -171,7 +192,7 @@ end
             end
             #......................................................................
             # FONT
-            if haskey(E, "font") # haskey(E, "text") || 
+            if haskey(E, "font") # haskey(E, "text") ||
                     SetFont(E["font"], node)
             end
 end
@@ -194,7 +215,7 @@ end
 
 # ======================================================================================
 # Set flags to indicate the Display scheme (see Flags.jl, BrowserTypes.jl -> MyElement.flags)
-# CALLED FROM: 
+# CALLED FROM:
 # ======================================================================================
 function SetDisplay(display,flags)
             if display == "inline"
@@ -213,7 +234,7 @@ end
 
 # ======================================================================================
 # Set flags to indicate the positioning scheme (see Flags.jl, BrowserTypes.jl -> MyElement.flags)
-# CALLED FROM: 
+# CALLED FROM:
 # ======================================================================================
 function SetPosition(pos,flags)
 		    if pos == "fixed"
@@ -226,46 +247,48 @@ function SetPosition(pos,flags)
 		    end
 end
 # ======================================================================================
-# 
-# CALLED FROM: 
+#
+# CALLED FROM:
 # ======================================================================================
 function SetPadding(padding, node)
         node.flags[HasPadding] = true
         # get --or otherwise create-- Padding
         #P = get(node.padding, Box(0,0, 0,0, 0,0))
         if isa(padding, Array)
-            node.padding = Box( padding[1],  padding[2], 
-                                padding[3],  padding[4], 
+            node.padding = MyBox( padding[1],  padding[2],
+                                padding[3],  padding[4],
                                 padding[1] + padding[2],
                                 padding[3] + padding[4]   )
         # assume padding is different...
         else
-            node.padding = Box(padding,padding, padding,padding, padding*2,padding*2)
+            node.padding = MyBox(padding,padding, padding,padding, padding*2,padding*2)
         node.flags[PaddingSame] = true
-        end 
+        end
 end
 # ======================================================================================
-# 
-# CALLED FROM: 
+#
+# CALLED FROM:
 # ======================================================================================
 function SetMargin(margin, node)
         node.flags[HasMargin] = true
         if isa(margin, Array)
-            node.margin = Box(  margin[1], margin[2], 
-                                margin[3], margin[4], 
+            node.margin = MyBox(  margin[1], margin[2],
+                                margin[3], margin[4],
                                 margin[1] + margin[2], margin[3] + margin[4]   )
-        else 
-            node.margin = Box(margin,margin, margin,margin, margin*2,margin*2)
+        else
+            node.margin = MyBox(margin,margin, margin,margin, margin*2,margin*2)
             node.flags[MarginSame] = true
-        end  
+        end
     margin = get(node.margin)
-    node.total.width  =   node.total.width + margin.width
-    node.total.height =   node.total.height + margin.height
+    # node.bg.width  =   node.bg.width + margin.width
+    # node.bg.height =   node.bg.height + margin.height
+    node.area.width  +=   margin.width
+    node.area.height  +=   margin.height
     # print("Margin width: $(margin.width) \n")
 end
 # ======================================================================================
-# 
-# CALLED FROM: 
+#
+# CALLED FROM:
 # ======================================================================================
 function GetTheColor(node,ColorNode)
                 if isa(ColorNode, Array)
@@ -285,42 +308,34 @@ function GetTheColor(node,ColorNode)
     return color
 end
 # ======================================================================================
-# 
+#
 # ======================================================================================
 
 
 
 # ======================================================================================
-# 
+#
 # ======================================================================================
 
 
 
 # ======================================================================================
-# 
-# ======================================================================================
-
-
-
-# ======================================================================================
-# 
-# CALLED FROM: 
+#
+# CALLED FROM:
 # ======================================================================================
 function SetFont(font, node)
-        node.flags[HasText] = true
 
-        #if haskey(E, "font")
-            #font = E["font"]
-        #else haskey(E, "text")
-        #    font = E["text"]
-        #end
-# "font":{ "color":[0, 0, 0],    "size":12,        "style":"italic", 
-#          "weight":"normal",    "lineHeight":1.4, "family":"SANS" 
-#           "align":"right" },
-    node.text = Text()    
-    text = get(node.text)
-    # lines, top, left,  
-    # color, size, lineHeight, align, family, 
+  # node.flags[HasText] = true
+  # node.text = Text()
+  # text = get(node.text)
+
+    node.flags[HasText] = true
+    #node.text = Text()
+    text = get(node.text,Text())
+
+
+    # lines, top, left,
+    # color, size, lineHeight, align, family,
     if haskey(font, "color")
         text.color = GetTheColor(node,font["color"])
     end
@@ -346,11 +361,16 @@ function SetFont(font, node)
     end
     if haskey(font, "align")
         text.align = font["align"]
-    end    
+    end
+    if haskey(font, "text-decoration")
+        node.flags[IsUnderlined] = true
+    end
+    # println("Attributes...........",node.text)
+node.text = text
 end
 # ======================================================================================
-# 
-# CALLED FROM: 
+#
+# CALLED FROM:
 # ======================================================================================
 function SetBorder(border, node)
         node.flags[HasBorder] = true
@@ -378,7 +398,7 @@ function SetBorder(border, node)
                     end
                 else
                     radius = [border["radius"], border["radius"], border["radius"], border["radius"]]
-                end 
+                end
             end
             width = border["width"]
             node.flags[BordersSame] = true # default
@@ -395,8 +415,11 @@ function SetBorder(border, node)
                     node.border = Border(3,3,3,3,6,6,style,color,radius)
                 elseif width == "thick"
                     node.border = Border(6,6,6,6,12,12,style,color,radius)
-                end 
+                end
     # Update the overall width
-     node.total.width  =   node.total.width  + get(node.border).width
-     node.total.height =   node.total.height + get(node.border).height
+     # node.bg.width  =   node.bg.width  + get(node.border).width
+     # node.bg.height =   node.bg.height + get(node.border).height
+     node.area.width  +=   get(node.border).width
+     node.area.height  +=   get(node.border).height
+
 end

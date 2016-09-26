@@ -32,6 +32,10 @@ include("GUI/Conversions.jl")
 # Types declarations for the browser
 include("GUI/BrowserTypes.jl")
 
+# geometric type declarations
+include("Rendering/GeoTypes.jl")
+# geometric type declarations
+include("Rendering/DrawPage.jl")
 
 # Bit Flags to indicate properties of elements
 include("DOM/Flags.jl")            # Flags for elements
@@ -42,10 +46,7 @@ include("DOM/SetAttributes.jl")
 include("DOM/BuildDOM.jl")
 
 
-# geometric type declarations
-include("Rendering/DrawPage.jl")
-# geometric type declarations
-include("Rendering/GeoTypes.jl")
+
 # A place to put functions as they transition from temporary drawing to permanant functions
 # WAS: include("Samples.jl")            # Drawing stuff
 include("Rendering/DrawShapes.jl")            # Drawing stuff
@@ -56,7 +57,7 @@ include("Rendering/Paint.jl")            # Drawing stuff
 
 type Window
           handle::Any   # Window
-        notebook::Any   # 
+        notebook::Any   #
             tabs::Array   # Array of open tabs
        activeTab::Any
        Window() = new()
@@ -67,16 +68,18 @@ global window = Window()
 
 # ======================================================================================
 # makeWindow
-# CALLED FROM: 
+# CALLED FROM:
 # ======================================================================================
 
 function makeWindow(window,width,height)
    # window = Window()
         window.handle = @Window("Naquadah", width, height, true, true)
 
-        window.notebook = @Notebook()  #   
+        window.notebook = @Notebook()  #
         window.tabs = []
         push!(window.handle, window.notebook)
+
+
 
         id = signal_connect(window.handle, "destroy")do object
             DestroyWindow()
@@ -86,7 +89,7 @@ function makeWindow(window,width,height)
 end
 # ======================================================================================
 # Destroy the Window
-# CALLED FROM: 
+# CALLED FROM:
 # ======================================================================================
 function DestroyWindow()
    window = Window()
