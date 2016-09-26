@@ -5,14 +5,14 @@
 #======================================================================================#
 
 
-
+# xmin left   ymin top   width width   height height box area
 ## header to provide surface and context
 # # using Cairo
 # # c = CairoRGBSurface(256,256);
 # # cr = CairoContext(c);
-# CALLED FROM: 
+# CALLED FROM:
 function sample_clip(cr,node)
-    l,t,r,b = node.total.left, node.total.top, node.total.right, node.total.bottom
+    l,t,r,b = node.content.left, node.content.top, node.content.width, node.content.height
     r = (r-l)/2
     set_antialias(cr,4)
     arc(cr, l+128.0, t+128.0, r, 0, 2*pi);
@@ -34,14 +34,14 @@ function sample_clip(cr,node)
 end
 #======================================================================================#
 # TRASH:
-# CALLED FROM: 
+# CALLED FROM:
 #======================================================================================#
 function drawArc(ctx)
     xc = 128.0;
     yc = 128.0;
     radius = 100.0;
-    angle1 = 45.0  * (pi/180.0);  # angles are specified 
-    angle2 = 180.0 * (pi/180.0);  # in radians           
+    angle1 = 45.0  * (pi/180.0);  # angles are specified
+    angle2 = 180.0 * (pi/180.0);  # in radians
 
     set_line_width(ctx, 10.0);
     arc(ctx, xc, yc, radius, angle1, angle2);
@@ -50,17 +50,17 @@ function drawArc(ctx)
 
 end
 # ======================================================================================
-# 
-# CALLED FROM: 
+#
+# CALLED FROM:
 # ======================================================================================
 function sample_fill_style(cr,node)
-    l,t,r,b = node.total.left, node.total.top, node.total.right, node.total.bottom
+    l,t,r,b = node.content.left, node.content.top, node.content.width, node.content.height
          # set_source_rgb(cr,0.8,0.8,0.8);    # light gray
          #  HasAlpha(context, node.color)
                 if length(node.color) > 3
-                     set_source_rgba(cr, node.color[1], node.color[2], node.color[3], node.color[4]);                     
+                     set_source_rgba(cr, node.color[1], node.color[2], node.color[3], node.color[4]);
                 else
-                     set_source_rgb(cr, node.color[1], node.color[2], node.color[3]); 
+                     set_source_rgb(cr, node.color[1], node.color[2], node.color[3]);
                 end
 
          rectangle(cr,l,t,r,b); # background WAS: 0,0,256,256
@@ -88,53 +88,53 @@ function sample_fill_style(cr,node)
          translate(cr, 0, -128);
 end
 # ======================================================================================
-# 
-# CALLED FROM: 
+#
+# CALLED FROM:
 # ======================================================================================
 function DrawCircle(cr, node)
     border = get(node.border, Border(0,0,0,0,0,0,"None",[],[]))
-  print("DrawCircle \n",border.color)
-    l,t,r,b = node.total.left, node.total.top, node.total.right, node.total.bottom
+  # print("DrawCircle \n",border.color)
+    l,t,r,b = node.box.left, node.box.top, node.box.width, node.box.height
     wide = node.content.width
     radius = node.shape.radius
                 if length(node.color) > 3
-                     set_source_rgba(cr, node.color[1], node.color[2], node.color[3], node.color[4]);                     
+                     set_source_rgba(cr, node.color[1], node.color[2], node.color[3], node.color[4]);
                 else
-                     set_source_rgb(cr, node.color[1], node.color[2], node.color[3]); 
+                     set_source_rgb(cr, node.color[1], node.color[2], node.color[3]);
                 end
 
         set_antialias(cr,6)
-        # set_fill_type(cr, Cairo.CAIRO_FILL_RULE_EVEN_ODD); 
-          # set_source_rgb(cr, 0, 0.7, 0); # 
+        # set_fill_type(cr, Cairo.CAIRO_FILL_RULE_EVEN_ODD);
+          # set_source_rgb(cr, 0, 0.7, 0); #
         move_to(cr, l+wide, t+radius)
         arc(cr, l+radius, t+radius, radius, 0, 2*pi);
         fill(cr);
 
                  if length(border.color) > 3
-                     set_source_rgba(cr, border.color[1], border.color[2], border.color[3], border.color[4]);                     
+                     set_source_rgba(cr, border.color[1], border.color[2], border.color[3], border.color[4]);
                  else
-                     set_source_rgb(cr, border.color[1], border.color[2], border.color[3]); 
-                 end       
+                     set_source_rgb(cr, border.color[1], border.color[2], border.color[3]);
+                 end
         arc(cr, l+radius, t+radius, radius, 0, 2*pi);
         set_line_width(cr, border.width);
         stroke(cr);
 end
 # ======================================================================================
-# 
-# CALLED FROM: 
+#
+# CALLED FROM:
 # ======================================================================================
-function sample_arc(cr, node) 
+function sample_arc(cr, node)
           border = get(node.border, Border(0,0,0,0,0,0,"None",[],[]))
-    l,t,r,b = node.total.left, node.total.top, node.total.right, node.total.bottom
-     xc = node.total.left + node.shape.center[1]
-     yc = node.total.top  + node.shape.center[2]
+    l,t,r,b = node.box.left, node.box.top, node.box.width, node.box.height
+     xc = node.box.left + node.shape.center[1]
+     yc = node.box.top  + node.shape.center[2]
 
      node.shape.angle
         set_antialias(cr,6)
         if length(border.color) > 3
-                set_source_rgba(cr, border.color[1], border.color[2], border.color[3], border.color[4]);                     
+                set_source_rgba(cr, border.color[1], border.color[2], border.color[3], border.color[4]);
         else
-                set_source_rgb(cr, border.color[1], border.color[2], border.color[3]); 
+                set_source_rgb(cr, border.color[1], border.color[2], border.color[3]);
         end
 
 
@@ -145,16 +145,16 @@ end
 
 # ======================================================================================
 # sample_line
-# CALLED FROM: 
+# CALLED FROM:
 # ======================================================================================
-function sample_line(cr, node) 
+function sample_line(cr, node)
           border = get(node.border, Border(0,0,0,0,0,0,"None",[],[]))
-    l,t,r,b = node.total.left, node.total.top, node.total.right, node.total.bottom
+    l,t,r,b = node.box.left, node.box.top, node.box.width, node.box.height
         set_antialias(cr,4)
         if length(border.color) > 3
-                set_source_rgba(cr, border.color[1], border.color[2], border.color[3], border.color[4]);                     
+                set_source_rgba(cr, border.color[1], border.color[2], border.color[3], border.color[4]);
         else
-                set_source_rgb(cr, border.color[1], border.color[2], border.color[3]); 
+                set_source_rgb(cr, border.color[1], border.color[2], border.color[3]);
         end
 
 
@@ -164,9 +164,9 @@ function sample_line(cr, node)
         if length(node.shape.coords) == 4
           line_to(cr, l+ node.shape.coords[3], t+ node.shape.coords[4]);
         else
-          theta = node.shape.angle  * (pi/180.0);  # angles are specified 
-        
-        line_to(cr,               
+          theta = node.shape.angle  * (pi/180.0);  # angles are specified
+
+        line_to(cr,
                     l+ node.shape.coords[1] + (node.shape.length * cos( theta )),
                     t+ node.shape.coords[2] + (node.shape.length * sin( theta )) );
 
@@ -174,17 +174,17 @@ function sample_line(cr, node)
         stroke(cr);
 end
 # ======================================================================================
-# 
-# CALLED FROM: 
+#
+# CALLED FROM:
 # ======================================================================================
 function sample_Curve(cr,node)
     border = get(node.border, Border(0,0,0,0,0,0,"None",[],[]))
-    l,t,r,b = node.total.left, node.total.top, node.total.right, node.total.bottom
+    l,t,r,b = node.box.left, node.box.top, node.box.width, node.box.height
 
                 if length(node.color) > 3
-                     set_source_rgba(cr, node.color[1], node.color[2], node.color[3], node.color[4]);                     
+                     set_source_rgba(cr, node.color[1], node.color[2], node.color[3], node.color[4]);
                 else
-                     set_source_rgb(cr, node.color[1], node.color[2], node.color[3]); 
+                     set_source_rgb(cr, node.color[1], node.color[2], node.color[3]);
                 end
         set_antialias(cr,6)
         set_line_width(cr, 1);
@@ -201,9 +201,9 @@ function sample_Curve(cr,node)
         # curve_to(cr, x3, y3, x4, y4, x5, y5);
 
         if length(border.color) > 3
-                set_source_rgba(cr, border.color[1], border.color[2], border.color[3], border.color[4]);                     
+                set_source_rgba(cr, border.color[1], border.color[2], border.color[3], border.color[4]);
         else
-                set_source_rgb(cr, border.color[1], border.color[2], border.color[3]); 
+                set_source_rgb(cr, border.color[1], border.color[2], border.color[3]);
         end
         set_line_width(cr, border.width);
         stroke(cr);
@@ -215,13 +215,13 @@ function sample_Curve(cr,node)
         stroke(cr);
 end
 # ======================================================================================
-# 
-# CALLED FROM: 
+#
+# CALLED FROM:
 # ======================================================================================
 function sample_ClipCircle(cr,node)
-print("sample_ClipCircle \n")
+# print("sample_ClipCircle \n")
     # border = get(node.border, Border(0,0,0,0,0,0,"None",[],[]))
-    l,t,r,b = node.total.left, node.total.top, node.total.right, node.total.bottom
+    l,t,r,b = node.box.left, node.box.top, node.box.width, node.box.height
     wide = node.content.width
     radius = wide/2
         # Cairo.CAIRO_FILL_RULE_WINDING
@@ -231,14 +231,14 @@ print("sample_ClipCircle \n")
 
 
         image = read_from_png("Browser/data/Mountains.png"); # "D:/Browser/data/mulberry.png"
-        w = image.width; 
+        w = image.width;
         h = image.height;
         imageScale = w/wide
 
         set_antialias(cr,6)
         set_source_rgb(cr, 0, 0, 0);
-        set_fill_type(cr, Cairo.CAIRO_FILL_RULE_EVEN_ODD); 
-          # set_source_rgb(cr, 0, 0.7, 0); # 
+        set_fill_type(cr, Cairo.CAIRO_FILL_RULE_EVEN_ODD);
+          # set_source_rgb(cr, 0, 0.7, 0); #
           move_to(cr, l+wide, t+radius)
          arc(cr, l+radius, t+radius, radius, 0, 2*pi);
          # rectangle(cr,l,t,r,b);
@@ -259,19 +259,19 @@ print("sample_ClipCircle \n")
 
 end
 # ======================================================================================
-#  
-# CALLED FROM: 
+#
+# CALLED FROM:
 # ======================================================================================
 function  sample_Gradient(cr,node)
     border = get(node.border, Border(0,0,0,0,0,0,"None",[],[]))
-    l,t,r,b = node.total.left, node.total.top, node.total.right, node.total.bottom
+    l,t,r,b = node.box.left, node.box.top, node.box.width, node.box.height
     center = node.content.width/2
     offsetX = 25
     offsetY = 25
                 if length(node.color) > 3
-                     set_source_rgba(cr, node.color[1], node.color[2], node.color[3], node.color[4]);                     
+                     set_source_rgba(cr, node.color[1], node.color[2], node.color[3], node.color[4]);
                 else
-                     set_source_rgb(cr, node.color[1], node.color[2], node.color[3]); 
+                     set_source_rgb(cr, node.color[1], node.color[2], node.color[3]);
                 end
         set_antialias(cr,6)
         set_line_width(cr, 1);
@@ -300,16 +300,16 @@ pat = pattern_create_linear(l+0.0, t+180.0,  l+180.0, t+0.0);
         destroy(pat);
 end
 # ======================================================================================
-#  
-# CALLED FROM: 
+#
+# CALLED FROM:
 # ======================================================================================
 function  sample_Text(cr,node)
     border = get(node.border, Border(0,0,0,0,0,0,"None",[],[]))
-    l,t,r,b = node.total.left, node.total.top, node.total.right, node.total.bottom
+    l,t,r,b = node.box.left, node.box.top, node.box.width, node.box.height
                 if length(node.color) > 3
-                     set_source_rgba(cr, node.color[1], node.color[2], node.color[3], node.color[4]);                     
+                     set_source_rgba(cr, node.color[1], node.color[2], node.color[3], node.color[4]);
                 else
-                     set_source_rgb(cr, node.color[1], node.color[2], node.color[3]); 
+                     set_source_rgb(cr, node.color[1], node.color[2], node.color[3]);
                 end
         set_antialias(cr,6)
         set_line_width(cr, 1);
@@ -340,8 +340,8 @@ function  sample_Text(cr,node)
         fill(cr);
 end
 # ======================================================================================
-#  
-# CALLED FROM: 
+#
+# CALLED FROM:
 # ======================================================================================
 type PathStep
     points::Float32
@@ -351,10 +351,10 @@ end
 function  ParsePath(path)
     data = []
 # split path into seperate drawing steps
-          group = split(path, r"(?=[MLHVCSQTAZmlhvcsqtaz])") 
+          group = split(path, r"(?=[MLHVCSQTAZmlhvcsqtaz])")
     # Parse steps
     for g in group
-        
+
             seperate = split(g, r"(?<=[MLHVCSQTAZmlhvcsqtaz])") # on second thought, split might work here
             seperate[1] = lowercase(seperate[1])
 
@@ -391,43 +391,43 @@ function  ParsePath(path)
 end
 #  path = "M150 0 L75 20.0 L225 200 Z"   ParsePath(path)
 #  group = split(path, r"(?=[MLHVCSQTAZmlhvcsqtaz])")
-# > "M150 0 "  
+# > "M150 0 "
 # > "L75 20.0 "
 # > "L225 200 "
-# > "Z" 
+# > "Z"
 #  seperate = split(group[2], r"(?<=[MLHVCSQTAZmlhvcsqtaz])")
-#  
-#  
-#  
-#  
+#
+#
+#
+#
 # ======================================================================================
-#  
-# CALLED FROM: 
+#
+# CALLED FROM:
 # ======================================================================================
 function  DrawPath(cr,node)
     border = get(node.border, Border(0,0,0,0,0,0,"None",[],[]))
-    l,t,r,b = node.total.left, node.total.top, node.total.right, node.total.bottom
+    l,t,r,b = node.box.left, node.box.top, node.box.width, node.box.height
     center = node.content.width/2
     halfBorder = border.width
                 if length(node.color) > 3
-                     set_source_rgba(cr, node.color[1], node.color[2], node.color[3], node.color[4]);                     
+                     set_source_rgba(cr, node.color[1], node.color[2], node.color[3], node.color[4]);
                 else
-                     set_source_rgb(cr, node.color[1], node.color[2], node.color[3]); 
+                     set_source_rgb(cr, node.color[1], node.color[2], node.color[3]);
                 end
         set_antialias(cr,6)
         set_line_width(cr, 1);
         rectangle(cr,l,t,r,b); # background
         stroke(cr);
 
-        dashes = [50.0,  # ink 
+        dashes = [50.0,  # ink
                   10.0,  # skip
-                  10.0,  # ink 
+                  10.0,  # ink
                   10.0   # skip
                   ];
         #ndash = length(dashes); not implemented as ndash on set_dash
         offset = -25.0;
 
-        set_dash(cr, dashes, offset); 
+        set_dash(cr, dashes, offset);
         set_line_width(cr, border.width);
 
         move_to(cr, l+center, t);
@@ -436,38 +436,38 @@ function  DrawPath(cr,node)
         curve_to(cr, l, t+b-(halfBorder*.5), l, t+center, l+center, t+center);
 
         stroke(cr);
-                set_dash(cr, [1.0,0.0], 1); 
+                set_dash(cr, [1.0,0.0], 1);
 
 end
 
 # ======================================================================================
-#  
-# CALLED FROM: 
+#
+# CALLED FROM:
 # ======================================================================================
 function  sample_Path(cr,node)
     border = get(node.border, Border(0,0,0,0,0,0,"None",[],[]))
-    l,t,r,b = node.total.left, node.total.top, node.total.right, node.total.bottom
+    l,t,r,b = node.box.left, node.box.top, node.box.width, node.box.height
     center = node.content.width/2
     halfBorder = border.width
                 if length(node.color) > 3
-                     set_source_rgba(cr, node.color[1], node.color[2], node.color[3], node.color[4]);                     
+                     set_source_rgba(cr, node.color[1], node.color[2], node.color[3], node.color[4]);
                 else
-                     set_source_rgb(cr, node.color[1], node.color[2], node.color[3]); 
+                     set_source_rgb(cr, node.color[1], node.color[2], node.color[3]);
                 end
         set_antialias(cr,6)
         set_line_width(cr, 1);
         rectangle(cr,l,t,r,b); # background
         stroke(cr);
 
-        dashes = [50.0,  # ink 
+        dashes = [50.0,  # ink
                   10.0,  # skip
-                  10.0,  # ink 
+                  10.0,  # ink
                   10.0   # skip
                   ];
-        #ndash = length(dashes); not implemented as ndash on set_dash
+        #ndash = length(dashes); not implemented as ndash on set_dash# content
         offset = -25.0;
 
-        set_dash(cr, dashes, offset); 
+        set_dash(cr, dashes, offset);
         set_line_width(cr, border.width);
 
         move_to(cr, l+center, t);
@@ -476,13 +476,13 @@ function  sample_Path(cr,node)
         curve_to(cr, l, t+b-(halfBorder*.5), l, t+center, l+center, t+center);
 
         stroke(cr);
-                set_dash(cr, [1.0,0.0], 1); 
+                set_dash(cr, [1.0,0.0], 1);
 
 end
 
 # IsBox, IsArc, IsCircle, IsLine, IsPath, TestFillStyle,
 # IsCurve, ClipCircle, IsGradient, IsText,
 # ======================================================================================
-# 
-# CALLED FROM: 
+#
+# CALLED FROM:
 # ======================================================================================
