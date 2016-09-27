@@ -6,6 +6,8 @@ A reconceptualised web browser built in Julia programming Language from the grou
 
 >Naquadah currently uses Cairo for graphics and GTK for the GUI.
 
+![window](doc/figures/BrowsertextSelect.gif)
+
 ![window](doc/figures/Browser-2.png)
 
 Yes, Naquadah is the name of a mineral from the sci-fi series Stargate. The browser named after that great series is not yet any more stable than the mineral itself. The objective is to build a browser capable of simplifying web design (front and back end) and removing unneeded complications.
