@@ -6,7 +6,7 @@ A reconceptualised web browser built in Julia programming Language from the grou
 
 >Naquadah currently uses Cairo for graphics and GTK for the GUI.
 
-![window](doc/figures/BrowsertextSelect.gif)
+![window](doc/figures/browser-1.gif)
 
 ![window](doc/figures/Browser-2.png)
 
