@@ -30,7 +30,7 @@ end
 # CALLED FROM: DrawPage.jl ---> drawAllElements()
 # http://zetcode.com/gfx/cairo/
 # ======================================================================================
-function DrawNode(context,node)
+function DrawNode(context,document,node)
 
     set_antialias(context,4)
     if node.flags[IsBox] == true
@@ -88,7 +88,7 @@ function DrawNode(context,node)
 
 #=======================================================================#
 			if !isnull(node.text) # haskey(E, "text") #E[">"] == "p"
-				drawText(context,node)
+				drawText(context,document,node)
 			end
 
 
@@ -100,12 +100,14 @@ end
 # Cairo tutorial: https://www.cairographics.org/tutorial/
 # CALLED FROM: DrawNode()
 #======================================================================================#
-function drawText(context,node)
+function drawText(context,document,node)
       #=---------------------------------=#
       # Text=  lines, top, left, color, size, style, weight
       #        lineHeight, align, family
       #=---------------------------------=#
       # TODO: perhaps these should be changes from strings to flags and values!
+
+
         text = get(node.text)
       if text.style == "italic"
       slant = Cairo.FONT_SLANT_ITALIC
@@ -122,7 +124,13 @@ function drawText(context,node)
           end
       select_font_face(context, text.family, slant, weight);
         set_font_size(context, text.size);
-
+        # set text color to draw
+        textcolor = text.color
+                if length(textcolor) > 3
+                    set_source_rgba(context, textcolor[1], textcolor[2], textcolor[3], textcolor[4]);
+                else
+                    set_source_rgb(context, textcolor[1], textcolor[2], textcolor[3]);
+                end
 
 
 
@@ -136,14 +144,6 @@ function drawText(context,node)
 				x = node.content.left
 				y = node.content.top + text.size #extents[4]
 				move_to(context, x, y);
-				textcolor = text.color
-      #  println("paint...........",text.color)
-
-                if length(textcolor) > 3
-                    set_source_rgba(context, textcolor[1], textcolor[2], textcolor[3], textcolor[4]);
-                else
-                    set_source_rgb(context, textcolor[1], textcolor[2], textcolor[3]);
-                end
 			                       # HasAlpha(context, textcolor)
                     #  set_source_rgb(context, textcolor[1], textcolor[2], textcolor[3]);
 #text.align = "center"
@@ -157,7 +157,7 @@ function drawText(context,node)
 				            	# contingency to keep the last line pretty!
 				            	# spacers = line.space/line.words
 				            words = split(line.text)
-				            X = x
+				            left = x
 				            if line.words > 2
 				            	spacer = (line.space/(line.words-1))
 				            elseif line.words == 2
@@ -180,9 +180,9 @@ function drawText(context,node)
 				        	width = text_extents(context,w );
 				            # print(width[3], ", ")
 				        	# text_extents(context,E["text"]);
-						    move_to(context, X, y);
+						    move_to(context, left, y);
 							show_text(context,w);
-				            X = X + width[3] + spacer
+				            left = left + width[3] + spacer
 						end
 
 							y = y + ( text.size * text.lineHeight) # WAS: extents[4]
@@ -195,14 +195,26 @@ function drawText(context,node)
 						    #extents = text_extents(context,line.text );
 			            	# print(extents)
 			            	if text.align == "left"
-				            	X = x
+				            	left = x
 				            elseif text.align == "right"
-				            	X = x + line.space
+				            	left = x + line.space
 				            elseif text.align == "center"
-				            	X = x + (line.space/2)
+				            	left = x + (line.space/2)
 			            	end
+
+
+
+
+Highlight(context,document,text,line,left,y)
+
+
+
+
+
+
+
 			            	# print(extents,": ")
-						    move_to(context, X, y);
+						    move_to(context, left, y);
 							show_text(context,line.text);
               stroke(context);
 
@@ -211,7 +223,7 @@ function drawText(context,node)
                 set_antialias(context,0)
                 set_line_width(context, 1);
                 extents = text_extents(context, line.text );
-                move_to(context, X, y+2);
+                move_to(context, left, y+2);
                 rel_line_to(context, extents[3], 0);
                 # rel_line_to(context, extents[3], 0);
                 # rel_line_to(context, extents[1], -extents[2]);
@@ -235,13 +247,85 @@ stroke(context);
 	# print(text)
 
 end
+#======================================================================================#
+# Highlight selected text
+# CALLED FROM: DrawText()
+#======================================================================================#
+function Highlight(context,document,text,line,left,y)
+
+
+  # If selected draw background
+  # print("drag: $(document.mousedown.x), $(document.mousedown.y) ---to--> $(document.mouseup.x), $(document.mouseup.y)... ")
+        if document.mousedown.x > 0 && document.mousedown.y > 0
+          # if condition ? if_true : if_false
+          # document.mousedown.y<document.mouseup.y   ?   minY = document.mousedown.y : minY = document.mouseup.y
+          if document.mousedown.y < document.mouseup.y
+            min = document.mousedown # min/max are points
+            max = document.mouseup
+          else
+            min = document.mouseup # min/max are points
+            max = document.mousedown
+          end
+
+          extents = text_extents(context, line.text );
+          # WAS: lineHeight = extents[2]*text.lineHeight
+          lineHeight = text.size*text.lineHeight
+            offset =  (lineHeight - text.size)/2
+            width  =  extents[3]
+            top    =  y - offset + extents[2]
+            height =  lineHeight + 1
+            bottom =  top + height
+            #text.size + offset + offset
+
+           startX, endX = left, width # default
+           # Is selected: this may be reworked to create fewer conditions or whatever...
+    if bottom < max.y    &&    bottom > min.y    ||    top < max.y    &&      top > min.y  ||  max.y < bottom   &&     max.y > top      ||  min.y < bottom   &&    min.y > top
+
+          # Middle selected lines:  This line is within but not on the bounds
+          if bottom < max.y && top > min.y
+            #min.x < left ? startX = left :
+            startX = left
+            endX = width
+
+            # Portion of one line:
+          elseif min.y > top     &&     min.y < bottom     &&     max.y > top     &&     max.y < bottom
+            #startX = min.x
+            min.x < left ? startX = left : startX = min.x
+            endX = max.x-startX #-left
+
+            # First selected line:
+          elseif min.y > top  &&  min.y < bottom
+            min.x < left ? startX = left : startX = min.x
+            endX = width-(startX-left)
+
+            # Last selected line:
+          elseif max.y > top  &&  max.y < bottom
+
+            endX = max.x-left
+
+          end
+
+
+          # this could be a shaddow DOM thing... where you can restyle it.
+          if endX > 1
+              set_source_rgb(context, 0.273, 0.507, 0.703); #steelblue aproximation
+              rectangle(context,  startX,  top,   endX,  height); # background
+              fill(context);
+          end
+            end
+            # set text color to draw
+            textcolor = text.color
+                    if length(textcolor) > 3
+                        set_source_rgba(context, textcolor[1], textcolor[2], textcolor[3], textcolor[4]);
+                    else
+                        set_source_rgb(context, textcolor[1], textcolor[2], textcolor[3]);
+                    end
+
+    end
 
 
 
-
-
-
-
+end
 #======================================================================================#
 # Draw an area with Borders of varying same widths
 # CALLED FROM: DrawNode()

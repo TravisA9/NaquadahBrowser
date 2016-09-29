@@ -14,31 +14,35 @@ module NaquadahBrowser
 # using /home/travis/BrowsertTypes.jl
 import Base
 using Gtk, JSON, Cairo, Requests
-using Gtk.ShortNames, Graphics
+using Gtk.ShortNames
 # using ImageView
 using ImageMagick, Images
 defaultPage = "http://travis.net16.net/something.json"
 
-
+# Bit Flags to indicate properties of elements
+include("DOM/Flags.jl")            # Flags for elements
+# Bit Flags to indicate properties of elements
+include("DOM/Flags.jl")            # Flags for elements
+# geometric type declarations
+include("Rendering/GeoTypes.jl")
+# Graphics primatives
+include("Rendering/NaqGraphics.jl")  # Drawing stuff
 # Attatch events
 include("Events/Events.jl")            # Drawing stuff
+# Types declarations for the browser
+include("GUI/BrowserTypes.jl")
+
+
 
 # Mish-mash
 include("Browser.jl")            # Drawing stuff
 
-
 # convert units to pixels
 include("GUI/Conversions.jl")
-# Types declarations for the browser
-include("GUI/BrowserTypes.jl")
 
-# geometric type declarations
-include("Rendering/GeoTypes.jl")
 # geometric type declarations
 include("Rendering/DrawPage.jl")
 
-# Bit Flags to indicate properties of elements
-include("DOM/Flags.jl")            # Flags for elements
 # transfere data from Dict(page-data) to build the DOM tree
 include("DOM/SetAttributes.jl")
 # Functions used to build elements/DOM tree
@@ -108,9 +112,5 @@ end
 export Start
 
 Start()
-	# FetchPage(defaultPage)
-
-
-#global window = nothing
 
 end # module

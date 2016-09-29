@@ -76,10 +76,10 @@ end
 #=---------------------------------=#
 # Not unlike GdkRectangle in cairo's gdk.jl
 type Box
-    left::Float64
-    width::Float64
-    top::Float64
-    height::Float64
+    left::Float32
+    width::Float32
+    top::Float32
+    height::Float32
     Box(left,width, top,height) = new(left,width, top,height)
 end
  #get(area) = area.xmax
@@ -92,17 +92,17 @@ end
 
 #=---------------------------------=#
 type Walls
-    left::Float64
-    right::Float64
-    top::Float64
-    bottom::Float64
+    left::Float32
+    right::Float32
+    top::Float32
+    bottom::Float32
     Walls(left,right, top,bottom) = new(left,right, top,bottom)
 end
 
 #=---------------------------------=#
 type Point
-    x::Float64
-    y::Float64
+    x::Float32
+    y::Float32
     Point(x,y) = new(x,y)
 end
 # This type and its compoents vary greatly.

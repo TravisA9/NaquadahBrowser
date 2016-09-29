@@ -4,6 +4,16 @@
 # CALLED FROM:
 # xmin left   ymin top   width width   height height box area text-color
 # ======================================================================================
+#=
+macro has(DOM, key)
+       quote
+         if haskey( DOM, key)
+             hover = DOM[key]
+
+       end
+end
+=#
+# ======================================================================================
 function ModifyNode(node,origional)
     # Alter node
     if origional == false
@@ -13,6 +23,15 @@ function ModifyNode(node,origional)
                 if haskey( hover, "color")
                     node.color = GetTheColor(node,hover["color"])
                 end
+
+                if haskey( hover, "border")
+                  border = hover["border"]
+                  if haskey( border, "color")
+                      b = get(node.border)
+                      b.color = GetTheColor(node,border["color"])
+                  end
+                end
+
                 if haskey(hover, "text-decoration")
                   if hover["text-decoration"] == "underline"
                     node.flags[IsUnderlined] = true
@@ -29,6 +48,15 @@ function ModifyNode(node,origional)
                 if haskey( hover, "color")
                     node.color = GetTheColor(node,node.DOM["color"])
                 end
+
+                if haskey( hover, "border") && haskey( node.DOM, "border")
+                  border = hover["border"]
+                  if haskey( border, "color") && haskey( node.DOM, "color")
+                    b = get(node.border)
+                    b.color = GetTheColor(node,node.DOM["border"]["color"])
+                  end
+                end
+
                 if haskey(hover, "text-decoration") # || haskey(node.DOM["font"]["text-decoration"],"underline")
                   if !haskey(node.DOM["font"], "text-decoration")
                     node.flags[IsUnderlined] = false

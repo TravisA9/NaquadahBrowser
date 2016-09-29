@@ -26,10 +26,18 @@ end
 # ======================================================================================
 function AttatchEvents(document)
 	    canvas = document.ui.canvas
+
     canvas.mouse.button1press = @guarded (widget, event) -> begin
+    document.flags[ButtonPressed] = true
+    println("pressed: ",document.flags[ButtonPressed])
+
         ctx = getgc(widget)
         splotch(ctx,event,1.0,0.0,0.0)
         reveal(widget)
+        #document.mousedown.x, document.mousedown.y = event.x, event.y
+        document.mousedown =  Point(event.x, event.y)
+        document.mouseup   =  Point(0, 0)
+
 #  img = ImageFromBlob("http://travis.net16.net/octocat.png")
 # @Image(@Pixbuf(data=img,has_alpha=true))
 #     println("this is img...",img)
@@ -52,7 +60,12 @@ function AttatchEvents(document)
         end
     end
     canvas.mouse.button1release = @guarded (widget, event) -> begin
-       # print("Button 1 Released( $(event.x), $(event.y) ) ")
+       #document.mouseup.x, document.mouseup.y = event.x, event.y
+       document.flags[ButtonPressed] = false
+       println("pressed: ",document.flags[ButtonPressed])
+       document.mouseup =  NaquadahBrowser.Point(event.x, event.y)
+       # ctx = getgc(widget)
+       # MouseDragged(ctx, document)
     end
     canvas.mouse.button2press = @guarded (widget, event) -> begin
        # print("Button 2 Released( $(event.x), $(event.y) ) ")
@@ -67,48 +80,16 @@ function AttatchEvents(document)
        # print("Button 3 Released( $(event.x), $(event.y) ) ")
     end
 
-# document.ui.scroller.on_signal_scroll("scroll", widget) do object
-#     println("Hello! ")
-# end
-#=
-            function on_signal_scroll(scroll_cb::Function, widget, vargs...)
-                add_events(widget, GdkEventMask.SCROLL)
-                signal_connect(scroll_cb, widget, "scroll-event", Cint, (Ptr{GdkEventScroll},), vargs...)
-            end
-
-
-
-            function scroll(w::Ptr{Gtk.GObject},e::Ptr{Gtk.GdkEventScroll},p)
-             println("Gtk.GObject",Gtk.GObject)
-             println("Gtk.GdkEventScroll",Gtk.GdkEventScroll)
-             println("pgraph",pgraph)
-             println("scroll")
-                Int32(false)
-            end
-
-               on_signal_scroll(scroll, document.ui.scroller)
-=#
-
-# on_signal_scroll("scroll-event", document.ui.scroller)do object
-#     println("Hello! ")
-# end
-# signal_connect(scroll,c,"scroll-event",Cint,(Ptr{Gtk.GdkEventScroll},),true,p)
-
-# signal_connect(document.ui.scroller, "scroll-event")do object
-#     println("Hello! ")
-# end
-   #  handler_id = signal_connect(a, "activate")do object
-   #      println("From event")
-   #      Page_request = getproperty(object,:text,AbstractString)
-   #      FetchPage(Page_request)
-   #  end
-
 
     # this works but I am muting it for the moment
     canvas.mouse.motion = @guarded (widget, event) -> begin
         # this flag is used to determin if any mouseover event fires
         flag = false # so far nothing found
         ctx = getgc(widget)
+      #  if document.flags[ButtonPressed] == true
+      #    document.mouseup =  NaquadahBrowser.Point(event.x, event.y)
+      #    MouseDragged(ctx, document)
+      #  end
 
             for e in document.events.hover
                 # Either onmousemove || onmouseover
@@ -131,7 +112,7 @@ function AttatchEvents(document)
                           end
 
                             ModifyNode(e.target,false)
-                            DrawNode(ctx,e.target)
+                            DrawNode(ctx,document,e.target)
                             reveal(widget)
                             #print(", onmouseover ", e.func)
                             #print(", event.x ", event.x)
@@ -165,7 +146,7 @@ function AttatchEvents(document)
                           document.hoverNode.flags[IsUnderlined] = false
                         end
                         ModifyNode(document.hoverNode,true)
-                        DrawNode(ctx,document.hoverNode)
+                        DrawNode(ctx,document,document.hoverNode)
                         reveal(widget)
                     #splotch(ctx,widget,event,0.0,1.0,0.0)
                     document.hoverNode = 0
@@ -180,7 +161,10 @@ function AttatchEvents(document)
     # something like a DRAG event
 
     canvas.mouse.button1motion = @guarded (widget, event) -> begin
-       # print("Button 1 Motion( $(event) ) ")
+          ctx = getgc(widget)
+          document.mouseup =  NaquadahBrowser.Point(event.x, event.y)
+          MouseDragged(ctx, document)
+          reveal(widget)
     end
     # Trying to get mousewheel working...
     #id = signal_connect(document.canvas, "scroll-event")do object

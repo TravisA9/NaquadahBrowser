@@ -3,13 +3,45 @@
 # DrawPage()
 #======================================================================================#
 
+
+# ======================================================================================
+# Draw Elements from Layout Tree
+# CALLED FROM: MouseDragged(document) -->  Events.jl
+# ======================================================================================
+function MouseDragged(context, document)
+  #  drawAllElements(context,document,document.node[1])
+  #  document.mousedown =  Point(event.x, event.y)
+  #  document.mouseup   =  Point(0, 0)
+
+  bounds = BoxFromPoints(document.mousedown, document.mouseup)
+  DrawAllInArea(context,document,document.node[1],bounds)
+end
+
+# ======================================================================================
+# Draw Elements from Layout Tree that are within X bounds
+# CALLED FROM: DrawAllInArea() -->  Above
+#
+# ALERT: the problem here is that children of parents are effected!
+#        ...parrents are redrawn but not all their children
+# ======================================================================================
+function DrawAllInArea(context,document,node,bounds)
+    nodes = node.node
+
+            for n in nodes
+                    if RowsOverlap(n.box, bounds)
+                        DrawNode(context,document,n)
+                        drawAllElements(context,document,n)
+                    else
+                        DrawAllInArea(context,document,n,bounds)
+                    end
+            end
+end
 # xmin left   ymin top   width width   height height box area
 # ======================================================================================
 # Draw Elements from Layout Tree
 # CALLED FROM: DrawPage(document) -->  Below
 # ======================================================================================
-#  drawAllElements(context,document.node[1]) # document.DOM
-function drawAllElements(context,node)
+function drawAllElements(context,document,node)
 
     nodes = node.node
 
@@ -20,8 +52,8 @@ function drawAllElements(context,node)
                     if n.box.top < (node.area.height + node.box.top) ||
                        n.box.left < (node.area.width + node.box.width)
                        # IN: Paint.jl
-                        DrawNode(context,n)
-                        drawAllElements(context,n)
+                        DrawNode(context,document,n)
+                        drawAllElements(context,document,n)
                     end
             # Flop
             #if node.flags[OverflowClip] == true;    reset_clip(context);    end
@@ -41,6 +73,9 @@ function DrawPage(document)
         context = getgc(canvas)
         document.events = EventTypes()
         node = document.node[1]
+        document.mousedown =  Point(0, 0)
+        document.mouseup   =  Point(0, 0)
+        document.flags = falses(8)
         p = Point(0,0)
         #node.box.width, node.box.height = width(context), height(context) # content
         node.area.width, node.area.height = width(context), height(context)
@@ -64,7 +99,7 @@ function DrawPage(document)
 
             # 0.621208 seconds (444.03 k allocations: 19.054 MB, 1.00% gc time)
             print("drawAllElements: ")
-           drawAllElements(context,node)
+           drawAllElements(context,document,node)
 
 
                 # corner thingie

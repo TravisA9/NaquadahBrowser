@@ -33,22 +33,10 @@ function sample_clip(cr,node)
      reset_clip(cr)
 end
 #======================================================================================#
-# TRASH:
+# 
 # CALLED FROM:
 #======================================================================================#
-function drawArc(ctx)
-    xc = 128.0;
-    yc = 128.0;
-    radius = 100.0;
-    angle1 = 45.0  * (pi/180.0);  # angles are specified
-    angle2 = 180.0 * (pi/180.0);  # in radians
 
-    set_line_width(ctx, 10.0);
-    arc(ctx, xc, yc, radius, angle1, angle2);
-    stroke(ctx);
-    # drawArc(ctx)
-
-end
 # ======================================================================================
 #
 # CALLED FROM:
