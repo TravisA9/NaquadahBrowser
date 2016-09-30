@@ -125,8 +125,8 @@ label = @Label(doc.head["title"]) # result[2]
 #...............................................................................
 # WARNING! the images library broke on the 0.5 release so this is going to
 # be messy until they get it fixed or I find another solution.
-     closeImg = load(imagePath)
-     data = convert(Array, closeImg.data)   # say, dat is a Matrix of size (256, 256)
+    # closeImg = load(imagePath)
+    # data = convert(Array, closeImg.data)   # say, dat is a Matrix of size (256, 256)
     # new_dat = Images.imresize(data, (25,25))
     # pageIcon = @Image(@Pixbuf(data=img, has_alpha=true))
 
