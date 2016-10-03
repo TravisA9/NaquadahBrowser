@@ -117,16 +117,14 @@ function MakeUserInterface(win, doc)   # win, notebook
 
 label = @Label(doc.head["title"]) # result[2]
 
-#println(typeof(@__FILE__()))
-  f = split(@__FILE__(),r"src/")
-  imagePath = string(f[1], "src/data/close.png")
-# Produces: /path/to/.julia/v0.5/NaquadahBrowser/src/data/close.png
+  # f = split(@__FILE__(),r"src/")
+  # imagePath = string(f[1], "src/data/close.png")
+  # closeImg = load(imagePath)
+  # data = convert(Array, closeImg.data)   # say, dat is a Matrix of size (256, 256)
 
 #...............................................................................
 # WARNING! the images library broke on the 0.5 release so this is going to
 # be messy until they get it fixed or I find another solution.
-    # closeImg = load(imagePath)
-    # data = convert(Array, closeImg.data)   # say, dat is a Matrix of size (256, 256)
     # new_dat = Images.imresize(data, (25,25))
     # pageIcon = @Image(@Pixbuf(data=img, has_alpha=true))
 
