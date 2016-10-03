@@ -15,6 +15,7 @@
 function traceElementTree(document,layoutTree, dom)
         if isa(dom["nodes"], Array)
         # TODO: Integrate   dom["nodes"] into   layoutTree.node[i].DOM before calling  traceElementTree()
+        # This is a test comment meant to test some git stuff.
             nodes = dom["nodes"]
             # i is a node in dom[Array]
             for i in eachindex(nodes)
