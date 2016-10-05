@@ -1,8 +1,4 @@
-# ======================================================================================
-# Create Modify a node
-# A time dependent spudo node function will also be needed for transitions.
-# CALLED FROM:
-# xmin left   ymin top   width width   height height box area text-color
+
 # ======================================================================================
 #=
 macro has(DOM, key)
@@ -14,7 +10,14 @@ macro has(DOM, key)
 end
 =#
 # ======================================================================================
-function ModifyNode(node,origional)
+
+# ======================================================================================
+# Create Modify a node
+# A time dependent spudo node function will also be needed for transitions.
+# CALLED FROM: Events.jl
+# xmin left   ymin top   width width   height height box area text-color
+# ======================================================================================
+function ModifyNode(node::MyElement,origional::Bool)
     # Alter node
     if origional == false
             if haskey( node.DOM, "hover")
@@ -72,16 +75,16 @@ end
 # Set attributes of source( E ) to node
 # CALLED FROM: BoxDesign(document,node,E) in BuildDOM.jl
 # ======================================================================================
-function SetAllAttributes(document,node,E)
+function SetAllAttributes(document::Page,node::MyElement,DOM::Dict)
 # EVENTS:.................................................
 # It may be helpful to backengineer the whole events thing
 # I believe Cairo.jl determines events from flags, which would be
 # better to use anyway... cairo.jl's work may just be bloatware
-if haskey(E, ">")
-            tag = E[">"]
+if haskey(DOM, ">")
+            tag = DOM[">"]
     if tag == "a"
-        push!(document.events.mousedown, Event(node,E["href"],"link"))
-        node.href = E["href"]
+        push!(document.events.mousedown, Event(node,DOM["href"],"link"))
+        node.href = DOM["href"]
         node.flags[IsBox] = true
     end
     if tag == "div" ||  tag == "p"
@@ -111,38 +114,33 @@ if haskey(E, ">")
 
     if tag == "line"
         node.flags[IsLine] = true
-        # node.shape = LineNode([]) # LineNode(coords)
-        # if haskey(E, "x1") # EX: "x1":0, "y1":0, "x2":100, "y2":100,
-        #     node.shape.coords = [E["x1"],E["y1"],E["x2"],E["y2"]]
-        # end
     end
     if tag == "circle"
         node.flags[IsCircle] = true
         node.shape = Circle([], 0, []) # Circle(center, radius, angle)
-        if haskey(E, "center") # "center":[50,50],
-            node.shape.center = E["center"]
+        if haskey(DOM, "center") # "center":[50,50],
+            node.shape.center = DOM["center"]
         end
-        if haskey(E, "radius") # "center":50,
-            node.shape.radius = E["radius"]
+        if haskey(DOM, "radius") # "center":50,
+            node.shape.radius = DOM["radius"]
        end
-        if haskey(E, "angle") # "angle":[25.0,180.0],
-            node.shape.angle = E["angle"]
+        if haskey(DOM, "angle") # "angle":[25.0,180.0],
+            node.shape.angle = DOM["angle"]
         end
     end
 
     if tag == "arc"
         node.flags[IsArc] = true
         node.shape = Circle([], 0, []) # Circle(center, radius, angle)
-        if haskey(E, "center") # "center":[50,50],
-            node.shape.center = E["center"]
+        if haskey(DOM, "center") # "center":[50,50],
+            node.shape.center = DOM["center"]
         end
-        if haskey(E, "radius") # "center":50,
-            node.shape.radius = E["radius"]
+        if haskey(DOM, "radius") # "center":50,
+            node.shape.radius = DOM["radius"]
        end
-        if haskey(E, "angle") # "angle":[25.0,180.0],
-            node.shape.angle = E["angle"]
+        if haskey(DOM, "angle") # "angle":[25.0,180.0],
+            node.shape.angle = DOM["angle"]
         end
-# print("\n SHAPE: ", node.shape)
     end
 
 
@@ -152,26 +150,26 @@ end
 
 
 # Event(target, func, subtype)
-if haskey(E, "mousedown")
-    push!(document.events.mousedown, Event(node,E["mousedown"],""))
+if haskey(DOM, "mousedown")
+    push!(document.events.mousedown, Event(node,DOM["mousedown"],""))
 end
 # onmousemove, onmouseover, onmouseout
 
-if haskey(E, "hover")
+if haskey(DOM, "hover")
     push!(document.events.hover, Event(node,"hover","hover"))
 end
-if haskey(E, "onmousemove")
-    push!(document.events.hover, Event(node,E["onmousemove"],"onmousemove"))
+if haskey(DOM, "onmousemove")
+    push!(document.events.hover, Event(node,DOM["onmousemove"],"onmousemove"))
 end
-if haskey(E, "onmouseover")
-    push!(document.events.hover, Event(node,E["onmouseover"],"onmouseover"))
+if haskey(DOM, "onmouseover")
+    push!(document.events.hover, Event(node,DOM["onmouseover"],"onmouseover"))
 end
-if haskey(E, "onmouseout")
-    push!(document.events.hover, Event(node,E["onmouseout"],"onmouseout"))
+if haskey(DOM, "onmouseout")
+    push!(document.events.hover, Event(node,DOM["onmouseout"],"onmouseout"))
 end
 
-if haskey(E, "opacity")
-    node.opacity = E["opacity"]
+if haskey(DOM, "opacity")
+    node.opacity = DOM["opacity"]
     node.flags[HasOpacity] = true
 end
 #......................................................................
@@ -179,49 +177,47 @@ end
 #       Test if has text or content which would implicitly determine width/height
 #       By determining how much space is available and how much is needed
 #       to accomodate the node's contents.
-            if haskey(E, "width")
-                # node.bg.width  =   E["width"]
-                node.area.width  =   E["width"]
+            if haskey(DOM, "width")
+                node.area.width  =   DOM["width"]
             end
-            if haskey(E, "height")
-                # node.bg.height  =   E["height"]
-                node.area.height  =   E["height"]
+            if haskey(DOM, "height")
+                node.area.height  =   DOM["height"]
             end
             #......................................................................
             # FLAGS: const Absolute = 10, Relative = 11, Fixed = 12
-            if haskey(E, "position")
-                SetPosition(E["position"], node.flags)
+            if haskey(DOM, "position")
+                SetPosition(DOM["position"], node.flags)
             end
             #......................................................................
             # FLAGS:
-            if haskey(E, "display")
-                SetDisplay(E["display"], node.flags)
+            if haskey(DOM, "display")
+                SetDisplay(DOM["display"], node.flags)
             end
             #......................................................................
             # PADDING
-                if haskey(E, "padding")
-                    SetPadding(E["padding"], node)
+                if haskey(DOM, "padding")
+                    SetPadding(DOM["padding"], node)
                 end
             #......................................................................
             # MARGIN
-                if haskey(E, "margin")
-                    SetMargin(E["margin"], node)
+                if haskey(DOM, "margin")
+                    SetMargin(DOM["margin"], node)
                 end
             #......................................................................
             # COLOR
-            if haskey(E, "color")
+            if haskey(DOM, "color")
                     node.flags[HasColor] = true
-                     node.color = GetTheColor(node,E["color"])
+                     node.color = GetTheColor(node,DOM["color"])
             end
             #......................................................................
             # BORDER
-            if haskey(E, "border")
-                    SetBorder(E["border"], node)
+            if haskey(DOM, "border")
+                    SetBorder(DOM["border"], node)
             end
             #......................................................................
             # FONT
-            if haskey(E, "font") # haskey(E, "text") ||
-                    SetFont(E["font"], node)
+            if haskey(DOM, "font") # haskey(DOM, "text") ||
+                    SetFont(DOM["font"], node)
             end
 end
 
@@ -278,7 +274,7 @@ end
 #
 # CALLED FROM:
 # ======================================================================================
-function SetPadding(padding, node)
+function SetPadding(padding, node::MyElement)
         node.flags[HasPadding] = true
         # get --or otherwise create-- Padding
         #P = get(node.padding, Box(0,0, 0,0, 0,0))
@@ -297,7 +293,7 @@ end
 #
 # CALLED FROM:
 # ======================================================================================
-function SetMargin(margin, node)
+function SetMargin(margin, node::MyElement)
         node.flags[HasMargin] = true
         if isa(margin, Array)
             node.margin = MyBox(  margin[1], margin[2],
@@ -318,7 +314,7 @@ end
 #
 # CALLED FROM:
 # ======================================================================================
-function GetTheColor(node,ColorNode)
+function GetTheColor(node::MyElement,ColorNode)
                 if isa(ColorNode, Array)
                     if length(ColorNode) == 3
                         color = [ColorNode[1]+0.0,ColorNode[2]+0.0,ColorNode[3]+0.0]
@@ -351,7 +347,7 @@ end
 #
 # CALLED FROM:
 # ======================================================================================
-function SetFont(font, node)
+function SetFont(font, node::MyElement)
 
   # node.flags[HasText] = true
   # node.text = Text()
@@ -364,11 +360,11 @@ function SetFont(font, node)
 
     # lines, top, left,
     # color, size, lineHeight, align, family,
-    if haskey(font, "color")
-        text.color = GetTheColor(node,font["color"])
-    end
     if haskey(font, "size")
         text.size = font["size"]
+    end
+    if haskey(font, "color")
+        text.color = GetTheColor(node,font["color"])
     end
     if haskey(font, "style")
         text.style = font["style"]
@@ -400,7 +396,7 @@ end
 #
 # CALLED FROM:
 # ======================================================================================
-function SetBorder(border, node)
+function SetBorder(border, node::MyElement)
         node.flags[HasBorder] = true
     style  = ""
     color  = []

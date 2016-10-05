@@ -38,7 +38,7 @@ end
 # Test to see if there is overlap between two boxes
 # CALLED FROM: BoxsOverlap(a,b) -->  Above
 # ======================================================================================
-function BoxsOverlap(a,b)
+function BoxsOverlap(a::Box,b::Box)
   if b.left > a.left+a.width || a.left > b.left+b.width ||  b.top > a.top+a.height || a.top > b.top+b.height
     return false
   else
@@ -49,7 +49,7 @@ end
 # Similar to BoxsOverlap(a,b) but only for virticle overlap
 # CALLED FROM: RowsOverlap(a,b) -->  Above
 # ======================================================================================
-function RowsOverlap(a,b)
+function RowsOverlap(a::Box,b::Box)
   if b.top > a.top+a.height || a.top > b.top+b.height
     return false
   else

@@ -15,20 +15,20 @@
 #      hoverNode::Any
 #         styles::Dict
 #           head::Any
-#             ui::PageUI 
+#             ui::PageUI
 # ======================================================================================
-function FetchPage(URL)
+function FetchPage(URL::String)
 # println("--:",URL,":--")
 
     document = Page()
 
         document.ui = PageUI(0, 0, 0, 0, 0)
-        document.url = URL 
+        document.url = URL
         #document.node = []
         #document.content = Dict()
 
        #  result = match(r"(\w+:\/\/)([-a-zA-Z0-9:@;?&=\/%\+\.\*!'\(\),\$_\{\}\^~\[\]`#|]+)", document.url)
-       # 
+       #
        #  if result[1] == "file://"
        #      f = open(result[2])
        #      Page_text = readall(f)
@@ -47,21 +47,16 @@ function FetchPage(URL)
         end
 
         document.node = []
-        push!(document.node, MyElement()) 
+        push!(document.node, MyElement())
         document.node[1].padding = MyBox(10,10, 10,10, 20,20)
 
         if haskey(pageContent, "body")
-            document.node[1].DOM = Dict("nodes" => pageContent["body"]) 
-            # document.DOM = document.content
+            document.node[1].DOM = Dict("nodes" => pageContent["body"])
         else
-            document.node[1].DOM = Dict("nodes" => pageContent) 
-            # document.DOM = document.content
+            document.node[1].DOM = Dict("nodes" => pageContent)
         end
         document.hoverNode = 0
         # document.ui set in this function
-        MakeUserInterface(window, document)
+        MakeUserInterface(document)
         DrawPage(document)
-
-    # return document
 end
-

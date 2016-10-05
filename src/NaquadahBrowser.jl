@@ -19,6 +19,10 @@ using Gtk.ShortNames
 using ImageMagick, Images
 defaultPage = "http://travis.net16.net/something.json"
 
+
+# Dict() ...default attributes for nodes
+include("GUI/ElementDefaults.jl")            # Flags for elements
+
 # Bit Flags to indicate properties of elements
 include("DOM/Flags.jl")            # Flags for elements
 # Bit Flags to indicate properties of elements
@@ -75,7 +79,7 @@ global window = Window()
 # CALLED FROM:
 # ======================================================================================
 
-function makeWindow(window,width,height)
+function makeWindow(window::Window,width,height)
    # window = Window()
         window.handle = @Window("Naquadah", width, height, true, true)
 

@@ -8,7 +8,7 @@
 # Draw Elements from Layout Tree
 # CALLED FROM: MouseDragged(document) -->  Events.jl
 # ======================================================================================
-function MouseDragged(context, document)
+function MouseDragged(context::CairoContext, document::Page)
   #  drawAllElements(context,document,document.node[1])
   #  document.mousedown =  Point(event.x, event.y)
   #  document.mouseup   =  Point(0, 0)
@@ -24,7 +24,7 @@ end
 # ALERT: the problem here is that children of parents are effected!
 #        ...parrents are redrawn but not all their children
 # ======================================================================================
-function DrawAllInArea(context,document,node,bounds)
+function DrawAllInArea(context::CairoContext,document::Page,node::MyElement,bounds::Box)
     nodes = node.node
 
             for n in nodes
@@ -41,7 +41,7 @@ end
 # Draw Elements from Layout Tree
 # CALLED FROM: DrawPage(document) -->  Below
 # ======================================================================================
-function drawAllElements(context,document,node)
+function drawAllElements(context::CairoContext,document::Page,node::MyElement)
 
     nodes = node.node
 
@@ -61,9 +61,9 @@ function drawAllElements(context,document,node)
 end
 # ======================================================================================
 # Fetch the page and build the DOM and Layout Tree, then render
-# CALLED FROM:
+# CALLED FROM: Browser.jl
 # ======================================================================================
-function DrawPage(document)
+function DrawPage(document::Page)
     # println("Draw Page...")
     canvas = document.ui.canvas
 
@@ -80,7 +80,7 @@ function DrawPage(document)
         #node.box.width, node.box.height = width(context), height(context) # content
         node.area.width, node.area.height = width(context), height(context)
         # LayoutInner(node,node.DOM ,0,0,width(context),height(context))
-        LayoutInner(node,node.DOM,p)
+        LayoutInner(node,p)
 
             # OnInitialize: 0.649740 seconds (359.77 k allocations: 15.420 MB, 1.01% gc time)
             # OnResize:     0.005325 seconds (6.80 k allocations: 339.750 KB)

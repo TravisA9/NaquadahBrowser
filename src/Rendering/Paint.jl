@@ -15,7 +15,7 @@
 # CALLED FROM:
 #======================================================================================#
 #macro
-function HasAlpha(context,color)
+function HasAlpha(context::CairoContext,color)
                  if length(color) > 3
                      set_source_rgba(context, color[1], color[2], color[3], color[4]);
                  elseif length(color) == 3
@@ -30,7 +30,7 @@ end
 # CALLED FROM: DrawPage.jl ---> drawAllElements()
 # http://zetcode.com/gfx/cairo/
 # ======================================================================================
-function DrawNode(context,document,node)
+function DrawNode(context::CairoContext,document::Page,node::MyElement)
 
     set_antialias(context,4)
     if node.flags[IsBox] == true
@@ -100,7 +100,7 @@ end
 # Cairo tutorial: https://www.cairographics.org/tutorial/
 # CALLED FROM: DrawNode()
 #======================================================================================#
-function drawText(context,document,node)
+function drawText(context::CairoContext,document::Page,node::MyElement)
       #=---------------------------------=#
       # Text=  lines, top, left, color, size, style, weight
       #        lineHeight, align, family
@@ -205,7 +205,7 @@ function drawText(context,document,node)
 
 
 
-Highlight(context,document,text,line,left,y)
+Highlight(context::CairoContext,document::Page,text,line,left,y)
 
 
 
@@ -251,7 +251,7 @@ end
 # Highlight selected text
 # CALLED FROM: DrawText()
 #======================================================================================#
-function Highlight(context,document,text,line,left,y)
+function Highlight(context::CairoContext,document::Page,text,line,left,y)
 
 
   # If selected draw background
@@ -330,7 +330,7 @@ end
 # Draw an area with Borders of varying same widths
 # CALLED FROM: DrawNode()
 #======================================================================================#
-function VariednBorderdBox(context,node,border)
+function VariednBorderdBox(context::CairoContext,node::MyElement,border)
                                         # HasAlpha(context, border.color)
                       # set_source_rgb(context, border.color[1], border.color[2], border.color[3]);
                  if length(border.color) > 3
@@ -378,7 +378,7 @@ end
 # Draw a area with Borders of the same width
 # CALLED FROM: DrawNode()
 #======================================================================================#
-function EvenBorderdBox(context,node,border)
+function EvenBorderdBox(context::CairoContext,node::MyElement,border)
                     rectangle(context,
                                 node.box.left   - (border.left*.5), node.box.top    - (border.top*.5),
                                 node.box.width  + (border.right), node.box.height + (border.bottom)     )
@@ -395,7 +395,7 @@ end
 # Draw a area with no borders
 # CALLED FROM: DrawNode()
 #======================================================================================#
-function NoBorderdBox(context,node)
+function NoBorderdBox(context::CairoContext,node::MyElement)
 
             rectangle(context,
                 node.box.left + node.hOffset,  node.box.top + node.vOffset,
@@ -408,7 +408,7 @@ end
 # Draw a area with rounded corners
 # CALLED FROM: DrawNode()
 #======================================================================================#
-function RoudedBox(context,node,border)
+function RoudedBox(context::CairoContext,node::MyElement,border)
 	radius = get(border.radius)
                     x = node.box.left   - 1 # minus 1 while the sides are being
                     y = node.box.top    - 1 # expanded by antialias-ing
