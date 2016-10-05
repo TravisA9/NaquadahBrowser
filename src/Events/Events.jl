@@ -36,6 +36,7 @@ function AttatchEvents(document)
         reveal(widget)
         #document.mousedown.x, document.mousedown.y = event.x, event.y
         document.mousedown =  Point(event.x, event.y)
+        # some comment
         document.mouseup   =  Point(0, 0)
 
 #  img = ImageFromBlob("http://travis.net16.net/octocat.png")
