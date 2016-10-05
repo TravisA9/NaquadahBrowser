@@ -53,9 +53,21 @@ end
 # CALLED FROM:
 # ======================================================================================
 
-function MakeUserInterface(win, doc)   # win, notebook
+function MakeUserInterface(doc::Page)   # window, notebook
     # SEE: https://github.com/tknopp/Julietta.jl/blob/master/src/maintoolbar.jl
     # SEE: http://julia-programming-language.2336112.n4.nabble.com/What-does-the-gt-operator-do-possibly-a-Gtk-jl-question-td27451.html
+  #.....................................
+  # A better way?.......................
+  #  w = Gtk.@Window() |>
+  #      (f = Gtk.@Box(:h) |>
+  #          (b = Gtk.@Button("1")) |>
+  #          (c = Gtk.@Button("2")) |>
+  #          (f2 = Gtk.@Box(:v) |>
+  #                Gtk.@Label("3") |>
+  #                Gtk.@Label("4"))) |>
+  #      showall
+  #.....................................
+
     search = @Entry()  # a widget for entering text
     setproperty!(search, :margin, 5)
     setproperty!(search, :text, doc.url)
@@ -70,7 +82,7 @@ function MakeUserInterface(win, doc)   # win, notebook
     button2 = @ToolButton("gtk-redo")
     setproperty!(button2, :margin, 5)
     button3 = @ToolButton("gtk-refresh")
-    setproperty!(button2, :margin, 5)
+    setproperty!(button3, :margin, 5)
     button4 = @ToolButton("gtk-home")
     setproperty!(button4, :margin, 5)
     seperator = @SeparatorToolItem()
@@ -96,10 +108,10 @@ function MakeUserInterface(win, doc)   # win, notebook
     push!(g,seperator)
     push!(g,scroller)
 
-    println("...",search)
+    # println("...",search)
 
 #vadjustment() = ccall((:gtk_get_vadjustment),Ptr{GObject}))
-#maximize(win::GtkWindow) = ccall((:gtk_window_maximize,libgtk),Void,(Ptr{GObject},),win)
+#maximize(window::GtkWindow) = ccall((:gtk_window_maximize,libgtk),Void,(Ptr{GObject},),window)
 #a = getproperty(scroller, :vadjustment, true)
 #println("Scrolling... ",a) #window.handle.get_vadjustment()
 
@@ -138,7 +150,7 @@ label = @Label(doc.head["title"]) # result[2]
     # Outline for close tab event!
     #----------------------------------------
     #  b = @Button("Press me")
-    #  win = @Window(b, "Callbacks")
+    #  window = @Window(b, "Callbacks")
     #  id = signal_connect(b, "clicked") do widget
     #      println("Button was clicked!")
     #  end
@@ -201,28 +213,29 @@ label = @Label(doc.head["title"]) # result[2]
     push!(hbox,label)
     push!(hbox,imClose)
 #    push!(hbox,closeButton)
-    push!(win.notebook, g, hbox)
+# window is Global
+    push!(window.notebook, g, hbox)
     showall(scroller)
     showall(pageIcon)
     showall(imClose)
     #showall(closeButton)
     showall(label)
-    showall(win.handle)
+    showall(window.handle)
 #----------------------------------------
-    push!(win.tabs,PageUI(win.handle,canvas,search,label,scroller))
+    push!(window.tabs,PageUI(window.handle,canvas,search,label,scroller))
     handler_id = signal_connect(search, "activate")do object
         # println("From event")
         Page_request = getproperty(object,:text,AbstractString)
         FetchPage(Page_request)
     end
-    doc.ui = win.tabs[end]
-    win.activeTab = win.tabs[end]
+    doc.ui = window.tabs[end]
+    window.activeTab = window.tabs[end]
 end
 # ======================================================================================
 # FIX: Attempt to Create an image from blob
 # CALLED FROM:
 # ======================================================================================
-function ImageFromBlob(URL)
+function ImageFromBlob(URL::String)
     fetch = get(URL; timeout = 5.0)
     data = readall(fetch)
     blob = convert( Vector{UInt8}, data )

@@ -11,7 +11,7 @@
 # # c = CairoRGBSurface(256,256);
 # # cr = CairoContext(c);
 # CALLED FROM:
-function sample_clip(cr,node)
+function sample_clip(cr::CairoContext,node::MyElement)
     l,t,r,b = node.content.left, node.content.top, node.content.width, node.content.height
     r = (r-l)/2
     set_antialias(cr,4)
@@ -33,7 +33,7 @@ function sample_clip(cr,node)
      reset_clip(cr)
 end
 #======================================================================================#
-# 
+#
 # CALLED FROM:
 #======================================================================================#
 
@@ -41,7 +41,7 @@ end
 #
 # CALLED FROM:
 # ======================================================================================
-function sample_fill_style(cr,node)
+function sample_fill_style(cr::CairoContext,node::MyElement)
     l,t,r,b = node.content.left, node.content.top, node.content.width, node.content.height
          # set_source_rgb(cr,0.8,0.8,0.8);    # light gray
          #  HasAlpha(context, node.color)
@@ -79,7 +79,7 @@ end
 #
 # CALLED FROM:
 # ======================================================================================
-function DrawCircle(cr, node)
+function DrawCircle(cr::CairoContext, node::MyElement)
     border = get(node.border, Border(0,0,0,0,0,0,"None",[],[]))
   # print("DrawCircle \n",border.color)
     l,t,r,b = node.box.left, node.box.top, node.box.width, node.box.height
@@ -111,7 +111,7 @@ end
 #
 # CALLED FROM:
 # ======================================================================================
-function sample_arc(cr, node)
+function sample_arc(cr::CairoContext, node::MyElement)
           border = get(node.border, Border(0,0,0,0,0,0,"None",[],[]))
     l,t,r,b = node.box.left, node.box.top, node.box.width, node.box.height
      xc = node.box.left + node.shape.center[1]
@@ -135,7 +135,7 @@ end
 # sample_line
 # CALLED FROM:
 # ======================================================================================
-function sample_line(cr, node)
+function sample_line(cr::CairoContext, node::MyElement)
           border = get(node.border, Border(0,0,0,0,0,0,"None",[],[]))
     l,t,r,b = node.box.left, node.box.top, node.box.width, node.box.height
         set_antialias(cr,4)
@@ -165,7 +165,7 @@ end
 #
 # CALLED FROM:
 # ======================================================================================
-function sample_Curve(cr,node)
+function sample_Curve(cr::CairoContext,node::MyElement)
     border = get(node.border, Border(0,0,0,0,0,0,"None",[],[]))
     l,t,r,b = node.box.left, node.box.top, node.box.width, node.box.height
 
@@ -206,7 +206,7 @@ end
 #
 # CALLED FROM:
 # ======================================================================================
-function sample_ClipCircle(cr,node)
+function sample_ClipCircle(cr::CairoContext,node::MyElement)
 # print("sample_ClipCircle \n")
     # border = get(node.border, Border(0,0,0,0,0,0,"None",[],[]))
     l,t,r,b = node.box.left, node.box.top, node.box.width, node.box.height
@@ -250,7 +250,7 @@ end
 #
 # CALLED FROM:
 # ======================================================================================
-function  sample_Gradient(cr,node)
+function  sample_Gradient(cr::CairoContext,node::MyElement)
     border = get(node.border, Border(0,0,0,0,0,0,"None",[],[]))
     l,t,r,b = node.box.left, node.box.top, node.box.width, node.box.height
     center = node.content.width/2
@@ -291,7 +291,7 @@ end
 #
 # CALLED FROM:
 # ======================================================================================
-function  sample_Text(cr,node)
+function  sample_Text(cr::CairoContext,node::MyElement)
     border = get(node.border, Border(0,0,0,0,0,0,"None",[],[]))
     l,t,r,b = node.box.left, node.box.top, node.box.width, node.box.height
                 if length(node.color) > 3
@@ -392,7 +392,7 @@ end
 #
 # CALLED FROM:
 # ======================================================================================
-function  DrawPath(cr,node)
+function  DrawPath(cr::CairoContext,node::MyElement)
     border = get(node.border, Border(0,0,0,0,0,0,"None",[],[]))
     l,t,r,b = node.box.left, node.box.top, node.box.width, node.box.height
     center = node.content.width/2
@@ -432,7 +432,7 @@ end
 #
 # CALLED FROM:
 # ======================================================================================
-function  sample_Path(cr,node)
+function  sample_Path(cr::CairoContext,node::MyElement)
     border = get(node.border, Border(0,0,0,0,0,0,"None",[],[]))
     l,t,r,b = node.box.left, node.box.top, node.box.width, node.box.height
     center = node.content.width/2

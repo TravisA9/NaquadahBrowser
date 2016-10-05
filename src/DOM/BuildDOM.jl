@@ -12,12 +12,12 @@
 # CALLED FROM: DrawPage.jl  -->  DrawPage()
 # this could be called BuildLayoutTree
 # ======================================================================================
-function traceElementTree(document,layoutTree, dom)
-        if isa(dom["nodes"], Array)
-        # TODO: Integrate   dom["nodes"] into   layoutTree.node[i].DOM before calling  traceElementTree()
+function traceElementTree(document::Page,layoutTree::MyElement, DOM::Dict)
+        if isa(DOM["nodes"], Array)
+        # TODO: Integrate   DOM["nodes"] into   layoutTree.node[i].DOM before calling  traceElementTree()
         # This is a test comment meant to test some git stuff.
-            nodes = dom["nodes"]
-            # i is a node in dom[Array]
+            nodes = DOM["nodes"]
+            # i is a node in DOM[Array]
             for i in eachindex(nodes)
                     # Add this node to parent
                     # CreateNode(nodes[i])
@@ -44,32 +44,123 @@ end
 # ======================================================================================
 # Create a node with default settings
 # CALLED FROM: Above traceElementTree()
+#   Instead of setting all the default variables it may be more sensible to test for
+#   attributes and set defaults if none are explicitly set from the DOM. It would be
+#   good to test for and set styles at the same time...
 # ======================================================================================
-function CreateDefaultNode(DOM)
+function CreateDefaultNode(DOM::Dict)
   node = MyElement()
+  # This is a Dict()
+  defaults = Dict()
+  # take into account that multiple styles may be applied.
+  # Styles should probably be merged...
+  styles = Dict()
+  # set styles..............................................
+  # set defaults..............................................
+  # NOTE: move from most important to least. Example:
+  #       imediate-styles -> ID-style -> last-class-style -> ... -> first-class-style -> default-style
 
     if haskey(DOM, ">")
       tag = DOM[">"]
-
-      if tag == "a"
-        # push!(document.events.mousedown, Event(node,E["href"],"link"))
-        # node.href = E["href"]
-        node.flags[IsBox] = true
-# new([],   0,  0,   [],   0,   "normal","normal",0,        "left","SANS")
-#     lines,top,left,color,size,style,   weight, lineHeight,align, family
-        # node.text = Text([],   0,  0,   [],   0,   "normal","normal",0,        "left","SANS")
-        # [],0,0,[0.23,0.2695,0.6757],0,"normal","normal",0,"left","SANS"
-        node.text = Text()
-        text = get(node.text)
-        text.color = [0.23,0.2695,0.6757]    # default link color
-      #  println("  .........",node.text,".........  ")
-        node.flags[UnderlineOnHover] = true
+      if haskey(Tags_Default, tag)
+          defaults = Tags_Default[tag]
+          MergeAttributes(DOM, defaults)
       end
+
+
+      # These should be set automattically now
       # if tag == "a"
+      #   node.flags[IsBox] = true
+      #   node.text = Text()
+      #   text = get(node.text)
+      #   text.color = [0.23,0.2695,0.6757]    # default link color
+      #   node.flags[UnderlineOnHover] = true
       # end
 
     end  # END: haskey(DOM, ">")
     return node
+end
+# ======================================================================================
+# just to keep things clean below. TODO: inline
+# ======================================================================================
+function Copy(primary::Dict, secondary::Dict, attribute::String)
+      if !haskey(primary, attribute) && haskey(secondary, attribute)
+          primary[attribute] = secondary[attribute]
+      end
+end
+# ======================================================================================
+# Take primary's attributes and fill in gaps with secondary's as fallback/default.
+# NOTE: move from most important to least. Example:
+#       imediate-styles -> ID-style -> last-class-style -> ... -> first-class-style -> default-style
+# CALLED FROM: Above CreateDefaultNode()
+#   list, table, text, column, color, border, padding, margin, background, font,
+#   position, display, z-index,
+#
+# nodes:, events:, transforms:,
+#
+# top-level: { font:, border:, hover:, position, text, href, display, width, height, color, padding, margin, , , ,  }
+# font:{ color, size, style, align, lineHeight, weight, family },
+# border:{ radius, style, width, color }
+# EVENTS: mousedown, mouseup, click, drag, hover
+# ======================================================================================
+function MergeAttributes(primary::Dict, secondary::Dict)
+
+    # Top-Level........................................
+    # hover:, position, text, href, display, width, height, color, padding, margin
+    Copy(primary, secondary, "hover")
+    Copy(primary, secondary, "position")
+    Copy(primary, secondary, "text")
+    Copy(primary, secondary, "href")
+    Copy(primary, secondary, "display")
+    Copy(primary, secondary, "width")
+    Copy(primary, secondary, "height")
+    Copy(primary, secondary, "color")
+    Copy(primary, secondary, "padding")
+    Copy(primary, secondary, "margin")
+    Copy(primary, secondary, "opacity")
+    Copy(primary, secondary, "z-index")
+    Copy(primary, secondary, "gradient")
+
+
+    Copy(primary, secondary, "center")
+    Copy(primary, secondary, "radius")
+    Copy(primary, secondary, "angle")
+    # Copy(primary, secondary, "")
+
+    # FONT.............................................
+        if haskey(secondary, "font")
+              if !haskey(primary, "font")
+                primary["font"] = secondary["font"]
+              else
+                font = primary["font"]
+                defaultfont = secondary["font"]
+                # primary does not have attribute but secondary does
+                          Copy(font, defaultfont, "color")
+                          Copy(font, defaultfont, "size")
+                          Copy(font, defaultfont, "style")
+                          Copy(font, defaultfont, "weight")
+                          Copy(font, defaultfont, "lineHeight")
+                          Copy(font, defaultfont, "family")
+                          Copy(font, defaultfont, "align")
+                          Copy(font, defaultfont, "text-decoration")
+              end
+        end
+
+    # BORDER.............................................
+        if haskey(secondary, "border")
+              if !haskey(primary, "border")
+                primary["border"] = secondary["border"]
+              else
+                border = primary["border"]
+                defaultborder = secondary["border"]
+                # primary does not have attribute but secondary does
+                radius, style, width, color
+                          Copy(border, defaultborder, "radius")
+                          Copy(border, defaultborder, "style")
+                          Copy(border, defaultborder, "width")
+                          Copy(border, defaultborder, "color")
+              end
+        end
 end
 # ======================================================================================
 # Inteded to be called recursively on any element to map tree for drawing
@@ -77,47 +168,50 @@ end
 # ======================================================================================
 # ( parent,element,  parent,currnt_element )
 # function CalculateElements(document, E,  parent,node)
-function CalculateElements(document, node)
-    E = node.DOM
+function CalculateElements(document::Page, node::MyElement)
+    DOM = node.DOM
     parent = node.parent
     contentArea = parent.content
     # padding: thicknesses for calculating content area    content
          cursor = parent          # The parent's content area
 
     # calculate all defaults
-     BoxDesign(document,node,E)
+     BoxDesign(document,node,DOM)
       padding = get(parent.padding, MyBox(0,0,0,0,0,0))
       margin = get(node.margin, MyBox(0,0,0,0,0,0))
       border = get(node.border, Border(0,0,0,0,0,0,"None",[],[]))
       parrentborder = get(parent.border, Border(0,0,0,0,0,0,"None",[],[]))
 
-
-
-    # contentArea = MyBox(  parent.box.left   + padding.left
-    #                     , parent.box.width  - padding.width
-    #                     , parent.box.top    + padding.top
-    #                     , parent.box.height - padding.height
-    #                     , parent.area.width  - margin.width
-    #                     , parent.area.height - margin.height )
-
- # println("......box......", content)
- # println("...contentArea...", contentArea)
-
-
-
-    # local variables PaintBox.content.right
-    #contentArea.width
-
     widthRemaining = contentArea.left + contentArea.width - cursor.x - padding.right - parrentborder.width
 
     if node.flags[Relative] == true
-        MakeRelative(parent,node,E)
+        MakeRelative(parent,node,DOM)
     elseif node.flags[Fixed] == true
         # println("going to fixed")
-        MakeFixed(document,node,E)
+        MakeFixed(document,node,DOM)
     else
 
-            if node.flags[Inline] == true
+      if node.flags[Inline] == true
+
+                  # Move to new row (due to lack of space)
+                 if node.area.width > widthRemaining
+                 #if node.box.width > widthRemaining
+                      if cursor.x != contentArea.left
+                          cursor.y += cursor.height
+                          cursor.x = contentArea.left
+                      end
+                      cursor.height = node.area.height
+                  elseif cursor.height < node.area.height #node.box.height
+                         cursor.height = node.area.height #node.box.height
+                  end
+
+                  LayoutInner(node,Point(cursor.x,cursor.y))
+                  # cursor.x += node.box.width # + border.width + margin.width
+                  cursor.x += node.area.width # + border.width + margin.width
+
+
+# TODO: fix
+          elseif node.flags[InlineBlock] == true
 
                         # Move to new row (due to lack of space)
                        if node.area.width > widthRemaining
@@ -131,7 +225,7 @@ function CalculateElements(document, node)
                                cursor.height = node.area.height #node.box.height
                         end
 
-                        LayoutInner(node,E,cursor)
+                        LayoutInner(node,Point(cursor.x,cursor.y))
                         # cursor.x += node.box.width # + border.width + margin.width
                         cursor.x += node.area.width # + border.width + margin.width
 
@@ -146,14 +240,14 @@ function CalculateElements(document, node)
                             newWidth = contentArea.width # - margin.right - border.width
                             node.area.width = newWidth>5 ? newWidth : 5
 
-                             LayoutInner(node,E,cursor) #  - margin.bottom - border.bottom
+                             LayoutInner(node,Point(cursor.x,cursor.y)) #  - margin.bottom - border.bottom
                              cursor.height = node.area.height + border.height
                             cursor.y += cursor.height
                         else # size to fit remaining space
 
                             node.area.width = widthRemaining # - margin.right - border.width
 
-                            LayoutInner(node,E,cursor) # - margin.bottom - border.bottom
+                            LayoutInner(node,Point(cursor.x,cursor.y)) # - margin.bottom - border.bottom
                             if cursor.height < node.area.height
                                 cursor.height = node.area.height
                             end
@@ -171,12 +265,12 @@ end
 # thicknes-r, thicknes-r, thicknes-r, thicknes-r, sum-x, sum-y
 # CALLED FROM:
 # ======================================================================================
-function BoxDesign(document,node,E)
+function BoxDesign(document::Page,node::MyElement,DOM::Dict)
 # ELEMENTS:..............................................
 # STYLES:................................................
-    if haskey(E, "class")
+    if haskey(DOM, "class")
         # TODO: Test if is Array and work out selector logic
-        class = E["class"]
+        class = DOM["class"]
         if haskey(document.styles, class)
             styles = document.styles[class]
             SetAllAttributes(document,node,styles)
@@ -185,7 +279,7 @@ function BoxDesign(document,node,E)
         end
     end
     # INLINE STYLES:..........................................
-    SetAllAttributes(document,node,E)
+    SetAllAttributes(document,node,DOM)
 end
 
 # ======================================================================================
@@ -194,7 +288,8 @@ end
 # TODO: eventually remove
 # ======================================================================================
 #function LayoutInner(node,dom,x,y,w,h)
-function LayoutInner(node,dom,point)
+# ALERT: it would appear that dom is not needed here!
+function LayoutInner(node::MyElement,point::NaquadahBrowser.Point)
     # This makes area the outer bounding area (including margin)
     node.area.left, node.area.top = point.x, point.y
     margin  = get(node.margin,MyBox(0,0,0,0,0,0))
@@ -216,7 +311,7 @@ function LayoutInner(node,dom,point)
     node.y                =   node.box.top     + padding.top
 
 
-        if !isnull(node.text)
+        if !isnull(node.text) && haskey(node.DOM, "text")
            textHeight = calculateTextArea(node)
            if textHeight > node.content.height
              node.content.height   = textHeight
@@ -232,7 +327,10 @@ end
 # Important because for many nodes you have to know the height of its content (such as text).
 # CALLED FROM: LayoutInner() rendered in: drawText(context,node) in Paint.jl
 # ======================================================================================
-function calculateTextArea(node)
+function calculateTextArea(node::MyElement)
+  if !haskey(node.DOM, "text")
+    return nothing
+  end
    # For now it seems we may have to create a surface to get the context to get the extents...
    # I make the size 0X0 because we will not actually draw to it.
    c = CairoRGBSurface(0,0);
@@ -342,36 +440,36 @@ extents = []
          return length(text.lines) * extents[4]
 end
 # ======================================================================================
-#
-# CALLED FROM:
+# Set node's possition reletive to parrent
+# CALLED FROM: CalculateElements()  above
 # ======================================================================================
-function MakeRelative(parent,node,dom)
+function MakeRelative(parent::MyElement,node::MyElement,DOM::Dict)
      #   vOffset, hOffset
-    if haskey(dom, "right")
-        node.hOffset  -= dom["right"]
-    elseif haskey(dom, "left")
-        node.hOffset  += dom["left"]
-    elseif haskey(dom, "top")
-        node.vOffset  += dom["top"]
-    elseif haskey(dom, "bottom")
-        node.vOffset  += dom["bottom"]
-    elseif haskey(dom, "x1") && haskey(dom, "y1")
-        # TODO: don't be reading dom all the time...
+    if haskey(DOM, "right")
+        node.hOffset  -= DOM["right"]
+    elseif haskey(DOM, "left")
+        node.hOffset  += DOM["left"]
+    elseif haskey(DOM, "top")
+        node.vOffset  += DOM["top"]
+    elseif haskey(DOM, "bottom")
+        node.vOffset  += DOM["bottom"]
+    elseif haskey(DOM, "x1") && haskey(DOM, "y1")
+        # TODO: don't be reading DOM all the time...
         #print("\n Relative...", parent.box.top)
         if  node.flags[IsLine] == true
-            if  haskey(dom, "x2") && haskey(dom, "y2")
+            if  haskey(DOM, "x2") && haskey(DOM, "y2")
             node.shape = LineNode([
-                                    parent.box.left + dom["x1"], parent.box.top + dom["y1"],
-                                    parent.box.left + dom["x2"], parent.box.top + dom["y2"]
+                                    parent.box.left + DOM["x1"], parent.box.top + DOM["y1"],
+                                    parent.box.left + DOM["x2"], parent.box.top + DOM["y2"]
                                     ],0,0)
-            elseif haskey(dom, "length") && haskey(dom, "angle")
-                    node.shape = LineNode([ parent.box.left + dom["x1"], parent.box.top + dom["y1"] ],
-                                    dom["length"], dom["angle"]
+            elseif haskey(DOM, "length") && haskey(DOM, "angle")
+                    node.shape = LineNode([ parent.box.left + DOM["x1"], parent.box.top + DOM["y1"] ],
+                                    DOM["length"], DOM["angle"]
                                     )
 
             end
         end
-    elseif haskey(dom, "center")
+    elseif haskey(DOM, "center")
         if  node.flags[IsArc] == true
             node.shape.center[1] += parent.box.left
             node.shape.center[2] += parent.box.top
@@ -379,18 +477,18 @@ function MakeRelative(parent,node,dom)
     end
 end
 # ======================================================================================
-#  MakeFixed(document,layoutElement,E)
+# make node position fixed
 # CALLED FROM:
 # ======================================================================================
-function MakeFixed(document,node,dom)
-    node.box.width, node.box.height = dom["width"], dom["height"]
+function MakeFixed(document::Page,node::MyElement,DOM::Dict)
+    node.box.width, node.box.height = DOM["width"], DOM["height"]
 
     viewport = collect(size(document.ui.scroller))
     # println("allocation",Gtk.allocation(document.ui.scroller))
     padding = get(node.padding,MyBox(0,0,0,0,0,0))
 
 
-      if !isnull(node.text)
+      if !isnull(node.text) && haskey(node.DOM, "text")
          node.content.width    =   node.box.width   - padding.right
          textHeight = calculateTextArea(node)
 
@@ -403,24 +501,24 @@ function MakeFixed(document,node,dom)
 
 
 
-    if haskey(dom, "right")
-        node.box.left = (viewport[1] - node.box.width) - dom["right"]
+    if haskey(DOM, "right")
+        node.box.left = (viewport[1] - node.box.width) - DOM["right"]
     end
-    if haskey(dom, "left")
-        node.box.left = 0 + dom["left"]
+    if haskey(DOM, "left")
+        node.box.left = 0 + DOM["left"]
     end
-    if haskey(dom, "top")
-        node.box.top = 0 + dom["top"]
+    if haskey(DOM, "top")
+        node.box.top = 0 + DOM["top"]
     end
-    if haskey(dom, "bottom")
-        node.box.top = (viewport[2] - node.box.height) - dom["bottom"]
+    if haskey(DOM, "bottom")
+        node.box.top = (viewport[2] - node.box.height) - DOM["bottom"]
     end
 
     node.content.left = node.box.left + padding.left
     node.content.top = node.box.top + padding.top
 
 # point = Point(node.box.left,node.box.top)
-# LayoutInner(node,dom,point)
+# LayoutInner(node,DOM,point)
 
 
 

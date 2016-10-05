@@ -121,14 +121,14 @@ type MyElement
     href::Nullable{String}   # Link?
 
     shape::Any
-
+#these things may get changed or removed ...not sure............................
     x::Float32           # Current x offset
     y::Float32           # Current y offset
     height::Float32      # Row height
     vOffset::Float32     # Offset from default position
     hOffset::Float32     # Offset from default position
-
-    flags::Any
+#...............................................................................
+    flags::BitArray{1} #Any
 
     opacity::Float32     # node opacity
     color::Array{Float32,1}         # background color

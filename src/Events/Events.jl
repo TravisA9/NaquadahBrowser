@@ -29,7 +29,7 @@ function AttatchEvents(document)
 
     canvas.mouse.button1press = @guarded (widget, event) -> begin
     document.flags[ButtonPressed] = true
-    println("pressed: ",document.flags[ButtonPressed])
+    #println("pressed: ",document.flags[ButtonPressed])
 
         ctx = getgc(widget)
         splotch(ctx,event,1.0,0.0,0.0)
@@ -63,7 +63,7 @@ function AttatchEvents(document)
     canvas.mouse.button1release = @guarded (widget, event) -> begin
        #document.mouseup.x, document.mouseup.y = event.x, event.y
        document.flags[ButtonPressed] = false
-       println("pressed: ",document.flags[ButtonPressed])
+       #println("pressed: ",document.flags[ButtonPressed])
        document.mouseup =  NaquadahBrowser.Point(event.x, event.y)
        # ctx = getgc(widget)
        # MouseDragged(ctx, document)
