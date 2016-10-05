@@ -1,7 +1,7 @@
 # Naquadah Browser 
 
 ####What is Naquadah?
-
+ya lo cambié
 A reconceptualised web browser built in Julia programming Language from the ground up. 
 
 >Naquadah currently uses Cairo for graphics and GTK for the GUI.
