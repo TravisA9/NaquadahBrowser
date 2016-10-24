@@ -25,7 +25,7 @@ include("GUI/ElementDefaults.jl")            # Flags for elements
 
 # Bit Flags to indicate properties of elements
 include("DOM/Flags.jl")            # Flags for elements
-# Bit Flags to indicate properties of elements
+# Bit Flags to indicate properties of el
 include("DOM/Flags.jl")            # Flags for elements
 # geometric type declarations
 include("Rendering/GeoTypes.jl")
