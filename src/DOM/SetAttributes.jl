@@ -185,6 +185,12 @@ end
             end
             #......................................................................
             # FLAGS: const Absolute = 10, Relative = 11, Fixed = 12
+            if haskey(DOM, "float")
+              # FloatLeft  FloatRight
+                SetFloat(DOM["float"], node)
+            end
+            #......................................................................
+            # FLAGS: const Absolute = 10, Relative = 11, Fixed = 12
             if haskey(DOM, "position")
                 SetPosition(DOM["position"], node.flags)
             end
@@ -229,14 +235,24 @@ end
 
 
 
+# ======================================================================================
+# Set flags float flags and add to parrent
+# CALLED FROM:
+# ======================================================================================
+function SetFloat(float,node::MyElement)
 
-
-
-
-
-
-
-
+      if float == "left"
+        node.flags[FloatLeft] = true
+        push!(node.parent.floater,node)
+      elseif  float == "right"
+        node.flags[FloatRight] = true
+        push!(node.parent.floater,node)
+      elseif  float == "none"
+        node.flags[FloatLeft] = false
+        node.flags[FloatRight] = false
+        # TODO: make sure this node is removed from parrent's float array list too.
+      end
+end
 # ======================================================================================
 # Set flags to indicate the Display scheme (see Flags.jl, BrowserTypes.jl -> MyElement.flags)
 # CALLED FROM:

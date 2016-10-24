@@ -12,35 +12,372 @@
 # CALLED FROM: DrawPage.jl  -->  DrawPage()
 # this could be called BuildLayoutTree
 # ======================================================================================
-function traceElementTree(document::Page,layoutTree::MyElement, DOM::Dict)
+function traceElementTree(document::Page,root::MyElement, DOM::Dict)
         if isa(DOM["nodes"], Array)
-        # TODO: Integrate   DOM["nodes"] into   layoutTree.node[i].DOM before calling  traceElementTree()
+        # TODO: Integrate   DOM["nodes"] into   root.node[i].DOM before calling  traceElementTree()
         # This is a test comment meant to test some git stuff.
-            nodes = DOM["nodes"]
+            DOM_nodes = DOM["nodes"]
+
+            # these serve a temp values to aid layout
+            root.x      = 0
+            root.y      = 0
+
+            root.height = 0
+                        # pack all floats
+
+
             # i is a node in DOM[Array]
-            for i in eachindex(nodes)
+            for i in eachindex(DOM_nodes)
                     # Add this node to parent
-                    # CreateNode(nodes[i])
-                    # WAS: push!(layoutTree.node, MyElement())
-                    push!(layoutTree.node, CreateDefaultNode(nodes[i]))
+                    push!(root.node, MyElement())
                     # link layout node with corresponding DOM node
-                    layoutTree.node[i].DOM = nodes[i]
+                    root.node[i].DOM = DOM_nodes[i]
                     # link this node Parent node
-                    layoutTree.node[i].parent = layoutTree
-                    # map into layout
-                    CalculateElements(document, layoutTree.node[i] )
-                    #layoutTree[i].
-                    if haskey(nodes[i], "nodes")
-                        traceElementTree(document, layoutTree.node[i] ,nodes[i])
+                    root.node[i].parent = root
+
+                    CreateDefaultNode(document, root.node[i], DOM_nodes[i])
+                    # make sure it's instantiated
+                     if length(root.rows) < 1
+                       push!(root.rows,Row())
+                     end
+
+
+
+                    # map into layout... maybe this should be named PositioningAndLayout
+                    #if root.node[i].flags[FloatLeft] == false && root.node[i].flags[FloatRight] == false
+                      CalculateElements(document, root.node[i], i )
+
+
+
+                    if i == 1
+                      root.rowstart = 1
+                    end
+
+
+
+                    #root[i].
+                    if haskey(DOM_nodes[i], "nodes")
+                        traceElementTree(document, root.node[i] ,DOM_nodes[i])
                     end
             end
-            # these serve a temp values to aid layout
-            layoutTree.x      = 0
-            layoutTree.y      = 0
-            layoutTree.height = 0
+
+            # Still need to calculate contingent on height
+
+        if length(root.floater) > 0
+          floatLefts = 0
+          floatRights = 0
+              for n in root.floater
+                    if n.flags[FloatLeft] == true
+                      floatLefts += n.area.width
+                    elseif n.flags[FloatRight] == true
+                      floatRights += n.area.width
+                    end
+              end
+              root.left      = floatLefts
+              root.right      = floatRights
+              println("left: ",root.left)
+        else
+              root.left      = 0
+              root.right      = 0
         end
-        return layoutTree.y
+
+
+
+
+        end
+        return root.y
 end
+# ======================================================================================
+# Inteded to be called recursively on any element to map tree for drawing
+# CALLED FROM: Above traceElementTree()
+# ======================================================================================
+# ( parent,element,  parent,currnt_element )
+# function CalculateElements(document, E,  parent,node)
+function CalculateElements(document::Page, node::MyElement, index)
+      DOM = node.DOM
+      parent = node.parent
+      contentArea = parent.content
+      cursor = parent          # The parent's content area
+      padding = get(parent.padding, MyBox(0,0,0,0,0,0))
+      margin = get(node.margin, MyBox(0,0,0,0,0,0))
+      border = get(node.border, Border(0,0,0,0,0,0,"None",[],[]))
+      parrentborder = get(parent.border, Border(0,0,0,0,0,0,"None",[],[]))
+
+      # width = contentArea.width - cursor.x - padding.width - parrentborder.width
+      # Left = contentArea.left + cursor.x
+      widthRemaining =  contentArea.width - cursor.x
+      # contentArea.left + contentArea.width - cursor.x - padding.right - parrentborder.width
+
+
+
+
+    if node.flags[Relative] == true
+        MakeRelative(parent,node,DOM)
+    elseif node.flags[Fixed] == true
+        MakeFixed(document,node,DOM)
+    else
+
+      if node.flags[Inline] == true
+
+                  # Move to new row (due to lack of space)
+                 if node.area.width > widthRemaining
+                      if cursor.x != 0
+                          cursor.y += cursor.height
+                          cursor.x = 0
+
+AddRow(parent,node)
+                          cursor.rowstart = index # mark as first in row
+                          println(cursor.rowstart)
+                      end
+                      cursor.height = node.area.height
+                  elseif cursor.height < node.area.height
+                         cursor.height = node.area.height
+                  end
+                  LayoutInner(node,Point(cursor.x + contentArea.left,cursor.y + contentArea.top))
+                  println("Hello Left...",parent.rows[end].flags," length: ",length(parent.rows))
+                  cursor.x += node.area.width
+
+
+# TODO: fix
+          elseif node.flags[InlineBlock] == true
+
+                        # Move to new row (due to lack of space)
+                       if node.area.width > widthRemaining
+                            if cursor.x != 0 # This condition is for cases where the box is bigger than the entire empty row
+                                cursor.y += cursor.height
+                                cursor.x = 0
+
+AddRow(parent,node)
+                                cursor.rowstart = index # mark as first in row
+                                println(cursor.rowstart)
+                            end
+                            cursor.height = node.area.height
+                        elseif cursor.height < node.area.height
+                               cursor.height = node.area.height
+                        end
+
+                        LayoutInner(node,Point(cursor.x + contentArea.left,cursor.y + contentArea.top))
+                        println("Hello Left...",parent.rows[end].flags," length: ",length(parent.rows))
+                        cursor.x += node.area.width
+
+
+
+            elseif node.flags[Block] == true
+                        # Full Row
+                        if (margin.width + 20) > widthRemaining
+                                cursor.y += cursor.height
+                                cursor.x = 0
+
+AddRow(parent,node)
+
+                                cursor.rowstart = index # mark as first in row
+                                println(cursor.rowstart)
+                            # determine new width
+                            newWidth = contentArea.width # - margin.right - border.width
+                            node.area.width = newWidth > 5 ? newWidth : 5
+
+                             LayoutInner(node,Point(cursor.x + contentArea.left,cursor.y + contentArea.top)) #  - margin.bottom - border.bottom
+                             cursor.height = node.area.height + border.height
+                            cursor.y += cursor.height
+                        else # size to fit remaining space
+
+                            node.area.width = widthRemaining # - margin.right - border.width
+
+                            LayoutInner(node,Point(cursor.x + contentArea.left,cursor.y + contentArea.top)) # - margin.bottom - border.bottom
+                            if cursor.height < node.area.height
+                                cursor.height = node.area.height
+                            end
+                            cursor.y += cursor.height
+                            cursor.height = 0
+                            AddRow(parent,node)
+                        end
+                        # TODO: set content area etc.
+                        # set up the next row
+                        cursor.x = 0
+
+            end
+    end
+
+
+end
+# ======================================================================================
+#
+# CALLED FROM:
+# ======================================================================================
+function AddRow(parent,node)
+    row = parent.rows[end]
+    l = length(row.nodes)
+    floatlefts = []
+    floatrights = []
+    # float'em Left.......................................................
+    if row.flags[RowHasFloatLeft] == true
+            for i = 1:length(row.nodes)
+                if row.nodes[i].flags[FloatLeft] == true
+                  push!(floatlefts,i)
+                end
+            end
+
+            for j = 1:length(floatlefts)
+              FloatNodeLeft(row, floatlefts[j])
+            end
+    end
+    # float'em Right.......................................................
+    if row.flags[RowHasFloatRight] == true
+            for i = 1:length(row.nodes)
+                if row.nodes[i].flags[FloatRight] == true
+                  push!(floatrights,i)
+                end
+            end
+
+            for j = 1:length(floatrights)
+              FloatNodeRight(row, floatrights[j])
+            end
+    end
+
+
+    push!(parent.rows,Row()) # push new row to parent
+    # println("Row contains $(l) nodes. Adding new row...",parent.rows[end].flags)
+end
+# ======================================================================================
+#
+# CALLED FROM:
+# ======================================================================================
+function FloatNodeLeft(row::NaquadahBrowser.Row, index::Int64)
+   thisNode = row.nodes[index]
+   nodes    = row.nodes
+
+                    first = nodes[1].area.left - thisNode.area.left # find distance to start (as a negative value)
+                    width = thisNode.area.width # width of node as value for moving all other nodes
+                    MoveNodeBy(thisNode, first) # move node by value
+                    for k = index:-1:2 # move each forward...
+                      MoveNodeBy(nodes[k-1], width) # move node forward by value
+                      nodes[k] = nodes[k-1] # move node in array
+                    end
+                    nodes[1] = thisNode # move node in array
+end
+# ======================================================================================
+#
+# CALLED FROM:
+# ======================================================================================
+function FloatNodeRight(row::NaquadahBrowser.Row, index::Int64)
+   thisNode = row.nodes[index]
+   nodes    = row.nodes
+
+                    width = thisNode.area.width # width of node as value for moving all other nodes
+                    first = nodes[end].area.left + nodes[end].area.width - thisNode.area.left - width # offset = farRight - node.width
+                    for k = index:length(nodes)-1 # move each forward...
+                      MoveNodeBy(nodes[k+1], -width) # move node forward by value
+                      nodes[k] = nodes[k+1] # move node in array
+                      print(index, " to ", index+1, ", ")
+                    end
+                    n = thisNode.area.left
+                    MoveNodeBy(thisNode, first) # move node by value
+                    nodes[end] = thisNode # move node in array
+end
+# ======================================================================================
+# Set up all inner bounds (can only be done after area size is determined)
+# CALLED FROM:
+# ======================================================================================
+#function LayoutInner(node,dom,x,y,w,h)
+# ALERT: it would appear that dom is not needed here!
+function MoveNodeBy(node::MyElement, offset::Float32)
+    node.area.left += offset
+    margin  = get(node.margin,MyBox(0,0,0,0,0,0))
+    border  = get(node.border,Border(0,0, 0,0, 0,0,0, [],[]))
+    padding = get(node.padding,MyBox(0,0,0,0,0,0))
+
+    node.box.left         =   node.area.left + margin.left  + border.left
+    node.content.left     =   node.box.left  + padding.left
+end
+# ======================================================================================
+# Set up all inner bounds (can only be done after area size is determined)
+# CALLED FROM:
+# TODO: eventually remove
+# ======================================================================================
+#function LayoutInner(node,dom,x,y,w,h)
+# ALERT: it would appear that dom is not needed here!
+function LayoutInner(node::MyElement,point::NaquadahBrowser.Point)
+    # This makes area the outer bounding area (including margin)
+    node.area.left, node.area.top = point.x, point.y
+    margin  = get(node.margin,MyBox(0,0,0,0,0,0))
+    border  = get(node.border,Border(0,0, 0,0, 0,0,0, [],[]))
+    padding = get(node.padding,MyBox(0,0,0,0,0,0))
+
+    # WIDTH...... best to establish width before toying with height.
+    node.box.left         =   point.x          + margin.left    + border.left
+    node.box.width        =   node.area.width  - margin.width   - border.width
+    node.content.width    =   node.box.width   - padding.right - padding.left
+    node.content.left     =   node.box.left    + padding.left
+    node.x                =   node.box.left    + padding.left
+
+    # HEIGHT...... There should be a condition here since some elements have a set height.
+    node.box.top          =   point.y          + margin.top     + border.top
+    node.box.height       =   node.area.height - margin.height  - border.height
+    node.content.height   =   node.box.height  - padding.bottom - padding.top
+    node.content.top      =   node.box.top     + padding.top
+    node.y                =   node.box.top     + padding.top
+
+        if !isnull(node.text) && haskey(node.DOM, "text")
+           textHeight = calculateTextArea(node)
+           if textHeight > node.content.height
+             node.content.height   = textHeight
+             node.box.height       = node.content.height + padding.top + padding.bottom
+             node.area.height      = node.box.height     + margin.top  + margin.bottom
+
+           end
+        end
+        # May be able to move this to SetAttributes module
+        # RowHasFloatLeft RowHasFloatRight
+        if !isa(node.parent, Int64) # HACK: fix a little problem with the first node
+                rows = node.parent.rows[end]
+                push!(rows.nodes,node)
+
+                             if node.flags[FloatLeft] == true
+                                 node.parent.rows[end].flags[RowHasFloatLeft] = true
+                             end
+                             if node.flags[FloatRight] == true
+                                 node.parent.rows[end].flags[RowHasFloatRight] = true
+                                # println("Hello Right...",node.parent.rows[end].flags)
+                             end
+
+        end
+
+         # push!(parent.rows[end].nodes,node)
+
+end
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 # ======================================================================================
 # Create a node with default settings
 # CALLED FROM: Above traceElementTree()
@@ -48,9 +385,8 @@ end
 #   attributes and set defaults if none are explicitly set from the DOM. It would be
 #   good to test for and set styles at the same time...
 # ======================================================================================
-function CreateDefaultNode(DOM::Dict)
-  node = MyElement()
-  # This is a Dict()
+function CreateDefaultNode(document::Page, node::MyElement ,DOM::Dict)
+
   defaults = Dict()
   # take into account that multiple styles may be applied.
   # Styles should probably be merged...
@@ -67,7 +403,6 @@ function CreateDefaultNode(DOM::Dict)
           MergeAttributes(DOM, defaults)
       end
 
-
       # These should be set automattically now
       # if tag == "a"
       #   node.flags[IsBox] = true
@@ -78,7 +413,10 @@ function CreateDefaultNode(DOM::Dict)
       # end
 
     end  # END: haskey(DOM, ">")
-    return node
+
+    BoxDesign(document,node,DOM)
+
+    # return node
 end
 # ======================================================================================
 # just to keep things clean below. TODO: inline
@@ -162,105 +500,7 @@ function MergeAttributes(primary::Dict, secondary::Dict)
               end
         end
 end
-# ======================================================================================
-# Inteded to be called recursively on any element to map tree for drawing
-# CALLED FROM: Above traceElementTree()
-# ======================================================================================
-# ( parent,element,  parent,currnt_element )
-# function CalculateElements(document, E,  parent,node)
-function CalculateElements(document::Page, node::MyElement)
-    DOM = node.DOM
-    parent = node.parent
-    contentArea = parent.content
-    # padding: thicknesses for calculating content area    content
-         cursor = parent          # The parent's content area
 
-    # calculate all defaults
-     BoxDesign(document,node,DOM)
-      padding = get(parent.padding, MyBox(0,0,0,0,0,0))
-      margin = get(node.margin, MyBox(0,0,0,0,0,0))
-      border = get(node.border, Border(0,0,0,0,0,0,"None",[],[]))
-      parrentborder = get(parent.border, Border(0,0,0,0,0,0,"None",[],[]))
-
-    widthRemaining = contentArea.left + contentArea.width - cursor.x - padding.right - parrentborder.width
-
-    if node.flags[Relative] == true
-        MakeRelative(parent,node,DOM)
-    elseif node.flags[Fixed] == true
-        # println("going to fixed")
-        MakeFixed(document,node,DOM)
-    else
-
-      if node.flags[Inline] == true
-
-                  # Move to new row (due to lack of space)
-                 if node.area.width > widthRemaining
-                 #if node.box.width > widthRemaining
-                      if cursor.x != contentArea.left
-                          cursor.y += cursor.height
-                          cursor.x = contentArea.left
-                      end
-                      cursor.height = node.area.height
-                  elseif cursor.height < node.area.height #node.box.height
-                         cursor.height = node.area.height #node.box.height
-                  end
-
-                  LayoutInner(node,Point(cursor.x,cursor.y))
-                  # cursor.x += node.box.width # + border.width + margin.width
-                  cursor.x += node.area.width # + border.width + margin.width
-
-
-# TODO: fix
-          elseif node.flags[InlineBlock] == true
-
-                        # Move to new row (due to lack of space)
-                       if node.area.width > widthRemaining
-                       #if node.box.width > widthRemaining
-                            if cursor.x != contentArea.left
-                                cursor.y += cursor.height
-                                cursor.x = contentArea.left
-                            end
-                            cursor.height = node.area.height
-                        elseif cursor.height < node.area.height #node.box.height
-                               cursor.height = node.area.height #node.box.height
-                        end
-
-                        LayoutInner(node,Point(cursor.x,cursor.y))
-                        # cursor.x += node.box.width # + border.width + margin.width
-                        cursor.x += node.area.width # + border.width + margin.width
-
-
-
-            elseif node.flags[Block] == true
-                        # Full Row
-                        if (margin.width + 20) > widthRemaining
-                                cursor.y += cursor.height
-                                cursor.x = contentArea.left
-                            # determine new width
-                            newWidth = contentArea.width # - margin.right - border.width
-                            node.area.width = newWidth>5 ? newWidth : 5
-
-                             LayoutInner(node,Point(cursor.x,cursor.y)) #  - margin.bottom - border.bottom
-                             cursor.height = node.area.height + border.height
-                            cursor.y += cursor.height
-                        else # size to fit remaining space
-
-                            node.area.width = widthRemaining # - margin.right - border.width
-
-                            LayoutInner(node,Point(cursor.x,cursor.y)) # - margin.bottom - border.bottom
-                            if cursor.height < node.area.height
-                                cursor.height = node.area.height
-                            end
-                            cursor.y += cursor.height
-                            cursor.height = 0
-                        end
-                        # TODO: set content area etc.
-                        # set up the next row
-                        cursor.x = contentArea.left
-
-            end
-    end
-end
 # ======================================================================================
 # thicknes-r, thicknes-r, thicknes-r, thicknes-r, sum-x, sum-y
 # CALLED FROM:
@@ -282,46 +522,7 @@ function BoxDesign(document::Page,node::MyElement,DOM::Dict)
     SetAllAttributes(document,node,DOM)
 end
 
-# ======================================================================================
-# Set up all inner bounds (can only be done after area size is determined)
-# CALLED FROM:
-# TODO: eventually remove
-# ======================================================================================
-#function LayoutInner(node,dom,x,y,w,h)
-# ALERT: it would appear that dom is not needed here!
-function LayoutInner(node::MyElement,point::NaquadahBrowser.Point)
-    # This makes area the outer bounding area (including margin)
-    node.area.left, node.area.top = point.x, point.y
-    margin  = get(node.margin,MyBox(0,0,0,0,0,0))
-    border  = get(node.border,Border(0,0, 0,0, 0,0,0, [],[]))
-    padding = get(node.padding,MyBox(0,0,0,0,0,0))
 
-    # WIDTH...... best to establish width before toying with height.
-    node.box.left         =   point.x          + margin.left    + border.left
-    node.box.width        =   node.area.width  - margin.width   - border.width
-    node.content.width    =   node.box.width   - padding.right
-    node.content.left     =   node.box.left    + padding.left
-    node.x                =   node.box.left    + padding.left
-
-    # HEIGHT...... There should be a condition here since some elements have a set height.
-    node.box.top          =   point.y          + margin.top     + border.top
-    node.box.height       =   node.area.height - margin.height  - border.height
-    node.content.height   =   node.box.height  - padding.bottom
-    node.content.top      =   node.box.top     + padding.top
-    node.y                =   node.box.top     + padding.top
-
-
-        if !isnull(node.text) && haskey(node.DOM, "text")
-           textHeight = calculateTextArea(node)
-           if textHeight > node.content.height
-             node.content.height   = textHeight
-             node.box.height       = node.content.height + padding.top + padding.bottom
-             node.area.height      = node.box.height     + margin.top  + margin.bottom
-
-           end
-        end
-
-end
 # ======================================================================================
 # calculateTextArea: devide text into rows and determin how much space it will take up.
 # Important because for many nodes you have to know the height of its content (such as text).

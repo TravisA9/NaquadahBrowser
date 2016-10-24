@@ -98,17 +98,40 @@ type Walls
     bottom::Float32
     Walls(left,right, top,bottom) = new(left,right, top,bottom)
 end
+#=---------------------------------=#
+#
+#=---------------------------------=#
+#const RowHasFloats = 1
+const RowHasFloatLeft = 1
+const RowHasFloatRight = 2
 
+type Row
+    flags::BitArray{1} #Any
+    nodes::Array{Any}
+    # Row(flags,nodes) = new(falses(8),[])
+    Row() = new(falses(8),[])
+    #Row(left,right, top,bottom, width,height) = new(left,right, top,bottom, width,height)
+end
 #=---------------------------------=#
 type Point
     x::Float32
     y::Float32
     Point(x,y) = new(x,y)
 end
-# This type and its compoents vary greatly.
+# This type and its components vary greatly.
 # I am still deciding which is the best way to deal with the variability
 # without slowing or complicating things.
 # Nullable is ok but I'm not yet convinced...
+#        |-----area-------------------------|
+#        |                                  |
+#        |     |-----box--------------|     |
+#        |     |  |-content---------| |     |
+#        |     |  |                 | |     |
+#        |     |  |                 | |     |
+#        |     |  |-----------------| |     |
+#        |     |----------------------|     |
+#        |                                  |
+#        |----------------------------------|
 type MyElement
     area::Box   # We will derive all our positioning values from here.
     box::Box         # Background area and box width and height (the two should probably be seperated!)
@@ -122,6 +145,8 @@ type MyElement
 
     shape::Any
 #these things may get changed or removed ...not sure............................
+    left::Float32           # Current left after floats
+    right::Float32          # Current right after floats
     x::Float32           # Current x offset
     y::Float32           # Current y offset
     height::Float32      # Row height
@@ -135,23 +160,18 @@ type MyElement
 
         parent::Any        # parent MyElement
         node::Array        # children of type MyElement
+        floater::Array     # list of float type children
+        rows::Array{Row,1}     # list of float type children
+        rowstart::Int32
         DOM::Any        # Link to dictionary counterpart
     MyElement()  = new( Box(0,0,0,0), Box(0,0,0,0), Box(0,0,0,0),
                         Nullable{MyBox}(), Nullable{MyBox}(),
                         Nullable{Border}(), Nullable{Text}(),
                         Nullable{String}(),
                         0,
-                        0,0,0, 0,0,
+                        0,0,0, 0,0, 0,0,
                         falses(64),
                         0,[],
-                        0,[],0)
+                        0,[],[],[],0,0)
     # BoundingMyBox() = BoundingMyBox(NaN, NaN, NaN, NaN)
-end
-#=---------------------------------=#
-# I think that 'Row' is only needed temporarily and could be pushed and popped
-#=---------------------------------=#
-type Row
-    left::Array
-    right::Array
-    Row(left,right, top,bottom, width,height) = new(left,right, top,bottom, width,height)
 end
