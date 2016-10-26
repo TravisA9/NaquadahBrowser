@@ -12,9 +12,21 @@ Tags_Default = Dict(
 														"color" => [0.23,0.2695,0.6757]
 						 )
 	),
+# SHADOW DOM stuff
+# h-scroll v-scroll: scrollbar-track scrollbar-thumb
+"h-scroll" => Dict( "offset" => 0,
+										"scrollbar-track" => Dict("color" => "darkgrey", "width" =>  12 ),
+										"scrollbar-thumb" => Dict("color" => "grey",     "width" =>  10 ),
+									),
+"v-scroll" => Dict( "offset" => 0,
+										"scrollbar-track" => Dict("color" => "darkgrey", "width" =>  12 ),
+										"scrollbar-thumb" => Dict("color" => "grey",     "width" =>  10 ),
+									),
 
 
 
+
+# NORMAL DOM stuff
 # <abbr>	    Defines an abbreviation or an acronym
 "abbr" => Dict("display" => "inline", "font" =>  Dict( "size" => 13, "family" => "Sans", "color" => "black" )),
 # <address>	    Defines contact information for the author/owner of a document

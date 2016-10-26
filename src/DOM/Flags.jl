@@ -36,6 +36,9 @@ const Fixed         = 12
 
 const FloatLeft = 40
 const FloatRight = 41
+# HasVscroll HasHscroll
+const HasVscroll = 42
+const HasHscroll = 43
 #=
 inline, block, flex, inline-block, inline-flex, inline-table, list-item, run-in, table, table-caption, table-column-group, table-header-group, table-footer-group, table-row-group, table-cell, table-column, table-row, none, initial, inherit
 =#

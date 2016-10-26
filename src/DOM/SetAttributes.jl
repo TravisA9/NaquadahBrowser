@@ -225,6 +225,16 @@ end
             if haskey(DOM, "font") # haskey(DOM, "text") ||
                     SetFont(DOM["font"], node)
             end
+            #......................................................................
+            # OVERFLOW
+            if haskey(DOM, "overflow") # haskey(DOM, "text") ||
+              if DOM["overflow"] == "scroll" # haskey(DOM, "text") ||
+                node.flags[HasVscroll] = true
+                node.flags[HasHscroll] = true
+              end
+            end
+
+
 end
 
 
