@@ -86,6 +86,9 @@ function DrawNode(context::CairoContext,document::Page,node::MyElement)
           sample_clip(context, node)
     end
 
+    if node.flags[HasVscroll] == true
+          VerticleScrollbar(context, node)
+    end
 #=======================================================================#
 			if !isnull(node.text) # haskey(E, "text") #E[">"] == "p"
 				drawText(context,document,node)
