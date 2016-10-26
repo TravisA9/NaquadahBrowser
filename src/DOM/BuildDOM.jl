@@ -317,9 +317,19 @@ function LayoutInner(node::MyElement,point::NaquadahBrowser.Point)
     node.content.top      =   node.box.top     + padding.top
     node.y                =   node.box.top     + padding.top
 
+    if node.flags[HasVscroll] == true && node.content.width > 12
+      node.content.width -= 12
+    end
+
+    if node.flags[HasHscroll] == true && node.content.height > 12
+      node.content.height -= 12
+    end
         if !isnull(node.text) && haskey(node.DOM, "text")
            textHeight = calculateTextArea(node)
-           if textHeight > node.content.height
+
+           # Reset node Height
+           # TODO: make it reset height Only if needed
+           if textHeight > node.content.height && node.flags[InlineBlock] == false
              node.content.height   = textHeight
              node.box.height       = node.content.height + padding.top + padding.bottom
              node.area.height      = node.box.height     + margin.top  + margin.bottom
@@ -342,7 +352,6 @@ function LayoutInner(node::MyElement,point::NaquadahBrowser.Point)
 
         end
 
-         # push!(parent.rows[end].nodes,node)
 
 end
 
@@ -413,8 +422,18 @@ function CreateDefaultNode(document::Page, node::MyElement ,DOM::Dict)
       # end
 
     end  # END: haskey(DOM, ">")
-
+    
+    if haskey(DOM, "overflow")
+      tag = DOM["overflow"]
+      if tag == "scroll"
+        # add scrollbars to the DOM
+        DOM["v-scroll"] = Tags_Default["v-scroll"]
+        DOM["h-scroll"] = Tags_Default["h-scroll"]
+      end
+    end
     BoxDesign(document,node,DOM)
+    # scrollbar-track scrollbar-thumb
+
 
     # return node
 end
@@ -604,7 +623,10 @@ function calculateTextArea(node::MyElement)
      end
          end
 =#
+# HasVscroll HasHscroll
+width  =  node.content.width
 
+#height  =
 # content = get(node.content,)
 extents = []
 
@@ -616,8 +638,8 @@ extents = []
                  end
            extents = text_extents(context,testString );# CALLED FROM: DrawNode()
 
-           if extents[3] < node.content.width # (extents[3]*.63)
-             line.space = ( node.content.width ) - extents[3]
+           if extents[3] < width # (extents[3]*.63)
+             line.space = ( width ) - extents[3]
        buffer = testString
        line.words = line.words + 1
      elseif i == length(words) # Flush out buffer
@@ -627,7 +649,7 @@ extents = []
 
        line.words = line.words + 1
        line.text = testString
-             line.space = ( node.content.width ) - extents[3]
+             line.space = ( width ) - extents[3]
 
                   push!(text.lines,line)
      else
