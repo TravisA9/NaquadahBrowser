@@ -3,14 +3,42 @@
 #       Modify the Shape Type in a way that is compatible with the DrawPath(node.p).
 #       This should serve to consolidate and simplify all/most drawing operations.
 #======================================================================================#
-
-
 # xmin left   ymin top   width width   height height box area
 ## header to provide surface and context
 # # using Cairo
 # # c = CairoRGBSurface(256,256);
 # # cr = CairoContext(c);
+
+
+
+
+#======================================================================================#
+#
 # CALLED FROM:
+#======================================================================================#
+function HorizontalScrollbar(cr, node)
+
+
+end
+#======================================================================================#
+#
+# CALLED FROM:
+#======================================================================================#
+function VerticleScrollbar(cr, node)
+  l,t,r,b = node.box.left, node.box.top, node.box.width, node.box.height
+
+  set_source_rgb(cr, 0.5, 0.5, 0.5);
+
+
+  rectangle(cr,r,t,12,b); # background WAS: 0,0,256,256
+  fill(cr);
+
+
+end
+#======================================================================================#
+#
+# CALLED FROM:
+#======================================================================================#
 function sample_clip(cr::CairoContext,node::MyElement)
     l,t,r,b = node.content.left, node.content.top, node.content.width, node.content.height
     r = (r-l)/2
