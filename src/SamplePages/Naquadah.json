@@ -30,7 +30,7 @@
 "body":[
 
 
-                    {">":"div",
+                    {">":"div","id":"root",
                       "display":"inline",
                       "padding":8,
                       "margin":5,
@@ -45,7 +45,7 @@
 
 
 
-  {">":"div",
+  {">":"div","id":"one",
     "display":"inline-block",
     "border":{"width":"thin", "style":"solid", "radius":7, "color":"grey"},
     "nodes":[
@@ -115,7 +115,7 @@
 
 
 
-                  {">":"div",
+                  {">":"div","id":"two",
                     "display":"inline-block",
                 		"margin":3,
                 		"height":100,
@@ -204,7 +204,7 @@
 
 
 
-                      {">":"div",
+                      {">":"div","id":"three",
                     		"margin":3,
                     		"height":50,
                     		"color":"cornsilk",
@@ -269,7 +269,7 @@
 
 
 
-                          {">":"div",
+                          {">":"div","id":"four",
                         		"margin":3,
                         		"height":50,
                         		"color":"cornsilk",
