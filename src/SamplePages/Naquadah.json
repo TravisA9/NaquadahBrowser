@@ -30,34 +30,29 @@
 "body":[
 
 
+                    {">":"div",
+                      "display":"inline",
+                      "padding":8,
+                      "margin":5,
+                      "width":100,
+                      "height":32,
+                      "border":{"radius":3, "style":"solid", "width":"thin", "color":"green"},
+                      "color":"lightgreen",
+                      "font":{"color":"black", "size":12, "align":"left", "lineHeight":1.4, "weight":"bold", "family":"Sans" },
+                      "text":"BuildDOM.jl . . . . . . . . . . . . . . . . . ."
+                    },
+
 
 
 
   {">":"div",
-    "display":"inline",
-    "padding":8,
-    "margin":5,
-    "width":100,
-    "height":32,
-    "border":{"radius":3, "style":"solid", "width":"thin", "color":"green"},
-    "color":"lightgreen",
-    "font":{"color":"black", "size":12, "align":"left", "lineHeight":1.4, "weight":"bold", "family":"Sans" },
-    "text":"BuildDOM.jl . . . . . . . . . . . . . . . . . ."
-  },
-
-  {">":"div",
-    "display":"block",
-    "height":400,
-    "border":{"width":"thin",
-				"style":"solid",
-				"radius":7,
-				"color":"grey"},
-  "nodes":[
+    "display":"inline-block",
+    "border":{"width":"thin", "style":"solid", "radius":7, "color":"grey"},
+    "nodes":[
 
             	{">":"div",
-            		"display":"block",
+                "display":"block",
             		"margin":3,
-            		"height":50,
             		"color":"cornsilk",
             		"border":{"width":"thin",
             				"style":"solid",
@@ -121,9 +116,10 @@
 
 
                   {">":"div",
-                		"display":"block",
+                    "display":"inline-block",
                 		"margin":3,
                 		"height":100,
+                    "width":400,
                 		"color":"cornsilk",
                 		"border":{"width":"thin",
                 				"style":"solid",
@@ -209,7 +205,6 @@
 
 
                       {">":"div",
-                    		"display":"block",
                     		"margin":3,
                     		"height":50,
                     		"color":"cornsilk",
@@ -275,7 +270,6 @@
 
 
                           {">":"div",
-                        		"display":"block",
                         		"margin":3,
                         		"height":50,
                         		"color":"cornsilk",
