@@ -1,24 +1,14 @@
+#.==============================================================================
+# this is sort of a bit-stack for pushing enheritance through functions
+#.==============================================================================
+const hasUnsetParent = 1
+
+#.==============================================================================
 # inheritable flags should go first
 # This includes atributes that are toggled before and after drawing all children
-#=
-const OpacityAll =
-const Antialias =
-const FillWinding =
-const FillEvenOdd =
-# fill-rule:nonzero
-const IsDashed =
-const CapBut =
-const CapRound =
-const CapSquare =
-
-const Clip =
-
-const Scale =
-const Transform =
-const Translate =
-=#
 # Flags for Elements
 # TODO: reorder, renumber and regroup...
+#.==============================================================================
 const HasBorder     = 1
 const BordersSame   = 2
 const HasMargin     = 3

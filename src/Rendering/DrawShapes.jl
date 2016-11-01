@@ -28,11 +28,18 @@ function VerticleScrollbar(cr, node)
   l,t,r,b = node.box.left, node.box.top, node.box.width, node.box.height
 
   set_source_rgb(cr, 0.5, 0.5, 0.5);
-
-
   rectangle(cr,r,t,12,b); # background WAS: 0,0,256,256
   fill(cr);
 
+end
+#======================================================================================#
+function VerticleScrollbarTrack(cr, node, offset, )
+  l,t,r,b = node.box.left, node.box.top, node.box.width, node.box.height
+  space = b - 12
+  height = node.contentheight - space
+  set_source_rgb(cr, 0.3, 0.3, 0.3);
+  rectangle(cr,r,offset,10,height); # background WAS: 0,0,256,256
+  fill(cr);
 
 end
 #======================================================================================#
@@ -48,7 +55,6 @@ function sample_clip(cr::CairoContext,node::MyElement)
     new_path(cr); # path not consumed by clip
 
     image = read_from_png("Browser/data/Tree.png"); # mulberry.png
-    println("Samples: this is an image...",image)
     w = image.width;
     h = image.height;
 

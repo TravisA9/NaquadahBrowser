@@ -46,17 +46,41 @@ function FetchPage(URL::String)
             document.styles = pageContent["style"]
         end
 
+        # Create root node
         document.node = []
         push!(document.node, MyElement())
-        document.node[1].padding = MyBox(10,10, 10,10, 20,20)
+        # Let's try to always refer to current node as 'node' for simplicity!
+        node = document.node[1]
+        node.padding = MyBox(10,10, 10,10, 20,20)
+        push!(node.rows,Row())
+        node.rows[end].height = 0
+        node.rows[end].y = 0
+        println(node.content)
+
+        # Give root a dummy parent
+        document.parent = MyElement()
+        parent = document.parent
+        parent.content = Box(0,0, 0,0)
+          push!(parent.rows,Row())
+          parentRow = parent.rows[end]
+          parentRow.height = 0
+          parentRow.y = 0
+          push!(parentRow.nodes, document.node)
+          println(parent.content)
+
+
+
+
+       println(node.rows)
 
         if haskey(pageContent, "body")
-            document.node[1].DOM = Dict("nodes" => pageContent["body"])
+            node.DOM = Dict("nodes" => pageContent["body"])
         else
-            document.node[1].DOM = Dict("nodes" => pageContent)
+            node.DOM = Dict("nodes" => pageContent)
         end
+        node.DOM["nodes"][1]["id"] = "root"
         document.hoverNode = 0
         # document.ui set in this function
-        MakeUserInterface(document)
+        MakeUserInterface(document) # IN: BrowserTypes.jl
         DrawPage(document)
 end

@@ -1,17 +1,7 @@
 
 
 Tags_Default = Dict(
-# <a>	        Defines a hyperlink
-"a" => Dict(
-				     "display" => "inline",
-						 "margin" => [0,0,4,4],
-				     "font" => Dict(
-														"size" => 13,
-														"family" => "Sans",
-														"weight" => "bold",
-														"color" => [0.23,0.2695,0.6757]
-						 )
-	),
+
 # SHADOW DOM stuff
 # h-scroll v-scroll: scrollbar-track scrollbar-thumb
 "h-scroll" => Dict( "offset" => 0,
@@ -27,6 +17,17 @@ Tags_Default = Dict(
 
 
 # NORMAL DOM stuff
+# <a>	        Defines a hyperlink
+"a" => Dict(
+				     "display" => "inline",
+						 "margin" => [0,0,4,4],
+				     "font" => Dict(
+														"size" => 13,
+														"family" => "Sans",
+														"weight" => "bold",
+														"color" => [0.23,0.2695,0.6757]
+						 )
+	),
 # <abbr>	    Defines an abbreviation or an acronym
 "abbr" => Dict("display" => "inline", "font" =>  Dict( "size" => 13, "family" => "Sans", "color" => "black" )),
 # <address>	    Defines contact information for the author/owner of a document

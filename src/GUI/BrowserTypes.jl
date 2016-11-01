@@ -28,8 +28,9 @@ const    = 8
 =#
 #=---------------------------------=#
 type Page
+         parent::Any
            node::Array       # First node in a tree-like data structure representing all elements on page
-            DOM::Dict        # Link to dictionary counterpart
+
             url::Any         # URL of page
 
           # TODO: considder a full redesign of the event system even perhaps undercutting some of the Julia-GTK interface
