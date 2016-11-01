@@ -76,17 +76,26 @@ function DrawPage(document::Page)
         document.mousedown =  Point(0, 0)
         document.mouseup   =  Point(0, 0)
         document.flags = falses(8)
-        p = Point(0,0)
+        #p = Point(0,0)
+
+
+         #println(node.rows)
+        #      push!(node.rows,Row())
+        #      node.rows[end].height = 0
+        #      println(node.rows)
         #node.box.width, node.box.height = width(context), height(context) # content
         node.area.width, node.area.height = width(context), height(context)
         # LayoutInner(node,node.DOM ,0,0,width(context),height(context))
-        LayoutInner(node,p)
+        x::Float32 = 0
+        LayoutInner(node, x)
 
             # OnInitialize: 0.649740 seconds (359.77 k allocations: 15.420 MB, 1.01% gc time)
             # OnResize:     0.005325 seconds (6.80 k allocations: 339.750 KB)
 
-            @time    traceElementTree(document,node, node.DOM)
-
+            @time    traceElementTree(document,node, node.DOM,0)
+            flags = falses(8)
+            # flags[] =     ## if you need to pass something in, do it here.
+                      ResetYoffset(node,flags)
             # Erase all previous
             rectangle(context,  0,  0,  node.box.width, node.box.height )
             set_source_rgb(context, 1,1,1);

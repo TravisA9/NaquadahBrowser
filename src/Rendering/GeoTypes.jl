@@ -104,12 +104,16 @@ end
 #const RowHasFloats = 1
 const RowHasFloatLeft = 1
 const RowHasFloatRight = 2
+const IncompleteRow = 3
 
 type Row
     flags::BitArray{1} #Any
     nodes::Array{Any}
+    height::Float32
+    x::Float32
+    y::Float32
     # Row(flags,nodes) = new(falses(8),[])
-    Row() = new(falses(8),[])
+    Row() = new(falses(8),[],0,0,0)
     #Row(left,right, top,bottom, width,height) = new(left,right, top,bottom, width,height)
 end
 #=---------------------------------=#
@@ -133,6 +137,15 @@ end
 #        |                                  |
 #        |----------------------------------|
 type MyElement
+              #--#..Linkage.............#.......................................
+              #==#  DOM::Dict           # dictionary counterpart of node
+              #==#  parent::Any         # parent MyElement
+              #==#  node::Array         # children of type MyElement
+              #==#  rows::Array{Row,1}  # list of float type children
+              #==#  floater::Array      # list of float type children
+    #.FLAGS.....................................................................
+    flags::BitArray{1} #Any
+    #.Box Modal.................................................................
     area::Box   # We will derive all our positioning values from here.
     box::Box         # Background area and box width and height (the two should probably be seperated!)
     content::Box       # Content area Values
@@ -140,38 +153,39 @@ type MyElement
     margin::Nullable{MyBox}        # Margin Values
     padding::Nullable{MyBox}       # Padding values
     border::Nullable{Border}     # Border Values
+    # Other node types..........................................................
     text::Nullable{Text}         # This is an uninstantiated text PsudoNode
     href::Nullable{String}   # Link?
-
     shape::Any
-#these things may get changed or removed ...not sure............................
+#.General node data.............................................................
+# TODO: It may be better to put much of this with rows[Row].....................
+#       On the other hand much of this may be stored on the stack by making temp
+#       Variables in the parrent function and passing them along.
+    # height::Float32      # Calculated height of the current row
     left::Float32           # Current left after floats
     right::Float32          # Current right after floats
     x::Float32           # Current x offset
     y::Float32           # Current y offset
-    height::Float32      # Row height
-    vOffset::Float32     # Offset from default position
-    hOffset::Float32     # Offset from default position
+    vOffset::Float32     # Offset from node's default position (only used in position:relative)
+    hOffset::Float32     # Offset from node's default position (only used in position:relative)
+    contentHeight::Float32 # As content is added to the node it should be measured and recored here. This will help to determine the size of the node.
+    contentWidth::Float32  # As content is added to the node it should be measured and recored here. This will help to determine the size of the node.
 #...............................................................................
-    flags::BitArray{1} #Any
 
     opacity::Float32     # node opacity
     color::Array{Float32,1}         # background color
 
-        parent::Any        # parent MyElement
-        node::Array        # children of type MyElement
-        floater::Array     # list of float type children
-        rows::Array{Row,1}     # list of float type children
-        rowstart::Int32
-        DOM::Any        # Link to dictionary counterpart
-    MyElement()  = new( Box(0,0,0,0), Box(0,0,0,0), Box(0,0,0,0),
-                        Nullable{MyBox}(), Nullable{MyBox}(),
-                        Nullable{Border}(), Nullable{Text}(),
-                        Nullable{String}(),
-                        0,
-                        0,0,0, 0,0, 0,0,
-                        falses(64),
-                        0,[],
-                        0,[],[],[],0,0)
-    # BoundingMyBox() = BoundingMyBox(NaN, NaN, NaN, NaN)
+
+  #..TRASH......................................................................
+
+#..CONSTRUCTOR..................................................................
+    MyElement()  = new( Dict(),0,[],[],[], # Linkage
+                        falses(64), # Flags
+                        Box(0,0,0,0), Box(0,0,0,0), Box(0,0,0,0), # Box Modal
+                        Nullable{MyBox}(), Nullable{MyBox}(), Nullable{Border}(),
+                        Nullable{Text}(), Nullable{String}(), 0,
+                        #0,
+                        0,0, 0,0, 0,0, 0,0,
+                        0,[]
+                        )
 end

@@ -227,17 +227,66 @@ end
             end
             #......................................................................
             # OVERFLOW
-            if haskey(DOM, "overflow") # haskey(DOM, "text") ||
-              if DOM["overflow"] == "scroll" # haskey(DOM, "text") ||
-                node.flags[HasVscroll] = true
-                node.flags[HasHscroll] = true
-              end
+            #  DOM["v-scroll"] = Tags_Default["v-scroll"]
+            #  DOM["h-scroll"] = Tags_Default["h-scroll"]
+            if haskey(DOM, "v-scroll") # haskey(DOM, "text") ||
+                SetVscroll(DOM["v-scroll"], node)
+            end
+            if haskey(DOM, "h-scroll") # haskey(DOM, "text") ||
+                SetHscroll(DOM["h-scroll"], node)
+            end
+            #......................................................................
+            # Scroll:  track, thumb
+            if haskey(DOM, "scrollbar-track") # haskey(DOM, "text") ||
+                SetScrollTrack(DOM["scrollbar-track"], node)
+            end
+            if haskey(DOM, "scrollbar-thumb") # haskey(DOM, "text") ||
+                SetScrollThumb(DOM["scrollbar-thumb"], node)
             end
 
-
 end
-
-
+# h-scroll v-scroll: scrollbar-track scrollbar-thumb
+# ======================================================================================
+# Set flags float flags and add to parrent
+# CALLED FROM:
+# ======================================================================================
+function SetVscroll(DOM::Dict, node::MyElement)
+  node.flags[HasVscroll] = true
+  #node.box.
+end
+# ======================================================================================
+# Set flags float flags and add to parrent
+# CALLED FROM:
+# ======================================================================================
+function SetHscroll(DOM::Dict, node::MyElement)
+  node.flags[HasHscroll] = true
+end
+# ======================================================================================
+# Set flags float flags and add to parrent
+# CALLED FROM:
+# ======================================================================================
+function SetScrollTrack(DOM::Dict, node::MyElement)
+  node.flags[HasVscroll] = true
+  node.area.width    = 12
+  node.box.width     = 12
+  node.content.width = 12
+  node.area.height    = 12
+  node.box.height     = 12
+  node.content.height = 12
+end
+# ======================================================================================
+# Set flags float flags and add to parrent
+# CALLED FROM:
+# ======================================================================================
+function SetScrollThumb(DOM::Dict, node::MyElement)
+  node.flags[HasHscroll] = true
+  node.area.width    = 12
+  node.box.width     = 12
+  node.content.width = 12
+  node.area.height    = 12
+  node.box.height     = 12
+  node.content.height = 12
+end
 
 
 
@@ -306,9 +355,9 @@ function SetPadding(padding, node::MyElement)
         #P = get(node.padding, Box(0,0, 0,0, 0,0))
         if isa(padding, Array)
             node.padding = MyBox( padding[1],  padding[2],
-                                padding[3],  padding[4],
-                                padding[1] + padding[2],
-                                padding[3] + padding[4]   )
+                                  padding[3],  padding[4],
+                                  padding[1] + padding[2],
+                                  padding[3] + padding[4]   )
         # assume padding is different...
         else
             node.padding = MyBox(padding,padding, padding,padding, padding*2,padding*2)

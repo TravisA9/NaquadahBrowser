@@ -17,7 +17,7 @@ using Gtk, JSON, Cairo, Requests
 using Gtk.ShortNames
 # using ImageView
 using ImageMagick, Images
-defaultPage = "http://travis.net16.net/something.json"
+defaultPage = "https://travisa9.github.io/NaquadahBrowser/src/SamplePages/Naquadah.json"
 
 
 # Dict() ...default attributes for nodes
