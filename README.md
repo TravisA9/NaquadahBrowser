@@ -4,7 +4,7 @@
 
 #### What is Naquadah?
 
-Naquadah principally consists of a **layout engine** and a **rendering engine** built from the ground up. For convenience, it includes a basic GUI as well. It is writen in the awesome **Julia language** and serves as a test of julia's value as a general purpose language. 
+Naquadah principally consists of a **layout engine** and a **rendering engine** built from the ground up. For convenience, it includes a basic GUI as well. It is writen in the awesome **Julia language** and serves as a test of julia's value as a general purpose language.
 
 > Naquadah currently uses **Cairo** for graphics and **GTK** for the GUI.
 
@@ -128,23 +128,25 @@ julia> Start()
 
 # Goals
 
-Mantain modularity in order to be adaptable. If in the future there is good reason to switch out something such as the graphics interface, it should be easy to do so without reworking all the code.
+* Mantain modularity in order to be adaptable. If in the future there is good reason to switch out something such as the graphics interface, it should be easy to do so without reworking all the code. Also, if someone wants to use just one module out of Naquadah it should be easy to do so.
 
-Mantain a measure of compatability with principal features of web standards. I believe that a lot of thought was put into the design and functionality of the WWW and that in general it is a good model to follow
+* Mantain a measure of compatability with principal features of web standards. I believe that a lot of thought was put into the design and functionality of the WWW and that in general it is a good model to follow.
 
-Simplify as much as possible while increasing functionality. It is pointless to build another browser if it does not offer good fetures.
+* Simplify as much as possible while increasing functionality. It is pointless to build another browser if it does not offer good fetures.
 
-Take advantage of opertunities to add select functionality that may not be feasable in an ordinary browser.
+* Take advantage of opertunities to add select functionality that may not be feasable in an ordinary browser.
 
-Make Naquadah easy to modify and repurpose. Naquadah is made to be used. It may be modified for standalone apps, mobile devices and more. The more it is used, the more it will be developed.
+* Make Naquadah easy to modify and repurpose. Naquadah is made to be used. It may be modified for standalone apps, mobile devices, text editors and more. The more it is used, the more it will be developed.
 
-Experiment with reactively connecting to databases for real-time page updates.
+* Experiment with reactively connecting to databases for real-time page updates.
 
-# Considerations
 
-### Code
 
-Julia is a great choice for this project because it can be optimized to run very fast. So far, little attention has been given to speed. For instance data types have not yet been specified in many cases and this creates overhead causing much slower code execution. Currently more emphasis has been given to adding broad functionality and to determining the structure of the project So expect much better speed in the future.
+## Code: Why Julia?
+
+Julia is a great choice for this project because it can be optimized to run very fast. So far, only a little attention has been given to speed. For instance data types have not yet been specified in many cases and this creates overhead causing much slower code execution. Currently more emphasis has been given to adding broad functionality and to determining the structure of the project So expect much better speed in the future.
+
+I also wanted to do something that would test Juliia's feasability as a general purpose language. I think this is a good test.
 
 ### Compatability
 
@@ -163,11 +165,11 @@ Text and Drop shadows
 
 Clipping
 
-Float
+~~Float~~
 
 Transitions
 
-Fix Text layout
+Fix Text layout    . . . progressing!
 
 Generate proper images from blobs
 
@@ -177,7 +179,9 @@ Optimize speed
 
 Compile distributable binaries for major OSs
 
-# Overview
+# Project Overview
+
+This will continue to evolve...
 
 ![window](doc/figures/MindMup.png)
 
