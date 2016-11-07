@@ -31,7 +31,7 @@
 	{">":"div","id":"containter",
     "display":"inline-block",
 		"color":"grey",
-		"padding":5
+		"padding":5,
     "border":{"width":"thin", "style":"solid", "radius":7, "color":"grey"},
     "nodes":[
 			{">":"a",
