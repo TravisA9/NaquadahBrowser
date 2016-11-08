@@ -53,17 +53,18 @@ function sample_clip(cr::CairoContext,node::MyElement)
     arc(cr, l+128.0, t+128.0, r, 0, 2*pi);
     clip(cr);
     new_path(cr); # path not consumed by clip
+     path = PATH * "Tree.png"
+     image = read_from_png(path); # mulberry.png
 
-    image = read_from_png("Browser/data/Tree.png"); # mulberry.png
-    w = image.width;
-    h = image.height;
+     w = image.width;
+     h = image.height;
 
-    # scale(cr, 256.0/w, 256.0/h);
+     scale(cr, 256.0/w, 256.0/h);
 
-    set_source_surface(cr, image, l, t);
-    paint(cr);
+     set_source_surface(cr, image, l, t);
+     paint(cr);
 
-    # reset_transform(cr)
+     reset_transform(cr)
      reset_clip(cr)
 end
 #======================================================================================#
@@ -250,9 +251,10 @@ function sample_ClipCircle(cr::CairoContext,node::MyElement)
         # Cairo.CAIRO_FILL_RULE_EVEN_ODD
         # set_operator(cr,Cairo.OPERATOR_DEST_OVER)
 
+        path = PATH * "Mountains.png"
 
 
-        image = read_from_png("Browser/data/Mountains.png"); # "D:/Browser/data/mulberry.png"
+        image = read_from_png(path); # "D:/Browser/data/mulberry.png"
         w = image.width;
         h = image.height;
         imageScale = w/wide

@@ -17,8 +17,10 @@ using Gtk, JSON, Cairo, Requests
 using Gtk.ShortNames
 # using ImageView
 using ImageMagick, Images
-defaultPage = "https://travisa9.github.io/NaquadahBrowser/src/SamplePages/Naquadah.json"
-
+# defaultPage = "https://travisa9.github.io/NaquadahBrowser/src/SamplePages/Naquadah.json"
+defaultPage = "file:///.julia/v0.5/NaquadahBrowser/src/SamplePages/Landing.json"
+global PATH = pwd() * "/.julia/v0.5/NaquadahBrowser/src/data/"
+global PAGES = "file://.julia/v0.5/NaquadahBrowser/src/SamplePages/Naquadah.json"
 
 # Dict() ...default attributes for nodes
 include("GUI/ElementDefaults.jl")            # Flags for elements

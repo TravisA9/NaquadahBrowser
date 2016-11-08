@@ -24,19 +24,19 @@ function FetchPage(URL::String)
 
         document.ui = PageUI(0, 0, 0, 0, 0)
         document.url = URL
-        #document.node = []
-        #document.content = Dict()
-
-       #  result = match(r"(\w+:\/\/)([-a-zA-Z0-9:@;?&=\/%\+\.\*!'\(\),\$_\{\}\^~\[\]`#|]+)", document.url)
-       #
-       #  if result[1] == "file://"
-       #      f = open(result[2])
-       #      Page_text = readall(f)
-       #  else         end
+# For URI parsing see:
+#        https://github.com/JuliaWeb/URIParser.jl/blob/master/README.md
+       uri = URI(URL)
             println("document.url:   ",document.url)
-            println("URL:   ",URL)
-             got = get(URL; timeout = 10.0)
-             Page_text = readall(got)
+            println("URL:   ",uri)
+              if uri.scheme == "file"
+                 File = pwd() * uri.path                      # f = 
+                       Page_text = readall(open(File))
+              elseif uri.scheme == "http" || uri.scheme == "https"
+                  got = get(URL; timeout = 10.0)
+                  Page_text = readall(got)
+              end
+
 
         pageContent = JSON.parse(Page_text)
          if haskey(pageContent, "head")
