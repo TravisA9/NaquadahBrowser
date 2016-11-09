@@ -23,7 +23,7 @@ global PATH = pwd() * "/.julia/v0.5/NaquadahBrowser/src/data/"
 global PAGES = "file://.julia/v0.5/NaquadahBrowser/src/SamplePages/Naquadah.json"
 
 # Dict() ...default attributes for nodes
-include("GUI/ElementDefaults.jl")            # Flags for elements
+include("DOM/ElementDefaults.jl")            # Flags for elements
 
 # Bit Flags to indicate properties of elements
 include("DOM/Flags.jl")            # Flags for elements
@@ -54,6 +54,7 @@ include("DOM/SetAttributes.jl")
 # Functions used to build elements/DOM tree
 # WAS: include("BuildElements.jl")
 include("DOM/BuildDOM.jl")
+include("DOM/BuildDefaultNode.jl")            # Flags for elements
 
 
 
