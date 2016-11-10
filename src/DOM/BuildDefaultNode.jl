@@ -29,14 +29,6 @@ function CreateDefaultNode(document::Page, node::MyElement ,DOM::Dict)
   # NOTE: move from most important to least. Example:
   #       imediate-styles -> ID-style -> last-class-style -> ... -> first-class-style -> default-style
 
-    if haskey(DOM, ">")
-      tag = DOM[">"]
-      if haskey(Tags_Default, tag)
-          defaults = Tags_Default[tag]
-          MergeAttributes(DOM, defaults)
-      end
-    end  # END: haskey(DOM, ">")
-
     if haskey(DOM, "class")
       tag = DOM["class"]
       if isa(tag,Array)
@@ -54,6 +46,14 @@ function CreateDefaultNode(document::Page, node::MyElement ,DOM::Dict)
           end
       end
     end  # END:
+
+    if haskey(DOM, ">")
+      tag = DOM[">"]
+      if haskey(Tags_Default, tag)
+          defaults = Tags_Default[tag]
+          MergeAttributes(DOM, defaults)
+      end
+    end  # END: haskey(DOM, ">")
 
 
     if haskey(DOM, "overflow")
@@ -110,6 +110,8 @@ function MergeAttributes(primary::Dict, secondary::Dict)
     Copy(primary, secondary, "opacity")
     Copy(primary, secondary, "z-index")
     Copy(primary, secondary, "gradient")
+    Copy(primary, secondary, "text-color")
+
 
 
     Copy(primary, secondary, "center")
@@ -133,6 +135,10 @@ function MergeAttributes(primary::Dict, secondary::Dict)
                           Copy(font, defaultfont, "family")
                           Copy(font, defaultfont, "align")
                           Copy(font, defaultfont, "text-decoration")
+
+
+
+
               end
         end
 
