@@ -165,7 +165,7 @@ label = @Label(doc.head["title"]) # result[2]
 
 #img1 = load("Browser/data/octocat.png")
     #println(img1)
-    img = ImageFromBlob("http://travis.net16.net/GitHub.png")
+    #img = ImageFromBlob("http://travis.net16.net/GitHub.png")
     #println("My Blob...",img.properties)
     # println("colorspace...",img.properties.colorspace)
     # println("spatialorder...",img.properties.spatialorder)
