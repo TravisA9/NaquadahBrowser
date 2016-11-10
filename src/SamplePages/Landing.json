@@ -17,27 +17,24 @@
 			"Patch":{
 							"padding":10, "margin":2, "width":170, "height":100,
 							"border":{"radius":3, "style":"solid", "width":"thin"},
-							"font":{ "size":12, "style":"italic", "align":"left", "lineHeight":1.4, "weight":"bold", "family":"Georgia" }
+							"font":{ "size":12, "style":"italic", "align":"left", "lineHeight":1.4, "weight":"normal", "family":"Georgia" }
 			},
 			"pink":{
 							"hover":{"color":"pink"},
 							"border":{"color":"firebrick"},
 							"color":[1, 1, 0.9],
-							"text-color":"firebrick",
 							"font":{"color":"firebrick" }
 			},
 			"lavender":{
 				      "hover":{"color":"lavender"},
 							"border":{"color":"blue"},
 							"color":"lightblue",
-							"text-color":[1, 1, 0.9],
 							"font":{"color":"black"}
 			},
 			"blue":{
 							"hover":{"color":"lightblue"},
 							"border":{"color":"blue"},
 							"color":"skyblue",
-							"text-color":[1, 1, 0.9],
 							"font":{"color":"black"}
 			}
 		},
