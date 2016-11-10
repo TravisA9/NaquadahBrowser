@@ -90,8 +90,6 @@ function makeWindow(window::Window,width,height)
         window.tabs = []
         push!(window.handle, window.notebook)
 
-
-
         id = signal_connect(window.handle, "destroy")do object
             DestroyWindow()
         end
