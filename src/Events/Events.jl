@@ -113,7 +113,10 @@ function AttatchEvents(document)
                           end
 
                             ModifyNode(e.target,false)
+                            ClipPath(ctx, e.target)
                             DrawNode(ctx,document,e.target)
+                            reset_clip(ctx)
+                            # drawAllElements(ctx, document, e.target)
                             reveal(widget)
                             #print(", onmouseover ", e.func)
                             #print(", event.x ", event.x)
@@ -147,7 +150,11 @@ function AttatchEvents(document)
                           document.hoverNode.flags[IsUnderlined] = false
                         end
                         ModifyNode(document.hoverNode,true)
+                        ClipPath(ctx, document.hoverNode)
                         DrawNode(ctx,document,document.hoverNode)
+                        reset_clip(ctx)
+                        # DrawNode(ctx,document,document.hoverNode)
+                        # drawAllElements(ctx, document, document.hoverNode)
                         reveal(widget)
                     #splotch(ctx,widget,event,0.0,1.0,0.0)
                     document.hoverNode = 0

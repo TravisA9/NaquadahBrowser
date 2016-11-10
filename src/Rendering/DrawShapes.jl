@@ -11,7 +11,6 @@
 
 
 
-
 #======================================================================================#
 #
 # CALLED FROM:
@@ -78,13 +77,7 @@ end
 # ======================================================================================
 function sample_fill_style(cr::CairoContext,node::MyElement)
     l,t,r,b = node.content.left, node.content.top, node.content.width, node.content.height
-         # set_source_rgb(cr,0.8,0.8,0.8);    # light gray
-         #  HasAlpha(context, node.color)
-                if length(node.color) > 3
-                     set_source_rgba(cr, node.color[1], node.color[2], node.color[3], node.color[4]);
-                else
-                     set_source_rgb(cr, node.color[1], node.color[2], node.color[3]);
-                end
+         setcolor( cr, node.color...)
 
          rectangle(cr,l,t,r,b); # background WAS: 0,0,256,256
          fill(cr);
@@ -97,8 +90,8 @@ function sample_fill_style(cr::CairoContext,node::MyElement)
          new_sub_path(cr); arc_negative(cr, l+192,t+64, 40, 0, -2*pi);
 
          set_fill_type(cr, Cairo.CAIRO_FILL_RULE_EVEN_ODD); # should be set_fill_rule
-         set_source_rgb(cr, 0, 0.7, 0); fill_preserve(cr);
-         set_source_rgb(cr, 0, 0, 0); stroke(cr);
+         setcolor( cr, 0, 0.7, 0); fill_preserve(cr);
+         setcolor( cr, 0, 0, 0); stroke(cr);
 
         translate(cr, 0, 128);
          rectangle(cr, l+12, t+12, 232,70);
@@ -106,8 +99,10 @@ function sample_fill_style(cr::CairoContext,node::MyElement)
          new_sub_path(cr); arc_negative(cr, l+192, t+64, 40, 0, -2*pi);
 
          set_fill_type(cr, Cairo.CAIRO_FILL_RULE_WINDING);
-         set_source_rgb(cr, 0, 0, 0.9); fill_preserve(cr);
-         set_source_rgb(cr, 0, 0, 0); stroke(cr);
+           setcolor( cr, 0, 0, 0.9)
+         fill_preserve(cr);
+         setcolor( cr, 0, 0, 0)
+         stroke(cr);
          translate(cr, 0, -128);
 end
 # ======================================================================================
@@ -120,24 +115,14 @@ function DrawCircle(cr::CairoContext, node::MyElement)
     l,t,r,b = node.box.left, node.box.top, node.box.width, node.box.height
     wide = node.content.width
     radius = node.shape.radius
-                if length(node.color) > 3
-                     set_source_rgba(cr, node.color[1], node.color[2], node.color[3], node.color[4]);
-                else
-                     set_source_rgb(cr, node.color[1], node.color[2], node.color[3]);
-                end
+    setcolor( cr, node.color...)
 
         set_antialias(cr,6)
-        # set_fill_type(cr, Cairo.CAIRO_FILL_RULE_EVEN_ODD);
-          # set_source_rgb(cr, 0, 0.7, 0); #
+        # set_fill_type(cr, Cairo.CAIRO_FILL_RULE_EVEN_ODD);          # set_source_rgb(cr, 0, 0.7, 0); #
         move_to(cr, l+wide, t+radius)
         arc(cr, l+radius, t+radius, radius, 0, 2*pi);
         fill(cr);
-
-                 if length(border.color) > 3
-                     set_source_rgba(cr, border.color[1], border.color[2], border.color[3], border.color[4]);
-                 else
-                     set_source_rgb(cr, border.color[1], border.color[2], border.color[3]);
-                 end
+setcolor( cr, border.color...)
         arc(cr, l+radius, t+radius, radius, 0, 2*pi);
         set_line_width(cr, border.width);
         stroke(cr);
@@ -154,12 +139,7 @@ function sample_arc(cr::CairoContext, node::MyElement)
 
      node.shape.angle
         set_antialias(cr,6)
-        if length(border.color) > 3
-                set_source_rgba(cr, border.color[1], border.color[2], border.color[3], border.color[4]);
-        else
-                set_source_rgb(cr, border.color[1], border.color[2], border.color[3]);
-        end
-
+        setcolor( cr, border.color...)
 
         set_line_width(cr, border.width);
         arc_negative(cr, xc, yc, node.shape.radius, node.shape.angle[1] * (pi/180.0), node.shape.angle[2] * (pi/180.0));
@@ -174,12 +154,7 @@ function sample_line(cr::CairoContext, node::MyElement)
           border = get(node.border, Border(0,0,0,0,0,0,"None",[],[]))
     l,t,r,b = node.box.left, node.box.top, node.box.width, node.box.height
         set_antialias(cr,4)
-        if length(border.color) > 3
-                set_source_rgba(cr, border.color[1], border.color[2], border.color[3], border.color[4]);
-        else
-                set_source_rgb(cr, border.color[1], border.color[2], border.color[3]);
-        end
-
+        setcolor( cr, border.color...)
 
         set_line_width(cr, border.width);
           move_to(cr, l+ node.shape.coords[1], t+ node.shape.coords[2])
@@ -203,12 +178,7 @@ end
 function sample_Curve(cr::CairoContext,node::MyElement)
     border = get(node.border, Border(0,0,0,0,0,0,"None",[],[]))
     l,t,r,b = node.box.left, node.box.top, node.box.width, node.box.height
-
-                if length(node.color) > 3
-                     set_source_rgba(cr, node.color[1], node.color[2], node.color[3], node.color[4]);
-                else
-                     set_source_rgb(cr, node.color[1], node.color[2], node.color[3]);
-                end
+setcolor( cr, node.color...)
         set_antialias(cr,6)
         set_line_width(cr, 1);
         rectangle(cr,l,t,r,b); # background
@@ -222,16 +192,10 @@ function sample_Curve(cr::CairoContext,node::MyElement)
         move_to(cr, x, y);
         curve_to(cr, x1, y1, x2, y2, x3, y3);
         # curve_to(cr, x3, y3, x4, y4, x5, y5);
-
-        if length(border.color) > 3
-                set_source_rgba(cr, border.color[1], border.color[2], border.color[3], border.color[4]);
-        else
-                set_source_rgb(cr, border.color[1], border.color[2], border.color[3]);
-        end
+setcolor( cr, border.color...)
         set_line_width(cr, border.width);
         stroke(cr);
-
-        set_source_rgba(cr, 1, 0.2, 0.2, 0.6);
+setcolor( cr, 1, 0.2, 0.2, 0.6)
         set_line_width(cr, 1.0);
         move_to(cr,x,y);   line_to(cr,x1,y1);
         move_to(cr,x2,y2); line_to(cr,x3,y3);
@@ -242,8 +206,6 @@ end
 # CALLED FROM:
 # ======================================================================================
 function sample_ClipCircle(cr::CairoContext,node::MyElement)
-# print("sample_ClipCircle \n")
-    # border = get(node.border, Border(0,0,0,0,0,0,"None",[],[]))
     l,t,r,b = node.box.left, node.box.top, node.box.width, node.box.height
     wide = node.content.width
     radius = wide/2
@@ -260,9 +222,8 @@ function sample_ClipCircle(cr::CairoContext,node::MyElement)
         imageScale = w/wide
 
         set_antialias(cr,6)
-        set_source_rgb(cr, 0, 0, 0);
+        setcolor( cr, 0, 0, 0)
         set_fill_type(cr, Cairo.CAIRO_FILL_RULE_EVEN_ODD);
-          # set_source_rgb(cr, 0, 0.7, 0); #
           move_to(cr, l+wide, t+radius)
          arc(cr, l+radius, t+radius, radius, 0, 2*pi);
          # rectangle(cr,l,t,r,b);
@@ -292,11 +253,7 @@ function  sample_Gradient(cr::CairoContext,node::MyElement)
     center = node.content.width/2
     offsetX = 25
     offsetY = 25
-                if length(node.color) > 3
-                     set_source_rgba(cr, node.color[1], node.color[2], node.color[3], node.color[4]);
-                else
-                     set_source_rgb(cr, node.color[1], node.color[2], node.color[3]);
-                end
+    setcolor( cr, node.color...)
         set_antialias(cr,6)
         set_line_width(cr, 1);
         rectangle(cr,l,t,r,b); # background
@@ -330,11 +287,7 @@ end
 function  sample_Text(cr::CairoContext,node::MyElement)
     border = get(node.border, Border(0,0,0,0,0,0,"None",[],[]))
     l,t,r,b = node.box.left, node.box.top, node.box.width, node.box.height
-                if length(node.color) > 3
-                     set_source_rgba(cr, node.color[1], node.color[2], node.color[3], node.color[4]);
-                else
-                     set_source_rgb(cr, node.color[1], node.color[2], node.color[3]);
-                end
+    setcolor( cr, node.color...)
         set_antialias(cr,6)
         set_line_width(cr, 1);
         rectangle(cr,l,t,r,b); # background
@@ -350,14 +303,14 @@ function  sample_Text(cr::CairoContext,node::MyElement)
 
         move_to(cr, l+70.0, t+165.0);
         text_path(cr, "Browser");
-        set_source_rgb(cr, 0.5, 0.5, 1);
+        setcolor( cr, 0.5, 0.5, 1)
         fill_preserve(cr);
-        set_source_rgb(cr, 0, 0, 0);
+        setcolor( cr, 0, 0, 0)
         set_line_width(cr, 2.56);
         stroke(cr);
 
         # draw helping lines
-        set_source_rgba(cr, 1, 0.2, 0.2, 0.6);
+        setcolor( cr, 1, 0.2, 0.2, 0.6)
         arc(cr, l+10.0, t+135.0, 5.12, 0, 2*pi);
         close_path(cr);
         arc(cr, l+70.0, t+165.0, 5.12, 0, 2*pi);
@@ -433,11 +386,7 @@ function  DrawPath(cr::CairoContext,node::MyElement)
     l,t,r,b = node.box.left, node.box.top, node.box.width, node.box.height
     center = node.content.width/2
     halfBorder = border.width
-                if length(node.color) > 3
-                     set_source_rgba(cr, node.color[1], node.color[2], node.color[3], node.color[4]);
-                else
-                     set_source_rgb(cr, node.color[1], node.color[2], node.color[3]);
-                end
+    setcolor( cr, node.color...)
         set_antialias(cr,6)
         set_line_width(cr, 1);
         rectangle(cr,l,t,r,b); # background
@@ -473,11 +422,7 @@ function  sample_Path(cr::CairoContext,node::MyElement)
     l,t,r,b = node.box.left, node.box.top, node.box.width, node.box.height
     center = node.content.width/2
     halfBorder = border.width
-                if length(node.color) > 3
-                     set_source_rgba(cr, node.color[1], node.color[2], node.color[3], node.color[4]);
-                else
-                     set_source_rgb(cr, node.color[1], node.color[2], node.color[3]);
-                end
+    setcolor( cr, node.color...)
         set_antialias(cr,6)
         set_line_width(cr, 1);
         rectangle(cr,l,t,r,b); # background

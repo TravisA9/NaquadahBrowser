@@ -24,17 +24,22 @@ end
 # ALERT: the problem here is that children of parents are effected!
 #        ...parrents are redrawn but not all their children
 # ======================================================================================
-function DrawAllInArea(context::CairoContext,document::Page,node::MyElement,bounds::Box)
+function DrawAllInArea(context::CairoContext, document::Page, node::MyElement, bounds::Box)
     nodes = node.node
 
+
+
             for n in nodes
+              ClipPath(context, n);
                     if RowsOverlap(n.box, bounds)
                         DrawNode(context,document,n)
                         drawAllElements(context,document,n)
                     else
                         DrawAllInArea(context,document,n,bounds)
                     end
+              reset_clip(context)
             end
+
 end
 # xmin left   ymin top   width width   height height box area
 # ======================================================================================
@@ -45,19 +50,73 @@ function drawAllElements(context::CairoContext,document::Page,node::MyElement)
 
     nodes = node.node
 
+    # clip(context);
+     #drawStuff()
+
+
             for n in nodes
                      # This will limit which nodes are drawn but clipping still needs to be done...
                      # it may be possible to do so with draw_surface-type functions
                      # https://www.cairographics.org/manual/cairo-cairo-surface-t.html#cairo-surface-t
+                    ClipPath(context, n);
                     if n.box.top < (node.area.height + node.box.top) ||
                        n.box.left < (node.area.width + node.box.width)
                        # IN: Paint.jl
                         DrawNode(context,document,n)
                         drawAllElements(context,document,n)
                     end
+                    reset_clip(context)
             # Flop
             #if node.flags[OverflowClip] == true;    reset_clip(context);    end
             end
+
+end
+# ======================================================================================
+# Fetch the page and build the DOM and Layout Tree, then render
+# CALLED FROM: Browser.jl
+# ======================================================================================
+function ClipPath(cr, node)
+	set_antialias(cr,6)
+
+  if node.flags[IsBox] == true
+    border = get(node.border, Border(0,0,0,0,0,0,"None",[],[0.0,0.0,0.0,0.0]))
+
+          if isnull(border.radius)
+            x = node.box.left   - border.left # minus 1 while the sides are being
+            y = node.box.top    - border.top # expanded by antialias-ing
+            h = node.box.height + border.height  # + 0.5
+            w = node.box.width  + border.width   # + 0.5
+             rectangle(cr, x, y, w, h)
+          else # RoudedBox(cr,node,border)
+            x = node.box.left   - (border.left* 0.5) # minus 1 while the sides are being
+            y = node.box.top    - (border.top* 0.5) # expanded by antialias-ing
+            h = node.box.height + (border.height* 0.5)  # + 0.5
+            w = node.box.width  + (border.width* 0.5)   # + 0.5
+               radius = get(border.radius)
+
+                               borderWidth = border.top[1]
+
+                               TR = radius[1]
+                               BR = radius[2]
+                               BL = radius[3]
+                               TL = radius[4]
+
+           		degrees = pi / 180.0;
+                   #w = w + borderWidth
+                   #h = h + borderWidth
+           		new_sub_path(cr);
+           		arc(cr, x + w - TR, y + TR, TR, -90 * degrees, 0 * degrees);    # topRight
+           		arc(cr, x + w - BR, y + h - BR, BR, 0 * degrees, 90 * degrees); # bottomRight
+           		arc(cr, x + BL, y + h - BL, BL, 90 * degrees, 180 * degrees);   # bottomLeft
+           		arc(cr, x + TL, y + TL, TL, 180 * degrees, 270 * degrees);      # topLeft
+           		close_path(cr);
+           end
+
+  #elseif node.flags[ClipCircle] == true
+  # elseif node.flags[IsPath] == true
+  end
+
+  clip(cr)
 end
 # ======================================================================================
 # Fetch the page and build the DOM and Layout Tree, then render
