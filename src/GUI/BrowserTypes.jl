@@ -28,8 +28,8 @@ const    = 8
 =#
 #=---------------------------------=#
 type Page
-         parent::Any
-           node::Array       # First node in a tree-like data structure representing all elements on page
+         parent::MyElement
+           node::Array{MyElement,1}       # First node in a tree-like data structure representing all elements on page
 
             url::Any         # URL of page
 
@@ -121,8 +121,8 @@ function MakeUserInterface(doc::Page)   # window, notebook
     # g[1:2,2] = scroller  # spans both columns
     # someutton = @Button()
     setproperty!(canvas, :expand, true)
-    setproperty!(g, :column_homogeneous, false) # setproperty!(g,:homogeoneous,true) for gtk2
-    setproperty!(g, :column_spacing, 15)  # introduce a 15-pixel gap between columns
+    # setproperty!(g, :column_homogeneous, false) # setproperty!(g,:homogeoneous,true) for gtk2
+    # setproperty!(g, :column_spacing, 15)  # introduce a 15-pixel gap between columns
     result = match(r"(\w+:\/\/)([-a-zA-Z0-9.]+)", doc.url)
 #----------------------------------------
 # Temporary image while I figure out how to fix the icon problem that was
@@ -147,6 +147,8 @@ label = @Label(doc.head["title"]) # result[2]
     ### setproperty!(closeButton, :padding, 1)
     ### push!(closeButton,imClose)
     imClose = @Image(stock_id="gtk-close",size=:MENU)
+    # Gtk.GConstants.GtkIconSize.:MENU or getfield(Gtk.GConstants.GtkIconSize, :MENU) instead.
+
     #----------------------------------------
     # Outline for close tab event!
     #----------------------------------------

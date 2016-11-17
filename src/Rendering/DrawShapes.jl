@@ -9,6 +9,8 @@
 # # c = CairoRGBSurface(256,256);
 # # cr = CairoContext(c);
 
+setcolor( cr, r, g, b, a) = set_source_rgba(cr, r, g, b, a);
+setcolor( cr, r, g, b) = set_source_rgb(cr, r, g, b);
 
 
 #======================================================================================#
@@ -24,10 +26,19 @@ end
 # CALLED FROM:
 #======================================================================================#
 function VerticleScrollbar(cr, node)
-  l,t,r,b = node.box.left, node.box.top, node.box.width, node.box.height
+  println("/////////////////////////////////////////")
 
-  set_source_rgb(cr, 0.5, 0.5, 0.5);
-  rectangle(cr,r,t,12,b); # background WAS: 0,0,256,256
+  #parent = node.parent
+  #l,t,r,b = parent.box.width, parent.box.top, 13, parent.box.height
+  l,t,r,b = node.box.left, node.box.top, node.box.width, node.box.height
+  println("L:$(l), T:$(t), R:$(r), B:$(b)")
+  println(node.area.width)
+  if length(node.color)>2
+    setcolor( cr, node.color...);
+  else
+    set_source_rgb(cr, 1, 0.5, 0.5);
+  end
+    rectangle(cr,l,t,r,b); # background WAS: 0,0,256,256
   fill(cr);
 
 end
@@ -66,6 +77,9 @@ function sample_clip(cr::CairoContext,node::MyElement)
      reset_transform(cr)
      reset_clip(cr)
 end
+
+
+
 #======================================================================================#
 #
 # CALLED FROM:

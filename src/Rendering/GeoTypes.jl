@@ -140,7 +140,7 @@ type MyElement
               #--#..Linkage.............#.......................................
               #==#  DOM::Dict           # dictionary counterpart of node
               #==#  parent::Any         # parent MyElement
-              #==#  node::Array         # children of type MyElement
+              #==#  node::Array{MyElement,1}         # children of type MyElement
               #==#  rows::Array{Row,1}  # list of float type children
               #==#  floater::Array      # list of float type children
     #.FLAGS.....................................................................
@@ -188,4 +188,34 @@ type MyElement
                         0,0, 0,0, 0,0, 0,0,
                         0,[]
                         )
+end
+
+function BuildElement(parent::MyElement, DOM::Dict)
+    push!(parent.node, MyElement())
+    node = parent.node[end]
+    node.DOM = DOM
+    node.parent = parent
+
+    node.x      = 0
+    node.y      = 0 # root.height = 0
+    node.contentHeight = 0
+
+
+          node.area = Box(0,0,0,0)
+          node.box = Box(0,0,0,0)
+          node.content = Box(0,0,0,0)
+
+
+          # Remove rows before adding ...to prevent layout problems
+          node.rows = []
+          if length(node.rows) < 1
+            push!(node.rows,Row())
+          end
+          row = node.rows[end]
+          row.height = 0
+          row.y = 0
+          # row.flags[IncompleteRow] = true # flag as incomplete
+
+          # node.padding = MyBox(10,10, 10,10, 20,20)
+    return node
 end

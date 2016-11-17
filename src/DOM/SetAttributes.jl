@@ -82,6 +82,14 @@ function SetAllAttributes(document::Page,node::MyElement,DOM::Dict)
 # better to use anyway... cairo.jl's work may just be bloatware
 if haskey(DOM, ">")
             tag = DOM[">"]
+            if tag == "h-scroll"
+              node.flags[HasHscroll] = true
+            end
+            if tag == "v-scroll"
+              node.flags[HasVscroll] = true
+            end
+
+
     if tag == "a"
         push!(document.events.mousedown, Event(node,DOM["href"],"link"))
         node.href = DOM["href"]
@@ -227,14 +235,12 @@ end
             end
             #......................................................................
             # OVERFLOW
-            #  DOM["v-scroll"] = Tags_Default["v-scroll"]
-            #  DOM["h-scroll"] = Tags_Default["h-scroll"]
-            if haskey(DOM, "v-scroll") # haskey(DOM, "text") ||
-                SetVscroll(DOM["v-scroll"], node)
-            end
-            if haskey(DOM, "h-scroll") # haskey(DOM, "text") ||
-                SetHscroll(DOM["h-scroll"], node)
-            end
+            #if haskey(DOM, "v-scroll") # haskey(DOM, "text") ||
+            #    SetVscroll(DOM["v-scroll"], node)
+            #end
+            #if haskey(DOM, "h-scroll") # haskey(DOM, "text") ||
+            #    SetHscroll(DOM["h-scroll"], node)
+            #end
             #......................................................................
             # Scroll:  track, thumb
             if haskey(DOM, "scrollbar-track") # haskey(DOM, "text") ||
@@ -252,7 +258,6 @@ end
 # ======================================================================================
 function SetVscroll(DOM::Dict, node::MyElement)
   node.flags[HasVscroll] = true
-  #node.box.
 end
 # ======================================================================================
 # Set flags float flags and add to parrent

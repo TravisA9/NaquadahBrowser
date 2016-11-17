@@ -7,8 +7,8 @@
 #   RoudedBox()
 #   drawText()
 #======================================================================================#
-setcolor( cr, r, g, b, a) = set_source_rgba(cr, r, g, b, a);
-setcolor( cr, r, g, b) = set_source_rgb(cr, r, g, b);
+# setcolor( cr, r, g, b, a) = set_source_rgba(cr, r, g, b, a);
+# setcolor( cr, r, g, b) = set_source_rgb(cr, r, g, b);
 
 # ======================================================================================
 # Draw a node
@@ -366,7 +366,7 @@ function RoudedBox(cr::CairoContext,node::MyElement,border)
                     h = node.box.height
                     w = node.box.width
 
-                    #borderWidth = border.top[1]
+                    borderWidth = border.top[1]
                     # w += border.width
                     # h += border.height
 
