@@ -1,9 +1,7 @@
 #======================================================================================#
-# drawAllElements()
-# DrawPage()
+#
 #======================================================================================#
-
-
+PopClipPath(context) = reset_clip(context)
 # ======================================================================================
 # Draw Elements from Layout Tree
 # CALLED FROM: MouseDragged(document) -->  Events.jl
@@ -30,14 +28,14 @@ function DrawAllInArea(context::CairoContext, document::Page, node::MyElement, b
 
 
             for n in nodes
-              ClipPath(context, n);
+              PushClipPath(context, n);
                     if RowsOverlap(n.box, bounds)
                         DrawNode(context,document,n)
                         drawAllElements(context,document,n)
                     else
                         DrawAllInArea(context,document,n,bounds)
                     end
-              reset_clip(context)
+              PopClipPath(context)
             end
 
 end
@@ -58,14 +56,19 @@ function drawAllElements(context::CairoContext,document::Page,node::MyElement)
                      # This will limit which nodes are drawn but clipping still needs to be done...
                      # it may be possible to do so with draw_surface-type functions
                      # https://www.cairographics.org/manual/cairo-cairo-surface-t.html#cairo-surface-t
-                    ClipPath(context, n);
+                    if n.flags[HasVscroll] == false && n.flags[HasHscroll] == false
+                      PushClipPath(context, n);
+                    end
                     if n.box.top < (node.area.height + node.box.top) ||
                        n.box.left < (node.area.width + node.box.width)
+
                        # IN: Paint.jl
                         DrawNode(context,document,n)
                         drawAllElements(context,document,n)
                     end
-                    reset_clip(context)
+                    if n.flags[HasVscroll] == false && n.flags[HasHscroll] == false
+                      PopClipPath(context)
+                    end
             # Flop
             #if node.flags[OverflowClip] == true;    reset_clip(context);    end
             end
@@ -75,7 +78,7 @@ end
 # Fetch the page and build the DOM and Layout Tree, then render
 # CALLED FROM: Browser.jl
 # ======================================================================================
-function ClipPath(cr, node)
+function PushClipPath(cr, node)
 	set_antialias(cr,6)
 
   if node.flags[IsBox] == true
@@ -112,7 +115,21 @@ function ClipPath(cr, node)
            		close_path(cr);
            end
 
-  #elseif node.flags[ClipCircle] == true
+  elseif node.flags[IsCircle] == true
+        border = get(node.border, Border(0,0,0,0,0,0,"None",[],[]))
+        l,t,r,b = node.box.left - border.width, node.box.top - border.width, node.box.width, node.box.height
+        wide = node.content.width
+        radius = node.shape.radius + border.width
+        move_to(cr, l+wide, t+radius)
+        arc(cr, l+radius, t+radius, radius, 0, 2*pi);
+  else
+    x = node.box.left
+    y = node.box.top
+    h = node.box.height
+    w = node.box.width
+     rectangle(cr, x, y, w, h)
+
+
   # elseif node.flags[IsPath] == true
   end
 
@@ -154,7 +171,7 @@ function DrawPage(document::Page)
             @time    traceElementTree(document,node, node.DOM,0)
             flags = falses(8)
             # flags[] =     ## if you need to pass something in, do it here.
-                      ResetYoffset(node,flags)
+                      # ResetYoffset(node,flags)
             # Erase all previous
             rectangle(context,  0,  0,  node.box.width, node.box.height )
             set_source_rgb(context, 1,1,1);

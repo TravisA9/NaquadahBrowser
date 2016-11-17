@@ -27,11 +27,9 @@ function FetchPage(URL::String)
 # For URI parsing see:
 #        https://github.com/JuliaWeb/URIParser.jl/blob/master/README.md
        uri = URI(URL)
-            println("document.url:   ",document.url)
-            println("URL:   ",uri)
               if uri.scheme == "file"
-                 File = pwd() * uri.path                      # f = 
-                       Page_text = readall(open(File))
+                 File = pwd() * uri.path
+                       Page_text = readstring(open(File))
               elseif uri.scheme == "http" || uri.scheme == "https"
                   got = get(URL; timeout = 10.0)
                   Page_text = readall(got)
@@ -55,7 +53,7 @@ function FetchPage(URL::String)
         push!(node.rows,Row())
         node.rows[end].height = 0
         node.rows[end].y = 0
-        println(node.content)
+        # println(node.content)
 
         # Give root a dummy parent
         document.parent = MyElement()
@@ -66,12 +64,12 @@ function FetchPage(URL::String)
           parentRow.height = 0
           parentRow.y = 0
           push!(parentRow.nodes, document.node)
-          println(parent.content)
+          # println(parent.content)
 
 
 
 
-       println(node.rows)
+       # println(node.rows)
 
         if haskey(pageContent, "body")
             node.DOM = Dict("nodes" => pageContent["body"])

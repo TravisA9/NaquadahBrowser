@@ -5,12 +5,20 @@ Tags_Default = Dict(
 # SHADOW DOM stuff
 # h-scroll v-scroll: scrollbar-track scrollbar-thumb
 "h-scroll" => Dict( "offset" => 0,
-										"scrollbar-track" => Dict("color" => "darkgrey", "width" =>  12 ),
-										"scrollbar-thumb" => Dict("color" => "grey",     "width" =>  10 ),
+                    "color" => "darkgrey",
+										"width" =>  12,
+										"height" =>  12,
+										"opacity" => 0.3,
+                    "hover" => Dict("opacity" => 0.9 ),
+										"nodes" => [ Dict(">" => "scrollbar-thumb", "color" => "grey", "height" =>  12,"width" =>  10 ) ]
 									),
 "v-scroll" => Dict( "offset" => 0,
-										"scrollbar-track" => Dict("color" => "darkgrey", "width" =>  12 ),
-										"scrollbar-thumb" => Dict("color" => "grey",     "width" =>  10 ),
+                    "color" => "darkgrey",
+										"width" =>  12,
+										"height" =>  12,
+										"opacity" => 0.3,
+                    "hover" => Dict("opacity" => 0.9 ),
+										"nodes" => [ Dict(">" => "scrollbar-thumb", "color" => "grey", "height" =>  12,"width" =>  10 ) ]
 									),
 
 

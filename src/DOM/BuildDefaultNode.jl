@@ -5,20 +5,9 @@
 #   attributes and set defaults if none are explicitly set from the DOM. It would be
 #   good to test for and set styles at the same time...
 # ======================================================================================
-function CreateDefaultNode(document::Page, node::MyElement ,DOM::Dict)
-  # set up some defaults...
-          node.x      = 0
-          node.y      = 0 # root.height = 0
-          node.contentHeight = 0
-
-          # Remove rows before adding ...to prevent layout problems
-          node.rows = []
-          if length(node.rows) < 1
-            push!(node.rows,Row())
-          end
-          node.rows[end].height = 0
-          node.flags[IncompleteRow] = true
-
+function CreateDefaultNode(document::Page, parent::MyElement, DOM::Dict) # node::MyElement ,
+    node = BuildElement(parent, DOM)
+    #node = parent.node[end]
 
   defaults = Dict()
   # take into account that multiple styles may be applied.
@@ -28,7 +17,17 @@ function CreateDefaultNode(document::Page, node::MyElement ,DOM::Dict)
   # set defaults..............................................
   # NOTE: move from most important to least. Example:
   #       imediate-styles -> ID-style -> last-class-style -> ... -> first-class-style -> default-style
-
+ # if haskey(DOM, "class")
+#      # TODO: Test if is Array and work out selector logic
+#      class = DOM["class"]
+#      if haskey(document.styles, class)
+#          styles = document.styles[class]
+#          SetAllAttributes(document,node,styles)
+#      else
+          # print("The class: $(class) not found!\n") # content
+#      end
+  #else
+  #end
     if haskey(DOM, "class")
       tag = DOM["class"]
       if isa(tag,Array)
@@ -58,17 +57,27 @@ function CreateDefaultNode(document::Page, node::MyElement ,DOM::Dict)
 
     if haskey(DOM, "overflow")
       tag = DOM["overflow"]
+
+      # SHADDOW DOM:..............................................
+
       if tag == "scroll"
-        # add scrollbars to the DOM
-        DOM["v-scroll"] = Tags_Default["v-scroll"]
-        DOM["h-scroll"] = Tags_Default["h-scroll"]
+            if !haskey(DOM,"nodes")
+              DOM["nodes"] = []
+            end
+            nodes = DOM["nodes"]
+            hScrollbar = Tags_Default["h-scroll"]
+            hScrollbar[">"] = "h-scroll"
+            push!(nodes,hScrollbar)
+            vScrollbar = Tags_Default["v-scroll"]
+            vScrollbar[">"] = "v-scroll"
+            push!(nodes,vScrollbar)
       end
     end
-    BoxDesign(document,node,DOM)
+    # BoxDesign(document,node,DOM)
+    SetAllAttributes(document,node,DOM)
     # scrollbar-track scrollbar-thumb
 
-
-    # return node
+    #return node
 end
 # ======================================================================================
 # just to keep things clean below. TODO: inline
@@ -157,25 +166,4 @@ function MergeAttributes(primary::Dict, secondary::Dict)
                           Copy(border, defaultborder, "color")
               end
         end
-end
-
-# ======================================================================================
-# thicknes-r, thicknes-r, thicknes-r, thicknes-r, sum-x, sum-y
-# CALLED FROM:
-# ======================================================================================
-function BoxDesign(document::Page,node::MyElement,DOM::Dict)
-# ELEMENTS:..............................................
-# STYLES:................................................
-    if haskey(DOM, "class")
-        # TODO: Test if is Array and work out selector logic
-        class = DOM["class"]
-        if haskey(document.styles, class)
-            styles = document.styles[class]
-            SetAllAttributes(document,node,styles)
-        else
-            # print("The class: $(class) not found!\n") # content
-        end
-    end
-    # INLINE STYLES:..........................................
-    SetAllAttributes(document,node,DOM)
 end

@@ -19,7 +19,26 @@ type EventTypes
   EventTypes() = new([],[],[],[])
 end
 
+# ======================================================================================
+# Attatch mouse (and other) events
+# CALLED FROM: Below, third button event line 100+
+# ======================================================================================
+function printDict(dict)
+       keyList = sort(collect(keys(dict)))
+       str, key, value = "","",""
+           for k in 1:length(keyList)
+             key = keyList[k]
+               if isa(dict[key], Dict)
+                 value = "{ $(printDict(dict[key])) } "
+               else
+                 value = dict[keyList[k]]
+               end
+               if k != 1; key = ", $(key)"; end
+            str =   "$(str)$(key):$(value)"
+           end
 
+    return str
+end
 # ======================================================================================
 # Attatch mouse (and other) events
 # CALLED FROM:
@@ -70,12 +89,24 @@ function AttatchEvents(document)
     end
     canvas.mouse.button2press = @guarded (widget, event) -> begin
        # print("Button 2 Released( $(event.x), $(event.y) ) ")
+       #println("document.node[1].node[1].node ", typeof(document.node[1].node[1].node))
+       println(".............................")
+       getFirstAt(document.node[1],event,1)
+
+           # if OverTarget(event,e.target)
+          #      info_dialog(e.target.DOM)
+           # end
+
     end
     canvas.mouse.button2release = @guarded (widget, event) -> begin
        # print("Button 2 Released( $(event.x), $(event.y) ) ")
     end
     canvas.mouse.button3press = @guarded (widget, event) -> begin
-       # print("Button 3 Released( $(event.x), $(event.y) ) ")
+       node = copy(getFirstAt(document.node[1],event,1).DOM)
+       node["nodes"] = "[...]"
+       contents = []
+       contents = printDict(node)
+       info_dialog( "Node: { $(contents) }", document.ui.window)
     end
     canvas.mouse.button3release = @guarded (widget, event) -> begin
        # print("Button 3 Released( $(event.x), $(event.y) ) ")
@@ -113,9 +144,9 @@ function AttatchEvents(document)
                           end
 
                             ModifyNode(e.target,false)
-                            ClipPath(ctx, e.target)
+                            PushClipPath(ctx, e.target)
                             DrawNode(ctx,document,e.target)
-                            reset_clip(ctx)
+                            PopClipPath(ctx)
                             # drawAllElements(ctx, document, e.target)
                             reveal(widget)
                             #print(", onmouseover ", e.func)
@@ -150,9 +181,9 @@ function AttatchEvents(document)
                           document.hoverNode.flags[IsUnderlined] = false
                         end
                         ModifyNode(document.hoverNode,true)
-                        ClipPath(ctx, document.hoverNode)
+                        PushClipPath(ctx, document.hoverNode)
                         DrawNode(ctx,document,document.hoverNode)
-                        reset_clip(ctx)
+                        PopClipPath(ctx)
                         # DrawNode(ctx,document,document.hoverNode)
                         # drawAllElements(ctx, document, document.hoverNode)
                         reveal(widget)
@@ -184,6 +215,46 @@ function AttatchEvents(document)
     #end
 
 end
+# ======================================================================================
+# Test if mouse is in bounds
+# CALLED FROM:
+# ======================================================================================
+function getFirstAt(node::MyElement,event,depth)
+ nodes = node.node
+      if isa(nodes, Array)
+          for node in nodes
+            print(". ", depth)
+            r = getFirstAt(node,event,depth+1)
+                   if OverTarget(event, node)
+                       return r == nothing ? node:r
+                   else
+
+                       if r != nothing
+                         println("Returned Node: ", r)
+                       end
+                   end
+
+                end
+              else
+              println(typeof(nodes))
+          end
+
+end
+#=
+function AllElements(context::CairoContext,document::Page,node::MyElement)
+
+    nodes = node.node
+            for n in nodes
+                    if n.box.top < (node.area.height + node.box.top) ||
+                       n.box.left < (node.area.width + node.box.width)
+                       # IN: Paint.jl
+                        DrawNode(context,document,n)
+                        drawAllElements(context,document,n)
+                    end
+            end
+
+end
+=#
 # ======================================================================================
 # Test if mouse is in bounds
 # CALLED FROM:
