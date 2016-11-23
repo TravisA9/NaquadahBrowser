@@ -4,33 +4,74 @@
 
 #### What is Naquadah?
 
-Naquadah principally consists of a **layout engine** and a **rendering engine** built from the ground up. For convenience, it includes a basic GUI as well. It is writen in the awesome **Julia language** and serves as a test of julia's value as a general purpose language.
+**Short answer: **A browser and_ layout engine_ that consumes **Json** instead of HTML
 
 > Naquadah currently uses **Cairo** for graphics and **GTK** for the GUI.
 
-Naquadah will soon be devided into **modules** for seperation of concerns, to make them usable as stand-alone packages and to facilitate swapping out parts in the future if desired.
 
-Although, Naquadah looks and functions like a browser, there are several differences.
+
+**Long answer:** Although, Naquadah looks and functions like a browser, there are a few differences. Naquadah principally consists of a **layout engine** and a **rendering engine** built from the ground up. For convenience, it includes a basic GUI as well. It is writen in the awesome **Julia language** and serves as a test of julia's value as a general purpose language. It is being developed for fun and for the purpose of displaying my work but if it proves to be useful, that would be great too.
+
+
+
+Naquadah will eventually be divided into **modules** for seperation of concerns, to make them usable as stand-alone packages and to facilitate swapping out parts in the future if desired.
 
 ![window](doc/figures/browser-1.gif)
 
 ![window](doc/figures/Browser-2.png)
 
-Yes, Naquadah is the name of a mineral from the sci-fi series Stargate. The browser named after that great series is not yet any more stable than the mineral. The objective is to build a browser capable of simplifying web design \(front and back end\) and removing unneeded complications.
+# State of the project
 
-As the WWW developed and changed many things were added in order to fill in the gaps. For each new piece added to the puzzle there were more complications introduced ...as if it were a big patch-work quilt where each piece has to be stitched together. If you want a traditional web page with only text, images and links then you can stick to HTML. However, if you want any real functionality you have to code. That usually means that the HTML has to be queried and modified, triggering a series of changes such as re-flow and repaint in the browser. But it is not that simple at all because HTML is not the only language being parsed in most cases. In many web pages XML, SVG, etc. are also used. Then there are other considerations such as what version of the markup is being used. Don't forget the CSS too! It is no surprise then that there are so many languages and packages for querying, parsing, patching or generating pages. They are mostly attempts at data binding and stitching the parts together.
+**Working...**
 
-Unfortunately, it is usually necessary to use, not just one, but several of these tools on any given project. This means that there is much overhead... more code, more languages, greater development costs, more complicated setup. The costs effect the server, the browser, the developer, the owner, and the user.
+* **Tags**: Nodes can be created with the default settings of common Tags pluss an extended set. Many of the defaults still need set but otherwize it seems to be working.
+* **Styles**: Attributes can be assigned to nodes as styles.
+* **Classes**: One or more classes can be defined and assigned to nodes to change or add attribues.
+* **Floats**: Left, Right
+* **Display**: inline, block, inline-block
+* **Position**: absolute, relative, fixed
+* **Box-Modal**: content, padding, border, margin, height, width
+* **Colors**: Background, border, text, Text-highlight, node-alpha, RGB\/RGBA
+* **Circles**: The "circle" Tag can be used to create a cicle that is treated as any other node.
+* **Events**: Hover and click events ahave been partially implemented.
+* **Clipping**: works
+* **Text-Highlighting: **
+* **Gradients**: radial, linear
+* **Border-radiaus**:
+* **Overflow**: scroll\(in progress\), hidden
+* **Links**: open in new page for now.
 
-## Here is Naquadah's solution:
+**In progress...**
 
-* Code in EMCA script \(JavaScript\)
-* Data in Json
-* That's all!
+* **Geometry as nodes**: Lines, curves, arcs, paths, text-paths
+* **Events:** drag, swipe, etc.
+* **Transforms**:
+* **Shaddow DOM**: scrollers, etc.
 
-# Example of a Web Page as Json
+**Not yet started...**
+* **Transitions:** 
+* **Animations**:
+* **JavaScript engine:** Maybe the v8 engine, would node be as good or better? ...don't know!
+* **Consume other scripts:** Html, SVG, CSS...
+* **Browsing History**:
+* **Shadows**: text, box
+* **Backgrounds**: images
+* **Columns**:
+* **Media Queries:**
+* **Media**: Video, audio
+* **Border Images**: ...maybe
+* **Forms**: maybe
+* **Selectors**: \(.\),   \#,   \[\],   $=,   \*=,   &gt;
+* **Max\/min**: max-width, max-height, min-width, min-height
+* **Tables**:
+* **Lists**:
+* **Outline**: ...maybe
 
-### General structure
+---
+
+# General structure
+
+Example of a Web Page as Json
 
 ```JSON
 {
@@ -40,7 +81,7 @@ Unfortunately, it is usually necessary to use, not just one, but several of thes
 }    
 ```
 
-The head may look something like this.
+The **head** may look something like this.
 
 ```JSON
     "head":{
@@ -53,7 +94,7 @@ The head may look something like this.
         }
 ```
 
-The styles section stores frequently used styles \(similer to CSS\).
+The **styles** section stores frequently used styles \(similer to CSS\).
 
 ```JSON
     "styles":{
@@ -62,7 +103,7 @@ The styles section stores frequently used styles \(similer to CSS\).
         }
 ```
 
-The body describes general structure \(similer to HTML and SVG\) and may also contain style information.
+The **body** describes general structure \(similer to HTML and SVG\) and may also contain style information.
 
 ```JSON
     "body":[
@@ -87,7 +128,7 @@ The body describes general structure \(similer to HTML and SVG\) and may also co
 
 As you can see there are three major sections to a Json page and these may be one file or spread across several files. It may be modified by script as well.
 
-## How To Get Started
+# How To Get Started
 
 * First install [Julia](http://julialang.org/downloads/). To start julia up go to your terminal and type:
 
@@ -126,7 +167,7 @@ If you close the window you can restart it like this:
 julia> Start()
 ```
 
-# Goals
+# General Goals
 
 * Mantain modularity in order to be adaptable. If in the future there is good reason to switch out something such as the graphics interface, it should be easy to do so without reworking all the code. Also, if someone wants to use just one module out of Naquadah it should be easy to do so.
 
@@ -141,34 +182,11 @@ julia> Start()
 * Experiment with reactively connecting to databases for real-time page updates.
 
 
-## Code: Why Julia?
+# Wish List:
 
-Julia is a great choice for this project because it can be optimized to run very fast. So far, only a little attention has been given to speed. For instance data types have not yet been specified in many cases and this creates overhead causing much slower code execution. Currently more emphasis has been given to adding broad functionality and to determining the structure of the project So expect much better speed in the future.
-
-I also wanted to do something that would test Juliia's feasability as a general purpose language. I think this is a good test.
-
-### Compatability
-
-Perhaps the reason that no one has attempted to fix the problems with the web is to avoid fragmenting it. If we start doing things differently then we risk end up with two sections of the internet; the HTML version and the Json version. Many large companies have invested great sums of money into developing their web pages and apps and it would be very unfortunate to create a problem in this area. 
-Is there a solution? I believe that there are a couple of ways to prevent this. A bridge must be built until a proper transition has been made. To do this, compatability packages need to be made. This would also create some new opertunities for those who wish to write the code needed to build such bridges.
-
-One would be needed to parse the Json to create HTML, SVG and CSS from the Json. There are already some JS libraries that do some of that.
-
-The second, would be to write HTML, SVG and CSS parsers for the Naquadah Browser. This could be in JS and parse them to a Json file or they could be written in Julia as an addition to the browser itself.
-
-# TODO:
+Toss in HTML, SVG and CSS parsers to make the browser work with standard web pages.
 
 Integrate v8 engine
-
-Text and Drop shadows
-
-Clipping
-
-~~Float~~
-
-Transitions
-
-Fix Text layout    . . . progressing!
 
 Generate proper images from blobs
 
@@ -177,6 +195,8 @@ Integrated page editor \(perhaps WYSIWYG\)
 Optimize speed
 
 Compile distributable binaries for major OSs
+
+Ploting and plot animation utilities. Example: force layout functionality
 
 # Project Overview
 
