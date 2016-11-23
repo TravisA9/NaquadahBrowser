@@ -4,15 +4,11 @@
 
 #### What is Naquadah?
 
-**Short answer: **A browser and_ layout engine_ that consumes **Json** instead of HTML
+**Short answer**: A browser and_ layout engine_ that consumes **Json** instead of HTML
 
 > Naquadah currently uses **Cairo** for graphics and **GTK** for the GUI.
 
-
-
-**Long answer:** Although, Naquadah looks and functions like a browser, there are a few differences. Naquadah principally consists of a **layout engine** and a **rendering engine** built from the ground up. For convenience, it includes a basic GUI as well. It is writen in the awesome **Julia language** and serves as a test of julia's value as a general purpose language. It is being developed for fun and for the purpose of displaying my work but if it proves to be useful, that would be great too.
-
-
+**Long answer**: Although, Naquadah looks and functions like a browser, there are a few differences. Naquadah principally consists of a **layout engine** and a **rendering engine** built from the ground up. For convenience, it includes a basic GUI as well. It is writen in the awesome **Julia language** and serves as a test of julia's value as a general purpose language. It is being developed for fun and for the purpose of displaying my work but if it proves to be useful, that would be great too.
 
 Naquadah will eventually be divided into **modules** for seperation of concerns, to make them usable as stand-alone packages and to facilitate swapping out parts in the future if desired.
 
@@ -35,7 +31,7 @@ Naquadah will eventually be divided into **modules** for seperation of concerns,
 * **Circles**: The "circle" Tag can be used to create a cicle that is treated as any other node.
 * **Events**: Hover and click events ahave been partially implemented.
 * **Clipping**: works
-* **Text-Highlighting: **
+* **Text-Highlighting**: 
 * **Gradients**: radial, linear
 * **Border-radiaus**:
 * **Overflow**: scroll\(in progress\), hidden
@@ -44,20 +40,21 @@ Naquadah will eventually be divided into **modules** for seperation of concerns,
 **In progress...**
 
 * **Geometry as nodes**: Lines, curves, arcs, paths, text-paths
-* **Events:** drag, swipe, etc.
+* **Events**: drag, swipe, etc.
 * **Transforms**:
 * **Shaddow DOM**: scrollers, etc.
 
 **Not yet started...**
-* **Transitions:** 
+
+* **Transitions**: 
 * **Animations**:
-* **JavaScript engine:** Maybe the v8 engine, would node be as good or better? ...don't know!
-* **Consume other scripts:** Html, SVG, CSS...
+* **JavaScript engine**: Maybe the v8 engine, would node be as good or better? ...don't know!
+* **Consume other scripts**: Html, SVG, CSS...
 * **Browsing History**:
 * **Shadows**: text, box
 * **Backgrounds**: images
 * **Columns**:
-* **Media Queries:**
+* **Media Queries**:
 * **Media**: Video, audio
 * **Border Images**: ...maybe
 * **Forms**: maybe
