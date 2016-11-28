@@ -59,7 +59,7 @@ Naquadah will eventually be divided into **modules** for seperation of concerns,
 * **Border Images**: ...maybe
 * **Forms**: maybe
 * **Selectors**: \(.\),   \#,   \[\],   $=,   \*=,   &gt;
-* **Max\/min**: max-width, max-height, min-width, min-height
+* **Max/min**: max-width, max-height, min-width, min-height
 * **Tables**:
 * **Lists**:
 * **Outline**: ...maybe
@@ -68,7 +68,7 @@ Naquadah will eventually be divided into **modules** for seperation of concerns,
 
 # General structure
 
-Example of a Web Page as Json
+Example of Json as a Web Page
 
 ```JSON
 {
