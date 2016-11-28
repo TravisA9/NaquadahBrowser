@@ -27,7 +27,7 @@ Naquadah will eventually be divided into **modules** for seperation of concerns,
 * **Display**: inline, block, inline-block
 * **Position**: absolute, relative, fixed
 * **Box-Modal**: content, padding, border, margin, height, width
-* **Colors**: Background, border, text, Text-highlight, node-alpha, RGB\/RGBA
+* **Colors**: Background, border, text, Text-highlight, node-alpha, RGB/RGBA
 * **Circles**: The "circle" Tag can be used to create a cicle that is treated as any other node.
 * **Events**: Hover and click events ahave been partially implemented.
 * **Clipping**: works
