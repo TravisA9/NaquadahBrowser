@@ -17,6 +17,9 @@ Naquadah will eventually be divided into **modules** for seperation of concerns,
 ![window](doc/figures/Browser-2.png)
 
 # State of the project
+**Special features**
+
+* **Right Mouse Click**: Display node DOM representation
 
 **Working...**
 
@@ -31,9 +34,9 @@ Naquadah will eventually be divided into **modules** for seperation of concerns,
 * **Circles**: The "circle" Tag can be used to create a cicle that is treated as any other node.
 * **Events**: Hover and click events ahave been partially implemented.
 * **Clipping**: works
-* **Text-Highlighting**: 
+* **Text-Highlighting**: A bit hacky but mostly working
 * **Gradients**: radial, linear
-* **Border-radiaus**:
+* **Border-radius**:
 * **Overflow**: scroll\(in progress\), hidden
 * **Links**: open in new page for now.
 
