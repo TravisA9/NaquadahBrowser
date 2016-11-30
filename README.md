@@ -94,7 +94,7 @@ The **head** may look something like this.
         }
 ```
 
-The **styles** section stores frequently used styles \(similer to CSS\).
+The **styles** section stores frequently used styles \(similer to CSS\). Styles can also be used as color swatches or as templates adding structure or other default aspects to a node.
 
 ```JSON
     "styles":{
