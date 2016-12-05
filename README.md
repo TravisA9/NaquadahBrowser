@@ -34,7 +34,7 @@ Naquadah will eventually be divided into **modules** for seperation of concerns,
 * **Circles**: The "circle" Tag can be used to create a circle that is treated as any other node.
 * **Events**: Hover and click events ahave been partially implemented.
 * **Clipping**: works
-* **Text-Highlighting**: A bit hacky but mostly working
+* **Text-Highlighting**: A bit hacky but mostly working   ...opps, reportedly broken!
 * **Gradients**: radial, linear
 * **Border-radius**:
 * **Overflow**: scroll\(in progress\), hidden
