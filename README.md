@@ -4,7 +4,7 @@
 
 #### What is Naquadah?
 
-**Short answer**: A browser and_ layout engine_ that consumes **Json** instead of HTML
+**Short answer**: A browser and _layout engine_ that consumes **Json** instead of HTML
 
 > Naquadah currently uses **Cairo** for graphics and **GTK** for the GUI.
 
@@ -31,7 +31,7 @@ Naquadah will eventually be divided into **modules** for seperation of concerns,
 * **Position**: absolute, relative, fixed
 * **Box-Modal**: content, padding, border, margin, height, width
 * **Colors**: Background, border, text, Text-highlight, node-alpha, RGB/RGBA
-* **Circles**: The "circle" Tag can be used to create a cicle that is treated as any other node.
+* **Circles**: The "circle" Tag can be used to create a circle that is treated as any other node.
 * **Events**: Hover and click events ahave been partially implemented.
 * **Clipping**: works
 * **Text-Highlighting**: A bit hacky but mostly working
