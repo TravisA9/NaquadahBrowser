@@ -13,7 +13,7 @@
 Naquadah will eventually be divided into **modules** for seperation of concerns, to make them usable as stand-alone packages and to facilitate swapping out parts in the future if desired.
 
 ## * Warning this project is being overhualed!
-     In order to improve the general design and improve modularity I am making some breaking changes but for now you are still welcome to try out Naquadah if you like.
+In order to improve the general design and improve modularity I am making some breaking changes but for now you are still welcome to try out Naquadah if you like.
      
 ![window](doc/figures/browser-1.gif)
 
