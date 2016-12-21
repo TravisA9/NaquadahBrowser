@@ -1,6 +1,5 @@
 # Naquadah Browser
 
-## * Warning this project is being overhualed!
 ---
 
 #### What is Naquadah?
@@ -12,6 +11,8 @@
 **Long answer**: Although, Naquadah looks and functions like a browser, there are a few differences. Naquadah principally consists of a **layout engine** and a **rendering engine** built from the ground up. For convenience, it includes a basic GUI as well. It is writen in the awesome **Julia language** and serves as a test of julia's value as a general purpose language. It is being developed for fun and for the purpose of displaying my work but if it proves to be useful, that would be great too.
 
 Naquadah will eventually be divided into **modules** for seperation of concerns, to make them usable as stand-alone packages and to facilitate swapping out parts in the future if desired.
+
+## * Warning this project is being overhualed!
 
 ![window](doc/figures/browser-1.gif)
 
