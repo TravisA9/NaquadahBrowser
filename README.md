@@ -29,15 +29,15 @@ In order to improve the general design and improve modularity I am making some b
 * **Tags**: Nodes can be created with the default settings of common Tags pluss an extended set. Many of the defaults still need set but otherwize it seems to be working.
 * **Styles**: Attributes can be assigned to nodes as styles.
 * **Classes**: One or more classes can be defined and assigned to nodes to change or add attribues.
-* **Floats**: Left, Right
+* **Floats**: left, right
 * **Display**: inline, block, inline-block
 * **Position**: absolute, relative, fixed
 * **Box-Modal**: content, padding, border, margin, height, width
-* **Colors**: Background, border, text, Text-highlight, node-alpha, RGB/RGBA
+* **Colors**: background, border, text, text-highlight, node-alpha, RGB/RGBA
 * **Circles**: The "circle" Tag can be used to create a circle that is treated as any other node.
-* **Events**: Hover and click events ahave been partially implemented.
+* **Events**: hover and click events ahave been partially implemented.
 * **Clipping**: works
-* **Text-Highlighting**: A bit hacky but mostly working   ...opps, reportedly broken!
+* **Text-Highlighting**: A bit hacky but mostly working   ...oops, reportedly broken!
 * **Gradients**: radial, linear
 * **Border-radius**:
 * **Overflow**: scroll\(in progress\), hidden
@@ -45,7 +45,7 @@ In order to improve the general design and improve modularity I am making some b
 
 **In progress...**
 
-* **Geometry as nodes**: Lines, curves, arcs, paths, text-paths
+* **Geometry as nodes**: lines, curves, arcs, paths, text-paths
 * **Events**: drag, swipe, etc.
 * **Transforms**:
 * **Shaddow DOM**: scrollers, etc.
@@ -61,7 +61,7 @@ In order to improve the general design and improve modularity I am making some b
 * **Backgrounds**: images
 * **Columns**:
 * **Media Queries**:
-* **Media**: Video, audio
+* **Media**: video, audio
 * **Border Images**: ...maybe
 * **Forms**: maybe
 * **Selectors**: \(.\),   \#,   \[\],   $=,   \*=,   &gt;
@@ -90,10 +90,10 @@ The **head** may look something like this.
     "head":{
             "title":"MyPageTitle",
             "favicon":"http://myapp/favicon.ico",
-               "charset":"utf-8",
-               "keywords":"web tech,browser concept,Json Pages",
-               "author":"Travis Deane Ashworth",
-              "links":[{"url":"http://myapp/somescript.js"}]
+            "charset":"utf-8",
+            "keywords":"web tech,browser concept,Json Pages",
+            "author":"Travis Deane Ashworth",
+            "links":[{"url":"http://myapp/somescript.js"}]
         }
 ```
 
@@ -157,7 +157,7 @@ As you can see there are three major sections to a Json page and these may be on
   Pkg.add("Images") 
   ```
 
-* Finally, you can start the application with the following command:
+* Finally, one way you can start the application is with the following command:
 
 
 ```julia
