@@ -28,7 +28,7 @@ In order to improve the general design and improve modularity I am making some b
 
 * **Tags**: Nodes can be created with the default settings of common Tags pluss an extended set. Many of the defaults still need set but otherwize it seems to be working.
 * **Styles**: Attributes can be assigned to nodes as styles.
-* **Classes**: One or more classes can be defined and assigned to nodes to change or add attribues.
+* **Classes**: One or more classes can be defined and assigned to nodes to change or add styles to an element.
 * **Floats**: left, right
 * **Display**: inline, block, inline-block
 * **Position**: absolute, relative, fixed
