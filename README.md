@@ -22,7 +22,7 @@ In order to improve the general design and improve modularity I am making some b
 # State of the project
 **Special features**
 
-* **Right Mouse Click**: Display node DOM representation
+* **Right Mouse Click**: Display DOM node representation
 
 **Working...**
 
