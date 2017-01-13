@@ -14,7 +14,7 @@ Naquadah will eventually be divided into **modules** for seperation of concerns,
 
 ## * Warning this project is being overhualed!
 In order to improve the general design and improve modularity I am making some breaking changes but for now you are still welcome to try out Naquadah if you like.
-### Update:
+### ...Update:
 I am makeing steady progress on a complete rewrite of Naquadah (as NaquadahCore)! The project will soon be folded into NaquadahBrowser. 
      
 ![window](doc/figures/browser-1.gif)
