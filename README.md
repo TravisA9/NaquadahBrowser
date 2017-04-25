@@ -15,6 +15,7 @@ In order to improve the general design and improve modularity I am making some b
 ### ...Update:
 I have now moved the old version of NaquadahBrowser to a folder. The current version of Naquadah is the updated version although some functionality is still missing.
  
+ Take a look at the new version of Naquadah!
 ![window](doc/figures/NaquadahCore.png)
 Some things that are missing from the current version that worked in the previous:
 * Most events
@@ -22,7 +23,11 @@ Some things that are missing from the current version that worked in the previou
 * Text selection
 * Compilation of styles section
 
-###Old version     
+Interesting new features:
+* Tab/Search Controls are now shadow DOM and can be moved or redesigned. This should help ensure that the browser works with any graphics engine changes and even change appearence and functionality where needed (Ex. mobile devices).
+* Mostly working scrollbar as shadow DOM
+
+### Old version     
 ![window](doc/figures/browser-1.gif)
 
 
@@ -195,10 +200,6 @@ julia> Start()
 
 # Wish List:
 
-Toss in HTML, SVG and CSS parsers to make the browser work with standard web pages.
-
-Integrate v8 engine
-
 Generate proper images from blobs
 
 Integrated page editor \(perhaps WYSIWYG\)
@@ -207,13 +208,9 @@ Optimize speed
 
 Compile distributable binaries for major OSs
 
-Ploting and plot animation utilities. Example: force layout functionality
+Ploting and plot animation utilities (Ex. force layout functionality). Since Naquadah is meant to be a layout engine, it may be nice to include more than just the basic browser options.
 
-# Project Overview
 
-This will continue to evolve...
-
-![window](doc/figures/MindMup.png)
 
 travisashworth2007@gmail.com
 
