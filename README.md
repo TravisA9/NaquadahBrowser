@@ -10,18 +10,19 @@
 
 **Long answer**: Although, Naquadah looks and functions like a browser, there are a few differences. Naquadah principally consists of a **layout engine** and a **rendering engine** built from the ground up. For convenience, it includes a basic GUI as well. It is writen in the awesome **Julia language** and serves as a test of julia's value as a general purpose language. It is being developed for fun and for the purpose of displaying my work but if it proves to be useful, that would be great too.
 
-Naquadah will eventually be divided into **modules** for seperation of concerns, to make them usable as stand-alone packages and to facilitate swapping out parts in the future if desired.
-
 ## * Warning this project is being overhualed!
-In order to improve the general design and improve modularity I am making some breaking changes but for now you are still welcome to try out Naquadah if you like.
+In order to improve the general design and improve modularity I am making some breaking changes.
 ### ...Update:
-I am making steady progress on a complete rewrite of Naquadah (as NaquadahCore)! The project will soon be folded into NaquadahBrowser. 
-     
+I have now moved the old version of NaquadahBrowser to a folder. The current version of Naquadah is the updated version although some functionality is still missing.
+ 
+![window](doc/figures/.png)
+
+Old version     
 ![window](doc/figures/browser-1.gif)
 
-![window](doc/figures/Browser-2.png)
 
 # State of the project
+Warning: some features in the new version are still missing so this may not be 100% correct!
 **Special features**
 
 * **Right Mouse Click**: Display DOM node representation
