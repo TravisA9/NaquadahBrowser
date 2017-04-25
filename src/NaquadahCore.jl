@@ -1,8 +1,7 @@
 # module NaquadahCore
 #   package code goes here
 # end # module
-defaultPage = "file:///src/SamplePages/test.json"
-global PATH = pwd() * "/data/"
+
 
 include("GraphDraw.jl")
 include("DomUtilities.jl")
@@ -11,6 +10,9 @@ include("GraphFlags.jl")
 
 using Gtk, Gtk.ShortNames, Cairo   # Colors
 using NaquadahDOM, Naquadraw
+
+defaultPage = "file:///src/SamplePages/test.json"
+global PATH = pwd() * "/src/SamplePages/"
 
 
 

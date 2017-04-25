@@ -16,12 +16,11 @@ function AttatchEvents(document)
 	    canvas = document.canvas
 
     canvas.mouse.button1press = @guarded (widget, event) -> begin
-
         document.event.pressed = Point(event.x, event.y)
     end
 
     canvas.mouse.button1release = @guarded (widget, event) -> begin
-    ctx = getgc(widget)
+        ctx = getgc(widget)
            if -5 < (document.event.pressed.x - event.x) < 5 &&
               -5 < (document.event.pressed.y - event.y) < 5
              splotch(ctx,event,1.0,0.0,0.0)
