@@ -15,7 +15,7 @@ In order to improve the general design and improve modularity I am making some b
 ### ...Update:
 I have now moved the old version of NaquadahBrowser to a folder. The current version of Naquadah is the updated version although some functionality is still missing.
  
- Take a look at the new version of Naquadah!
+ Take a look at at an example page in the new version of Naquadah!
 ![window](doc/figures/NaquadahCore.png)
 Some things that are missing from the current version that worked in the previous:
 * Most events
