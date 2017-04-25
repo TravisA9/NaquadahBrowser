@@ -1,0 +1,10 @@
+/home/travis/.julia/v0.5/NaquadahBrowser/deps/usr/include/GLFW/glfw3native.h
+/home/travis/.julia/v0.5/NaquadahBrowser/deps/usr/include/GLFW/glfw3.h
+/home/travis/.julia/v0.5/NaquadahBrowser/deps/usr/lib/cmake/glfw3/glfw3Config.cmake
+/home/travis/.julia/v0.5/NaquadahBrowser/deps/usr/lib/cmake/glfw3/glfw3ConfigVersion.cmake
+/home/travis/.julia/v0.5/NaquadahBrowser/deps/usr/lib/cmake/glfw3/glfw3Targets.cmake
+/home/travis/.julia/v0.5/NaquadahBrowser/deps/usr/lib/cmake/glfw3/glfw3Targets-noconfig.cmake
+/home/travis/.julia/v0.5/NaquadahBrowser/deps/usr/lib/pkgconfig/glfw3.pc
+/home/travis/.julia/v0.5/NaquadahBrowser/deps/usr/lib/libglfw.so.3.2
+/home/travis/.julia/v0.5/NaquadahBrowser/deps/usr/lib/libglfw.so.3
+/home/travis/.julia/v0.5/NaquadahBrowser/deps/usr/lib/libglfw.so
