@@ -1,0 +1,420 @@
+{
+"head":{
+		"title":"MyPage",
+	   	"charset":"utf-8",
+	   	"keywords":"web tech,browser concept,Json Pages,fragmented web tech",
+	   	"author":"Travis Deane Ashworth",
+	  	"links":{"url":"http://travis.net16.net/test.json"}
+	},
+
+"style":{
+			"Button":{
+				"display":"inline",
+							"padding":10, "margin":2, "width":170, "height":100,
+							"border":{"radius":3, "style":"solid", "width":"thin"},
+							"font":{ "size":12, "style":"italic", "align":"left", "lineHeight":1.4, "weight":"bold", "family":"Georgia" }
+			},
+			"Patch":{
+							"padding":10, "margin":2, "width":170, "height":100,
+							"border":{"radius":3, "style":"solid", "width":"thin"},
+							"font":{ "size":12, "style":"italic", "align":"left", "lineHeight":1.4, "weight":"normal", "family":"Georgia" }
+			},
+			"pink":{
+							"hover":{"color":"pink"},
+							"border":{"color":"firebrick"},
+							"color":[1, 1, 0.9],
+							"font":{"color":"firebrick" }
+			},
+			"lavender":{
+				      "hover":{"color":"lavender"},
+							"border":{"color":"blue"},
+							"color":"lightblue",
+							"font":{"color":"black"}
+			},
+			"blue":{
+							"hover":{"color":"lightblue"},
+							"border":{"color":"blue"},
+							"color":"skyblue",
+							"font":{"color":"black"}
+			}
+		},
+
+"body":[
+		{">":"div",
+			"class":["Button", "blue"]
+		},
+
+	{">":"div","id":"containter",
+    "display":"inline-block",
+		"color":"grey",
+		"padding":5,
+    "border":{"width":"thin", "style":"solid", "color":"black"},
+    "nodes":[
+
+			{">":"a", "class":["Patch", "lavender"],
+				"href":"https://travisa9.github.io/NaquadahBrowser/src/SamplePages/Naquadah.json",
+				"text":"A test here with styles indicates that there are some font details that are not being propperly set ...... ...... ....... ....... ....... ......"
+			},
+
+			{">":"a", "class":["Patch", "lavender"],
+				"href":"https://travisa9.github.io/NaquadahBrowser/src/SamplePages/Naquadah.json",
+				"text":"Margin is not being set from classes ...Select this to see the page \"Naquadah\" ...... ...... ....... ....... ....... ......"
+			},
+			{">":"a", "class":["Patch", "blue"],
+				"href":"https://travisa9.github.io/NaquadahBrowser/src/SamplePages/something.json",
+					"text":"Select this to see the page \"something\" ...... ...... ....... ....... ....... ......"
+			},
+			{">":"a", "class":["Patch", "pink"],
+				"href":"https://travisa9.github.io/NaquadahBrowser/src/SamplePages/otherpage.json",
+				"text":"Text and font color are not being set from classes. Select this to see the page \"otherpage\" ...... ...... ....... ....... ....... ......"
+			},
+			{">":"a", "class":["Patch", "lavender"],
+				"href":"https://travisa9.github.io/NaquadahBrowser/src/SamplePages/Naquadah.json",
+				"text":"Select this to see the page \"Naquadah\" ...... ...... ....... ....... ....... ......"
+			},
+			{">":"a", "class":["Patch", "blue"],
+				"href":"https://travisa9.github.io/NaquadahBrowser/src/SamplePages/something.json",
+				"text":"Select this to see the page \"something\" ...... ...... ....... ....... ....... ......"
+			},
+
+			{">":"a", "class":["Patch", "pink"],
+				"href":"https://travisa9.github.io/NaquadahBrowser/src/SamplePages/otherpage.json",
+				"text":"Select this to see the page \"otherpage\" ...... ...... ....... ....... ....... ......"
+			}
+
+
+		]
+	},
+
+                    {">":"div","id":"First-node",
+                      "display":"inline",
+                      "padding":8,
+                      "margin":5,
+                      "width":100,
+                      "height":32,
+                      "border":{"radius":3, "style":"solid", "width":"thin", "color":"green"},
+                      "color":"lightgreen",
+                      "font":{"color":"black", "size":12, "align":"left", "lineHeight":1.4, "weight":"bold", "family":"Sans" },
+                      "text":"BuildDOM.jl . . . . . . . . . . . . . . . . . ."
+                    },
+
+
+
+
+  {">":"div","id":"containter",
+    "display":"inline-block",
+    "border":{"width":"thin", "style":"solid", "radius":7, "color":"grey"},
+    "nodes":[
+
+            	{">":"div","id":"one",
+                "display":"block",
+            		"margin":3,
+            		"color":"cornsilk",
+            		"border":{"width":"thin",
+            				"style":"solid",
+            				"radius":7,
+            				"color":"black"},
+            				"font":{"color":"black",
+            					"size":16,
+            					"style":"Georgia",
+            					"align":"left",
+            					"weight":"normal",
+            					"lineHeight":1.4,
+            					"family":"SANS" },
+                    "nodes":[
+                      {">":"div",
+                        "display":"inline",
+                        "padding":8,
+                        "margin":5,
+                        "width":170,
+                        "height":32,
+                        "border":{"radius":3, "style":"solid", "width":"thin", "color":"green"},
+                        "color":"lightgreen",
+                        "font":{"color":"black", "size":12, "align":"left", "lineHeight":1.4, "weight":"bold", "family":"Sans" },
+                        "text":"traceElementTree() . . . . . . . . . . . . . . . . . ."
+                      },
+                      {">":"div",
+                        "display":"inline",
+                        "padding":8,
+                        "margin":5,
+                        "width":170,
+                        "height":32,
+                        "border":{"radius":3, "style":"solid", "width":"thin", "color":"steelblue"},
+                        "color":"skyblue",
+                        "font":{"color":"slateblue", "size":12, "align":"left", "lineHeight":1.4, "weight":"bold", "family":"Sans" },
+                        "text":"CreateDefaultNode() . . . . . . . . . . . . . . . . . ."
+                      },
+                      {">":"div",
+                        "display":"inline",
+                        "padding":8,
+                        "margin":5,
+                        "width":170,
+                        "height":32,
+                        "border":{"radius":3, "style":"solid", "width":"thin", "color":"steelblue"},
+                        "color":"skyblue",
+                        "font":{"color":"slateblue", "size":12, "align":"left", "lineHeight":1.4, "weight":"bold", "family":"Sans" },
+                        "text":"CalculateElements() . . . . . . . . . . . . . . . . . ."
+                      },
+                      {">":"div",
+                        "display":"inline",
+                        "padding":8,
+                        "margin":5,
+                        "width":170,
+                        "height":32,
+                        "border":{"radius":3, "style":"solid", "width":"thin", "color":"steelblue"},
+                        "color":"skyblue",
+                        "font":{"color":"slateblue", "size":12, "align":"left", "lineHeight":1.4, "weight":"bold", "family":"Sans" },
+                        "text":"traceElementTree() . . . . . . . . . . . . . . . . . ."
+                      }
+                    ]
+            			},
+
+
+
+                  {">":"div","id":"two",
+                    "display":"inline-block",
+                		"margin":3,
+                		"height":100,
+                    "width":400,
+                		"color":"cornsilk",
+                		"border":{"width":"thin",
+                				"style":"solid",
+                				"radius":7,
+                				"color":"black"},
+                				"font":{"color":"black",
+                					"size":16,
+                					"style":"Georgia",
+                					"align":"left",
+                					"weight":"normal",
+                					"lineHeight":1.4,
+                					"family":"SANS" },
+                        "nodes":[
+                          {">":"div",
+                            "display":"inline",
+                            "padding":8,
+                            "margin":5,
+                            "width":170,
+                            "height":32,
+                            "border":{"radius":3, "style":"solid", "width":"thin", "color":"green"},
+                            "color":"lightgreen",
+                            "font":{"color":"black", "size":12, "align":"left", "lineHeight":1.4, "weight":"bold", "family":"Sans" },
+                            "text":"CalculateElements() . . . . . . . . . . . . . . . . . ."
+                          },
+                          {">":"div",
+                            "display":"inline",
+                            "padding":8,
+                            "margin":5,
+                            "width":170,
+                            "height":32,
+                            "border":{"radius":3, "style":"solid", "width":"thin", "color":"steelblue"},
+                            "color":"skyblue",
+                            "font":{"color":"slateblue", "size":12, "align":"left", "lineHeight":1.4, "weight":"bold", "family":"Sans" },
+                            "text":"MakeRelative() . . . . . . . . . . . . . . . . . ."
+                          },
+                          {">":"div",
+                            "display":"inline",
+                            "padding":8,
+                            "margin":5,
+                            "width":170,
+                            "height":32,
+                            "border":{"radius":3, "style":"solid", "width":"thin", "color":"steelblue"},
+                            "color":"skyblue",
+                            "font":{"color":"slateblue", "size":12, "align":"left", "lineHeight":1.4, "weight":"bold", "family":"Sans" },
+                            "text":"MakeFixed() . . . . . . . . . . . . . . . . . ."
+                          },
+                          {">":"div",
+                            "display":"inline",
+                            "padding":8,
+                            "margin":5,
+                            "width":170,
+                            "height":32,
+                            "border":{"radius":3, "style":"solid", "width":"thin", "color":"steelblue"},
+                            "color":"skyblue",
+                            "font":{"color":"slateblue", "size":12, "align":"left", "lineHeight":1.4, "weight":"bold", "family":"Sans" },
+                            "text":"inline, block, etc. . . . . . . . . . . . . . . . . . ."
+                          },
+                          {">":"div",
+                            "display":"inline",
+                            "padding":8,
+                            "margin":5,
+                            "width":170,
+                            "height":32,
+                            "border":{"radius":3, "style":"solid", "width":"thin", "color":"steelblue"},
+                            "color":"skyblue",
+                            "font":{"color":"slateblue", "size":12, "align":"left", "lineHeight":1.4, "weight":"bold", "family":"Sans" },
+                            "text":"LayoutInner() . . . . . . . . . . . . . . . . . ."
+                          },
+                          {">":"div",
+                            "display":"inline",
+                            "padding":8,
+                            "margin":5,
+                            "width":170,
+                            "height":32,
+                            "border":{"radius":3, "style":"solid", "width":"thin", "color":"steelblue"},
+                            "color":"skyblue",
+                            "font":{"color":"slateblue", "size":12, "align":"left", "lineHeight":1.4, "weight":"bold", "family":"Sans" },
+                            "text":"AddRow() . . . . . . . . . . . . . . . . . ."
+                          }
+                        ]
+                			},
+
+
+
+                      {">":"div","id":"three",
+                    		"margin":3,
+                    		"height":50,
+                    		"color":"cornsilk",
+                    		"border":{"width":"thin",
+                    				"style":"solid",
+                    				"radius":7,
+                    				"color":"black"},
+                    				"font":{"color":"black",
+                    					"size":16,
+                    					"style":"Georgia",
+                    					"align":"left",
+                    					"weight":"normal",
+                    					"lineHeight":1.4,
+                    					"family":"SANS" },
+                            "nodes":[
+                              {">":"div",
+                                "display":"inline",
+                                "padding":8,
+                                "margin":5,
+                                "width":170,
+                                "height":32,
+                                "border":{"radius":3, "style":"solid", "width":"thin", "color":"green"},
+                                "color":"lightgreen",
+                                "font":{"color":"black", "size":12, "align":"left", "lineHeight":1.4, "weight":"bold", "family":"Sans" },
+                                "text":"AddRow() . . . . . . . . . . . . . . . . . ."
+                              },
+                              {">":"div",
+                                "display":"inline",
+                                "padding":8,
+                                "margin":5,
+                                "width":170,
+                                "height":32,
+                                "border":{"radius":3, "style":"solid", "width":"thin", "color":"steelblue"},
+                                "color":"skyblue",
+                                "font":{"color":"slateblue", "size":12, "align":"left", "lineHeight":1.4, "weight":"bold", "family":"Sans" },
+                                "text":"FloatNodeLeft() . . . . . . . . . . . . . . . . . ."
+                              },
+                              {">":"div",
+                                "display":"inline",
+                                "padding":8,
+                                "margin":5,
+                                "width":170,
+                                "height":32,
+                                "border":{"radius":3, "style":"solid", "width":"thin", "color":"steelblue"},
+                                "color":"skyblue",
+                                "font":{"color":"slateblue", "size":12, "align":"left", "lineHeight":1.4, "weight":"bold", "family":"Sans" },
+                                "text":"FloatNodeRight() . . . . . . . . . . . . . . . . . ."
+                              },
+                              {">":"div",
+                                "display":"inline",
+                                "padding":8,
+                                "margin":5,
+                                "width":170,
+                                "height":32,
+                                "border":{"radius":3, "style":"solid", "width":"thin", "color":"steelblue"},
+                                "color":"skyblue",
+                                "font":{"color":"slateblue", "size":12, "align":"left", "lineHeight":1.4, "weight":"bold", "family":"Sans" },
+                                "text":"push node into row. . . . . . . . . . . . . . . . . . ."
+                              }
+                            ]
+                    			},
+
+
+
+                          {">":"div","id":"four",
+                        		"margin":3,
+                        		"height":50,
+                        		"color":"cornsilk",
+                        		"border":{"width":"thin",
+                        				"style":"solid",
+                        				"radius":7,
+                        				"color":"black"},
+                        				"font":{"color":"black",
+                        					"size":16,
+                        					"style":"Georgia",
+                        					"align":"left",
+                        					"weight":"normal",
+                        					"lineHeight":1.4,
+                        					"family":"SANS" },
+                                "nodes":[
+                                  {">":"div",
+                                    "display":"inline",
+                                    "padding":8,
+                                    "margin":5,
+                                    "width":170,
+                                    "height":32,
+                                    "border":{"radius":3, "style":"solid", "width":"thin", "color":"green"},
+                                    "color":"lightgreen",
+                                    "font":{"color":"black", "size":12, "align":"left", "lineHeight":1.4, "weight":"bold", "family":"Sans" },
+                                    "text":"CreateDefaultNode() . . . . . . . . . . . . . . . . . ."
+                                  },
+                                  {">":"div",
+                                    "display":"inline",
+                                    "padding":8,
+                                    "margin":5,
+                                    "width":170,
+                                    "height":32,
+                                    "border":{"radius":3, "style":"solid", "width":"thin", "color":"steelblue"},
+                                    "color":"skyblue",
+                                    "font":{"color":"slateblue", "size":12, "align":"left", "lineHeight":1.4, "weight":"bold", "family":"Sans" },
+                                    "text":"MergeAttributes() . . . . . . . . . . . . . . . . . ."
+                                  },
+                                  {">":"div",
+                                    "display":"inline",
+                                    "padding":8,
+                                    "margin":5,
+                                    "width":170,
+                                    "height":32,
+                                    "border":{"radius":3, "style":"solid", "width":"thin", "color":"steelblue"},
+                                    "color":"skyblue",
+                                    "font":{"color":"slateblue", "size":12, "align":"left", "lineHeight":1.4, "weight":"bold", "family":"Sans" },
+                                    "text":"overflow:scroll . . . . . . . . . . . . . . . . . ."
+                                  },
+                                  {">":"div",
+                                    "display":"inline",
+                                    "padding":8,
+                                    "margin":5,
+                                    "width":170,
+                                    "height":32,
+                                    "border":{"radius":3, "style":"solid", "width":"thin", "color":"steelblue"},
+                                    "color":"skyblue",
+                                    "font":{"color":"slateblue", "size":12, "align":"left", "lineHeight":1.4, "weight":"bold", "family":"Sans" },
+                                    "text":"BoxDesign(). . . . . . . . . . . . . . . . . . ."
+                                  }
+                                ]
+                        			}
+
+
+    ]
+  }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+]
+}
