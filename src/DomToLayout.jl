@@ -75,13 +75,15 @@ function AtributesToLayout(document, node)
                     node.shape.flags[HasImage] = true
       end
       if haskey(DOM, "radius")
-                    node.shape.radius = DOM["radius"]
+          r =  DOM["radius"]
+                    node.shape.radius = r
+                    node.shape.width  = r*2
+                    node.shape.height = r*2
       end
       if haskey(DOM, "text")
                     node.shape.text = DOM["text"]
       end
       if haskey(DOM, "opacity")
-
                     node.shape.flags[HasOpacity] = true
       end
       if haskey(DOM, "color")
@@ -322,25 +324,7 @@ if haskey(DOM, "border")
       end
 
 
-
-
-
-      #"font":{"color":"black", "size":12,
-      #  "style":"italic",
-      #  "align":"left",
-      #  "lineHeight":1.4,
-      #  "weight":"bold",
-      #  "family":"Georgia" },
-
-
-
-
-
-
-
-
-
-    end
+end
 
 
 

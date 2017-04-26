@@ -113,133 +113,126 @@ function FinalizeRow(row)
 end
 
 #======================================================================================#
-# PushToRow(node, child, l,t,w,h)
+# PushToRow(document, Current node, the shape, (bounds->) l,t,w,h)
 #======================================================================================#
 function PushToRow(document, node, thing, l,t,w) # height not needed
-
- # Get shape........
- #  shape = node.shape
-  if isa(thing,TextLine)
-      thingShape = thing
-  else
-      thingShape = thing.shape
-  end
-
-  # general data........
-      thingWidth, thingHeight = getSize(thingShape)
-
-
+ #temp = node.shape
+      shape = getShape(thing)
+      width, height = getSize(shape)
       rows = node.rows
-    # Make new row if: object too wide
-    if length(rows) < 1
-        Row(rows, l, t, w)
+      row = LastRow(rows, l, t, w) #rows[end]
+
+       parent = node.parent
+       parentshape = parent.shape
+       if parentshape.flags[DisplayInline] == true
+           println("parentshape is inline!")
+       end
+
+    # Fixed /////////////////////////////////////////////////////
+    if shape.flags[Fixed] == true
+        rows = document.fixed.rows
+        row = LastRow(rows, l, t, w)
+                  canvas = document.canvas
+                  if shape.flags[Bottom] == true
+                          h = document.height # height(canvas)
+                          shape.top =  h - (shape.top + height)
+                  else
+                          shape.top =  h + shape.top
+                  end
+                  if shape.flags[Right] == true
+                          w = document.width # width(canvas)
+                          shape.left =  w - (shape.left + width)
+                  else
+                          shape.left =  w + shape.left
+                  end
+                    push!(row.nodes, thing)
+                    return
     end
-    row = rows[end]
-   #.................................
-    if thingShape.flags[Fixed] == true
-      canvas = document.canvas
-      if thingShape.flags[Bottom] == true
-              h = height(canvas)
-              thingShape.top =  h - (thingShape.top + thingHeight)
-      else
-              thingShape.top =  h + thingShape.top
-      end
-      if thingShape.flags[Right] == true
-              w = width(canvas)
-              thingShape.left =  w - (thingShape.left + thingWidth)
-      else
-              thingShape.left =  w + thingShape.left
-      end
-        push!(row.nodes, thing)
-        return
-    end
-    #.................................
+    # Absolute /////////////////////////////////////////////////////
     # I think the only way to set an Absolute position is to wait until the parent is totaly finished
-     if thingShape.flags[Absolute] == true
-         node.shape.flags[HasAbsolute] = true
-         push!(row.nodes, thing)
-         return
+     if shape.flags[Absolute] == true
+                 node.shape.flags[HasAbsolute] = true
+                 ##setNodePosition(shape, row, row.x, width)
+                 push!(row.nodes, thing)
+                 return
      end
-
-     if thingShape.flags[DisplayInlineBlock] == true && thingShape.width < 1
-       println("no width inline block!")
-       padding, border, margin = getReal(thingShape)
-       thingShape.width = row.space - (border.width + padding.width + margin.width)
-       row.space = 0
-       OffsetX, OffsetY = contentOffset( getReal(thingShape)... )
-       thingShape.top = row.y + OffsetY
-       thingShape.left = row.x + OffsetX
-       push!(row.nodes, thing)
-       FinalizeRow(row)
-       return
+     # Inline /////////////////////////////////////////////////////
+     if shape.flags[DisplayInline] == true
+         # TODO: there is a problem! I have the width arbitrarily set because a button
+         #       does not have a width even though it has a child. The error must be
+         #       somewhere else! ...I think.
+             shape.width = 25
+             padding, border, margin = getReal(shape)
+             width = shape.width + (border.width + padding.width + margin.width)
+              row.height < height && (row.height = height)
+             # row.y == 0 && (row.y = t)
+             setNodePosition(shape, row, row.x, width)
+             push!(row.nodes, thing)
+             return
      end
-
-     # Is BLOCK-type
-    if thingShape.flags[DisplayBlock] == true && thingShape.width < 1
-        if length(row.nodes) > 0
-            FinalizeRow(row)
-            row = Row(rows, l, row.y + row.height, w)
-        end
-        padding, border, margin = getReal(thingShape)
-        thingShape.width = w - (border.width + padding.width + margin.width)
-        row.space = 0
-    else
-        # not enough space.. new row!
-        if row.space < thingWidth
-            FinalizeRow(row)
-            newRow = Row(rows,  l + thingWidth,  row.y + row.height,  w - thingWidth)
-            push!(newRow.nodes, thing)
-            newRow.height = thingHeight
-            if !isa(thingShape, TextLine)
-                OffsetX, OffsetY = contentOffset( getReal(thingShape)... )
-                thingShape.left = l + OffsetX
-                thingShape.top = newRow.y + OffsetY
-            else
-                thingShape.left = l
-                thingShape.top = newRow.y
+    # InlineBlock /////////////////////////////////////////////////////
+    if shape.flags[DisplayInlineBlock] == true && shape.width < 1
+               println("no width inline block!")
+               padding, border, margin = getReal(shape)
+               shape.width = row.space - (border.width + padding.width + margin.width)
+               row.space = 0
+               OffsetX, OffsetY = contentOffset( getReal(shape)... )
+               shape.top = row.y + OffsetY
+               shape.left = row.x + OffsetX
+               push!(row.nodes, thing)
+               FinalizeRow(row)
+               return
+        # else not enough space
+    end
+    # Block /////////////////////////////////////////////////////
+    if shape.flags[DisplayBlock] == true && shape.width < 1
+                if length(row.nodes) > 0
+                    FinalizeRow(row)
+                    row = Row(rows, l, row.y + row.height, w)
+                end
+                padding, border, margin = getReal(shape)
+                shape.width = w - (border.width + padding.width + margin.width)
+                row.space = 0
+        else # not enough space.. new row!
+            if row.space < width
+                FinalizeRow(row)
+                row = Row(rows,  l,  row.y + row.height,  w) #  - width
+                push!(row.nodes, thing)
+                row.height = height
+                setNodePosition(shape, row, l, width)
+                return
             end
-
-            return
         end
-    end
-    # if object height is greater than row reset row.height
-    if row.height < thingHeight
-            row.height = thingHeight
-    end
-    # add object to row and calculate remaining space
-    if row.y == 0
-      row.y = t
-    end
 
+#setRowMetrics(row, height, x)
+    row.height < height && (row.height = height)
+    row.y == 0 && (row.y = t)
 
-    if !isa(thingShape, TextLine)
-        OffsetX, OffsetY = contentOffset( getReal(thingShape)... )
-        thingShape.top = row.y + OffsetY
-        thingShape.left = row.x + OffsetX
-
-    else
-        thingShape.top = row.y
-        thingShape.left = row.x
-    end
-
-    row.space -= thingWidth
-    row.x += thingWidth
-
-
-    #    node.shape.flags[LineBreakAfter] == true
+    setNodePosition(shape, row, row.x, width)
 
     push!(row.nodes, thing)
 
-
-
-
+    #    node.shape.flags[LineBreakAfter] == true
 end
-
-
 #======================================================================================#
 #
 #======================================================================================#
+function setRowMetrics(shape, row, x)
 
+end
+#======================================================================================#
+function setNodePosition(shape, row, x, width)
+        if !isa(shape, TextLine)
+            OffsetX, OffsetY = contentOffset( getReal(shape)... )
+            shape.top = row.y + OffsetY
+            shape.left = x + OffsetX
+        else
+            shape.top = row.y
+            shape.left = x
+        end
+        row.space -= width
+        row.x += width
+end
 
 #======================================================================================#
 function MoveNodeToLeft(row, index)

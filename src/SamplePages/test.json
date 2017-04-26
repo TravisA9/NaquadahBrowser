@@ -46,7 +46,7 @@
 
 
 
-			{">":"div",	"display":"inline-block", "width":140, "height":80,
+	{">":"div",	"display":"inline-block", "width":140, "height":80,
 				"margin": 10,
 				"nodes":[
 								{">":"p", "display":"inline-block",  "font":{ "color":"black", "size":64, "align":"center", "lineHeight":1.4, "family":"Georgia", "vertical-align":"middle" },
@@ -76,7 +76,9 @@
 						"text":"in Technical and General Computing!"
 			}]
 	},
-	{">":"circle", "radius":50, "color":"pink",	"image":"coffee.png",
+
+
+	{">":"circle", "display":"inline-block", "radius":50, "color":"pink",	"image":"coffee.png",
 	       		   "border":{"width":12, "style":"solid", "color":"forestgreen"}},
 
 

@@ -2,7 +2,7 @@
 
 export
           # Structural:
-          Element, Row, NText,
+          Element, Row, LastRow, NText,
           # General utility:
           Point, Square,
           # Drawable Shapes:
@@ -66,6 +66,14 @@ type Row
         return r
     end
 end
+
+function LastRow(rows, l, t, w)
+    if length(rows) < 1
+        Row(rows, l, t, w)
+    end
+    return rows[end]
+end
+
 #-------------------------------------------------------------------------------
 type Element
     DOM::Dict       # Reference to dictionary counterpart of this node
