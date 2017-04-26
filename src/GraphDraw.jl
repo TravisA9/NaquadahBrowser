@@ -13,8 +13,8 @@ using Gtk
 
 
 export
-          DrawContent, DrawClippedContent, DrawBox, DrawCircle, DrawRoundedBox,
-          DrawText, setcolor
+          DrawViewport, DrawContent, DrawClippedContent, DrawBox, DrawCircle,
+          DrawRoundedBox, DrawText, setcolor
 
           include("Events.jl")
           include("GraphFlags.jl")
@@ -22,6 +22,11 @@ export
 # ======================================================================================
 setcolor( ctx, r, g, b, a) = set_source_rgba(ctx, r, g, b, a);
 setcolor( ctx, r, g, b) = set_source_rgb(ctx, r, g, b);
+# ======================================================================================
+function DrawViewport(ctx, document, node)
+    DrawContent(ctx, document, node)
+    DrawContent(ctx, document, document.fixed)
+end
 # ======================================================================================
 # ======================================================================================
 function DrawContent(ctx, document, node, clipPath=nothing)
@@ -83,7 +88,7 @@ function VScroller(ctx::CairoContext, document, node, shape, clipPath)
 
     canvas = document.canvas
     ctx = getgc(canvas)
-    winHeight = height(canvas)
+    winHeight = document.height # height(canvas)
 
         border = get(shape.border,  Border(0,0,0,0,0,0, 0,[],[0,0,0,0]))
         padding = get(shape.padding, BoxOutline(0,0,0,0,0,0))
@@ -96,12 +101,24 @@ function VScroller(ctx::CairoContext, document, node, shape, clipPath)
         setcolor(ctx, .3,.3,.3, .8)
         rectangle(ctx,r,t,12,h )
         fill(ctx);
-        diff = node.scroll.contentHeight - node.shape.height
-        unit = (node.shape.height - 20)/diff
-        y = (unit*node.scroll.y)
+        # (node.scroll.contentHeight + node.scroll.y + node.shape.top)
+        #diff = node.scroll.contentHeight - node.shape.height #+ node.shape.top
+        #unit = (node.shape.height - 20)/node.scroll.contentHeight   #+ node.shape.top
+        #       (the view area)   - (button height)
+        #unit = (node.shape.height - 140 )/diff
+        #y = (unit*node.scroll.y)
+        #.............................................................
+         height       = node.shape.height - node.shape.top    # Height of the viewport and of the scrollbarArea
+         scrollHeight = node.scroll.contentHeight     # Height of the content
+         scrollTop    = node.scroll.y      # Scrolled position of the content from the top
+         #.............................................................
+         scrollButHeight = height / (scrollHeight / height)
+         y = scrollTop / (scrollHeight / height)
+         #.............................................................
+         #.............................................................
 
         setcolor(ctx, .6,.6,.6, 1)
-        rectangle(ctx,r+1,t-y,10,20 )
+        rectangle(ctx,r+1,t-y,10,scrollButHeight )
         fill(ctx);
 end
 

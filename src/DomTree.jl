@@ -19,6 +19,7 @@ export Page, FetchPage
 type Page
          parent::Any  # First node needs a Psudo-parent too ..maybe!
          children::Array{Element,1} # First node in a tree-like data structure representing all elements on page
+         fixed::Element # First node in a tree-like data structure representing all elements on page
          styles::Dict
          head::Dict
          width::Float32
@@ -39,7 +40,7 @@ type Page
                      children::Array{Element,1} = [Element()]
                      parent = children[1]
                      children[1].parent = parent
-                 new(parent, children, Dict(), Dict(), 0,0, nothing, url, falses(8), Point(0, 0), Point(0, 0), 0, 0, 0, EventType())
+                 new(parent, children, Element(), Dict(), Dict(), 0,0, nothing, url, falses(8), Point(0, 0), Point(0, 0), 0, 0, 0, EventType())
              end
 end
 include("DomToLayout.jl")
@@ -107,8 +108,9 @@ function FetchPage(win, URL::String, canvas)
                   # node.DOM[3] / newPage
 
 # Tabs
+                push!( button["nodes"], JuliaIcon)
+                push!( tabControls["nodes"], button)
                 push!(node.DOM["nodes"], tabControls)
-                push!( tabControls["nodes"], JuliaIcon)
                 push!( tabControls["nodes"], tab)
                 push!( tabControls["nodes"], NewPageIcon)
 

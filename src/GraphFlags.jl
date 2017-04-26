@@ -7,7 +7,7 @@ export
         RowFinalized,
         HasBorder,   BordersSame,  Clip, IsRoundBox,
         FixedHeight,
-        DisplayBlock, DisplayInlineBlock, DisplayNone, DisplayTable, DisplayFlex,
+        DisplayBlock, DisplayInlineBlock, DisplayInline, DisplayNone, DisplayTable, DisplayFlex,
         LineBreakBefore, LineBreakAfter,
         IsHidden,
         AlignBase,   AlignMiddle,
@@ -37,37 +37,38 @@ const FixedHeight   = 15
 # https://developer.mozilla.org/en-US/docs/Web/CSS/display
 const DisplayBlock   = 16
 const DisplayInlineBlock   = 17
-const DisplayNone   = 18
-const DisplayTable   = 19
-const DisplayFlex   = 20
+const DisplayInline   = 18
+const DisplayNone   = 19
+const DisplayTable   = 20
+const DisplayFlex   = 21
 
 # visibility: visible|hidden|collapse|initial|inherit;
-const IsHidden     = 21
+const IsHidden     = 22
 
 
-const AlignBase      = 22
-const AlignMiddle    = 23
+const AlignBase      = 23
+const AlignMiddle    = 24
 
-const TextCenter     = 24
-const TextRight      = 25
-const TextJustify    = 26
+const TextCenter     = 25
+const TextRight      = 26
+const TextJustify    = 27
 
-const TextItalic     = 27
-const TextOblique    = 28
+const TextItalic     = 28
+const TextOblique    = 29
 
-const TextBold       = 29
+const TextBold       = 30
 
-const IsHScroll      = 30
-const IsVScroll      = 31
+const IsHScroll      = 31
+const IsVScroll      = 32
 
-const HasImage      = 34
-const TextPath      = 35
-const LinearGrad    = 36
-const RadialGrad    = 37
+const HasImage      = 33
+const TextPath      = 34
+const LinearGrad    = 35
+const RadialGrad    = 36
 
 
-const LineBreakBefore      = 32
-const LineBreakAfter      = 33
+const LineBreakBefore      = 37
+const LineBreakAfter      = 38
 
 
 #.==============================================================================

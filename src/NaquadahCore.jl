@@ -34,7 +34,8 @@ function CreateLayoutTree(document, node)
                 length(child.children) > 0   &&   Row(child.rows, l,t,w)
                 # Create Child's DOM
                 AtributesToLayout(document, child)
-
+                # attach to parent
+                child.parent = node
                 # Put child into row
                 if isa(child.shape, NText) #node.shape.flags[] == true row =
                     textToRows(document, node, child, l,t,w)
@@ -108,20 +109,18 @@ function DrawANode(document)
             node.children[3].scroll.y = 0
             println("scroll ", abs(ScrollY))
             VmoveAllChildren(node.children[3], abs(ScrollY), false)
-            #MoveAll(node,node.scroll.x, abs(ScrollY))
         end
        setWindowSize(w,h, node)
+       document.fixed.rows = [] #Row(0, 0, w)
+       setWindowSize(w,h, document.fixed)
        AtributesToLayout(document, node)
        AttatchEvents(document, c)
        CreateLayoutTree(document, node)
-       #println("Children: ", node.children[3].shape.height)
        node.children[3].scroll.y = ScrollY
-       #MoveAll(node.children[3],node.children[3].scroll.x,ScrollY)
        VmoveAllChildren(node.children[3], ScrollY, false)
-       DrawContent(ctx, document, node)
+       DrawViewport(ctx, document, node)
    end
 show(c)
-
 end
 # ======================================================================================
 c = @Canvas()
