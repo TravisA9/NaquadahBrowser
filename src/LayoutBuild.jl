@@ -1,4 +1,5 @@
-export setWindowSize, MoveAll, VmoveAllChildren
+export setWindowSize, MoveAll, VmoveAllChildren,
+        PushToRow, textToRows, FinalizeRow
 # ======================================================================================
 #
 # ======================================================================================
@@ -159,7 +160,21 @@ function PushToRow(document, node, thing, l,t,w) # height not needed
          push!(row.nodes, thing)
          return
      end
-# Is BLOCK-type
+
+     if thingShape.flags[DisplayInlineBlock] == true && thingShape.width < 1
+       println("no width inline block!")
+       padding, border, margin = getReal(thingShape)
+       thingShape.width = row.space - (border.width + padding.width + margin.width)
+       row.space = 0
+       OffsetX, OffsetY = contentOffset( getReal(thingShape)... )
+       thingShape.top = row.y + OffsetY
+       thingShape.left = row.x + OffsetX
+       push!(row.nodes, thing)
+       FinalizeRow(row)
+       return
+     end
+
+     # Is BLOCK-type
     if thingShape.flags[DisplayBlock] == true && thingShape.width < 1
         if length(row.nodes) > 0
             FinalizeRow(row)

@@ -139,7 +139,7 @@
             "lineHeight":1.4,
             "weight":"bold",
             "family":"Georgia" },
-      			 "text":"This is some sample text for testing the text printing capabilities of cairo. This is some sample text for testing the text printing capabilities of cairo. This is some sample text for testing the text printing capabilities of cairo. This is some sample text for testing the text printing capabilities of cairo.. ."
+      			 "text":"This is some sample text for testing the text printing capabilities of cairo. Strangely, this text is perfectly centered when rendered on windows and on linux it is a hare off. This is some sample text for testing the text printing capabilities of cairo. This is some sample text for testing the text printing capabilities of cairo. This is some sample text for testing the text printing capabilities of cairo.. ."
            },
 
 		   {">":"div", "display":"block", "color":[0.5,0.7,0.5],

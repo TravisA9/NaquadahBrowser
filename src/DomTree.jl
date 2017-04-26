@@ -24,6 +24,7 @@ type Page
          width::Float32
          height::Float32
 
+         win::Any
          url::Any         # URL of page
          # events::EventTypes  # All registered events
          flags::BitArray{1}        #  buttonPressed
@@ -38,7 +39,7 @@ type Page
                      children::Array{Element,1} = [Element()]
                      parent = children[1]
                      children[1].parent = parent
-                 new(parent, children, Dict(), Dict(), 0,0, url, falses(8), Point(0, 0), Point(0, 0), 0, 0, 0, EventType())
+                 new(parent, children, Dict(), Dict(), 0,0, nothing, url, falses(8), Point(0, 0), Point(0, 0), 0, 0, 0, EventType())
              end
 end
 include("DomToLayout.jl")
@@ -71,7 +72,7 @@ end
 # ======================================================================================
 #
 # ======================================================================================
-function FetchPage(URL::String, canvas)
+function FetchPage(win, URL::String, canvas)
        # .......................................................................
        # get the file...
        uri = URI(URL)
@@ -86,6 +87,7 @@ function FetchPage(URL::String, canvas)
         pageContent = JSON.parse(Page_text)
         # ......................................................................
         document = Page(URL)
+        document.win = win
         document.canvas = canvas
         node = document.children[1]
         parent = document.parent
@@ -113,8 +115,8 @@ function FetchPage(URL::String, canvas)
 # Navagation
                 push!(node.DOM["nodes"], navigation)
                 push!( navigation["nodes"], icons)
-                push!( navigation["nodes"], navBar)
                 push!( navigation["nodes"], downloadIcon)
+                push!( navigation["nodes"], navBar)
 
 # Page content
                 newPage["nodes"] = pageContent["body"] # add this way because it is an array!

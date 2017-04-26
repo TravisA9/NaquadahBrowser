@@ -1,6 +1,5 @@
 # module NaquadahCore
-#   package code goes here
-# end # module
+
 
 
 include("GraphDraw.jl")
@@ -8,8 +7,8 @@ include("DomUtilities.jl")
 include("DomTree.jl")
 include("GraphFlags.jl")
 
-using Gtk, Gtk.ShortNames, Cairo   # Colors
-using NaquadahDOM, Naquadraw
+using Gtk, Gtk.ShortNames, Cairo,   # Colors
+      NaquadahDOM, Naquadraw
 
 defaultPage = "file:///src/SamplePages/test.json"
 global PATH = pwd() * "/src/SamplePages/"
@@ -102,7 +101,7 @@ function DrawANode(document)
         ctx = getgc(c)
         h   = height(c)
         w   = width(c)
-        document.height ,document.width = h, w
+        document.height, document.width = h, w
 
         if node.children[3].scroll.y < 0
             ScrollY = node.children[3].scroll.y
@@ -113,7 +112,7 @@ function DrawANode(document)
         end
        setWindowSize(w,h, node)
        AtributesToLayout(document, node)
-       AttatchEvents(document)
+       AttatchEvents(document, c)
        CreateLayoutTree(document, node)
        #println("Children: ", node.children[3].shape.height)
        node.children[3].scroll.y = ScrollY
@@ -128,5 +127,5 @@ end
 c = @Canvas()
 win = @Window("Naquadah", 1000, 600)
 push!(win, c)
-document = FetchPage(defaultPage, c) # DomTree.jl
+document = FetchPage(win, defaultPage, c) # DomTree.jl
 DrawANode(document)

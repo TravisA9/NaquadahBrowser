@@ -5,7 +5,7 @@ include("DomUtilities.jl")
 module Naquadraw
 
 global PATH = pwd() * "/src/SamplePages/"
-using Cairo, Gtk.ShortNames # , NaquadahEvents # Graphics,
+using Cairo, Gtk.ShortNames
 using Gtk
 
   include("GraphTypes.jl")
@@ -13,20 +13,12 @@ using Gtk
 
 
 export
-        DrawContent, DrawClippedContent,
-          # get real data (margin, padding, border) instead of Nullables
-          getReal, DrawBox, DrawCircle, DrawRoundedBox, textToRows, DrawText,
-          PushToRow, FinalizeRow,
-          # get calculated metrics
-          getBorderBox, getContentBox, getMarginBox, getSize,
-          TotalShapeWidth, TotalShapeHeight,
-          DrawANode, InitializeRow,
-
-          setcolor
+          DrawContent, DrawClippedContent, DrawBox, DrawCircle, DrawRoundedBox,
+          DrawText, setcolor
 
           include("Events.jl")
           include("GraphFlags.jl")
-include("LayoutBuild.jl")
+          include("LayoutBuild.jl")
 # ======================================================================================
 setcolor( ctx, r, g, b, a) = set_source_rgba(ctx, r, g, b, a);
 setcolor( ctx, r, g, b) = set_source_rgb(ctx, r, g, b);

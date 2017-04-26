@@ -1,3 +1,7 @@
+export    getBorderBox, getContentBox, getMarginBox, getSize,
+          TotalShapeWidth, TotalShapeHeight,
+          DrawANode, InitializeRow, getReal
+
 #=  left, top, right, bottom = content-area
   ...padding, border and margin are added to that!
             ┌───────────────────────────────┐
