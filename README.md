@@ -10,78 +10,68 @@
 
 **Long answer**: Although, Naquadah looks and functions like a browser, there are a few differences. Naquadah principally consists of a **layout engine** and a **rendering engine** built from the ground up. For convenience, it includes a basic GUI as well. It is writen in the awesome **Julia language** and serves as a test of julia's value as a general purpose language. It is being developed for fun and for the purpose of displaying my work but if it proves to be useful, that would be great too.
 
-## * Warning this project is being overhualed!
+## \* Warning this project is being overhualed!
+
 In order to improve the general design and improve modularity I am making some breaking changes.
+
 ### ...Update:
+
 I have now moved the old version of NaquadahBrowser to a folder. The current version of Naquadah is the updated version although some functionality is still missing.
- 
- Take a look at at an example page in the new version of Naquadah!
-![window](doc/figures/NaquadahCore.png)
-Some things that are missing from the current version that worked in the previous:
+
+Take a look at at an example page in the new version of Naquadah!  
+![window](doc/figures/NaquadahCore.png)  
+Progress Report
+
+| Feature | State of development |
+| :--- | :--- |
+| Tags | div, p, circle, page |
+| Styles | color, opacity, gradients, size, display, position, border, radius, padding, margin, font, alignment and more! |
+| Classes | Not yet finished |
+| Floats | Left is working but I need to finish Right \(I think\) |
+| Display | inline, inline-block, block \(mostly all working\) |
+| Position | fixed, absolute, relative |
+| Box-Modal | content, padding, border, margin |
+| Colors | Any color with or without opacity |
+| Events | mousedown, mouseup, click, drag, scroll and hover fire but do not yet trigger meaningfull actions. |
+| Clipping | Mostly set up and working. |
+| Text selection and highlighting | Not yet started |
+| Gradients | Mostly working |
+| Border Radius | Working fine |
+| Overflow | Don't remember |
+| Links | Not yet finished |
+| Shadow DOM | Scrollbars, window controls |
+| Transforms | Not yet started |
+| Transitions | Not yet started |
+| Animations | Not yet started |
+| Shadows | Temporary hack for text/basically not yet begun |
+| Backgrounds | color, radial-gradient, linear-gradient, image \(most all with optional opacity\) |
+| Columns | Not yet started |
+| Media queries | Not yet started |
+| Selectors \(.\),   \#,   \[\],   $=,   \*=,   &gt; | Not yet started |
+| Max/min | Not yet available |
+| Tables | Not yet |
+| Lists | Not yet |
+
+
+
+| Speacial Features |  |
+| :--- | :--- |
+| Geometry as Nodes | So far circles are set up to work as normal page elements but other common geometries will soon be added. |
+| Tabs and Search bar are Shaddow DOM | This makes it possible to move or redesign them. This should help ensure that the browser works with any graphics engine changes and even change the appearence and functionality where needed \(Ex. mobile devices\). |
+|  |  |
+
+A few things that are missing from the current version that worked in the previous:
+
 * Most events
 * Controls' functionality
 * Text selection
 * Compilation of styles section
 
-Interesting new features:
-* Tab/Search Controls are now shadow DOM and can be moved or redesigned. This should help ensure that the browser works with any graphics engine changes and even change appearence and functionality where needed (Ex. mobile devices).
-* Mostly working scrollbar as shadow DOM
+### Take a look at the old version
 
-### Old version     
 ![window](doc/figures/browser-1.gif)
 
 
-# State of the project
-Warning: some features in the new version are still missing so this may not be 100% correct!
-**Special features**
-
-* **Right Mouse Click**: Display DOM node representation
-
-**Working...**
-
-* **Tags**: Nodes can be created with the default settings of common Tags pluss an extended set. Many of the defaults still need set but otherwize it seems to be working.
-* **Styles**: Attributes can be assigned to nodes as styles.
-* **Classes**: One or more classes can be defined and assigned to nodes to change or add styles to an element.
-* **Floats**: left, right
-* **Display**: inline, block, inline-block
-* **Position**: absolute, relative, fixed
-* **Box-Modal**: content, padding, border, margin, height, width
-* **Colors**: background, border, text, text-highlight, node-alpha, RGB/RGBA
-* **Circles**: The "circle" Tag can be used to create a circle that is treated as any other node.
-* **Events**: hover and click events ahave been partially implemented.
-* **Clipping**: works
-* **Text-Highlighting**: A bit hacky but mostly working   ...oops, reportedly broken!
-* **Gradients**: radial, linear
-* **Border-radius**:
-* **Overflow**: scroll\(in progress\), hidden
-* **Links**: open in new page for now.
-
-**In progress...**
-
-* **Geometry as nodes**: lines, curves, arcs, paths, text-paths
-* **Events**: drag, swipe, etc.
-* **Transforms**:
-* **Shaddow DOM**: scrollers, etc.
-
-**Not yet started...**
-
-* **Transitions**: 
-* **Animations**:
-* **JavaScript engine**: Maybe the v8 engine, would node be as good or better? ...don't know!
-* **Consume other scripts**: Html, SVG, CSS...
-* **Browsing History**:
-* **Shadows**: text, box
-* **Backgrounds**: images
-* **Columns**:
-* **Media Queries**:
-* **Media**: video, audio
-* **Border Images**: ...maybe
-* **Forms**: maybe
-* **Selectors**: \(.\),   \#,   \[\],   $=,   \*=,   &gt;
-* **Max/min**: max-width, max-height, min-width, min-height
-* **Tables**:
-* **Lists**:
-* **Outline**: ...maybe
 
 ---
 
@@ -94,7 +84,7 @@ Example of Json as a Web Page
     "head":{...},
     "styles":{...},
     "body":[...]
-}    
+}
 ```
 
 The **head** may look something like this.
@@ -155,7 +145,7 @@ As you can see there are three major sections to a Json page and these may be on
 * Clone NaquadahBrowser thusly:
 
   ```julia
-  julia> Pkg.clone("https://github.com/TravisA9/NaquadahBrowser.git") 
+  julia> Pkg.clone("https://github.com/TravisA9/NaquadahBrowser.git")
   ```
 
 * You may also have to add package **dependancies** for this project. You can paste the following into the Julia Console and press enter.
@@ -165,16 +155,12 @@ As you can see there are three major sections to a Json page and these may be on
   Pkg.add("JSON")
   Pkg.add("Cairo")
   Pkg.add("Requests")
-  Pkg.add("Graphics")
-  Pkg.add("ImageMagick")
-  Pkg.add("Images") 
   ```
 
 * Finally, one way you can start the application is with the following command:
 
-
 ```julia
-julia> using NaquadahBrowser 
+julia> using NaquadahBrowser
 ```
 
 If you close the window you can restart it like this:
@@ -186,29 +172,21 @@ julia> Start()
 # General Goals
 
 * Mantain modularity in order to be adaptable. If in the future there is good reason to switch out something such as the graphics interface, it should be easy to do so without reworking all the code. Also, if someone wants to use just one module out of Naquadah it should be easy to do so.
-
 * Mantain a measure of compatability with principal features of web standards. I believe that a lot of thought was put into the design and functionality of the WWW and that in general it is a good model to follow.
-
 * Simplify as much as possible while increasing functionality. It is pointless to build another browser if it does not offer good fetures.
-
 * Take advantage of opertunities to add select functionality that may not be feasable in an ordinary browser.
-
 * Make Naquadah easy to modify and repurpose. Naquadah is made to be used. It may be modified for standalone apps, mobile devices, text editors and more. The more it is used, the more it will be developed.
-
 * Experiment with reactively connecting to databases for real-time page updates.
-
 
 # Wish List:
 
-Generate proper images from blobs
+* Generate proper images from blobs
+* Integrated page editor \(perhaps WYSIWYG\)
+* Optimize speed
+* Compile distributable binaries for major OSs
+* Ploting and plot animation utilities \(Ex. force layout functionality\). Since Naquadah is meant to be a layout engine, it may be nice to include more than just the basic browser options.
 
-Integrated page editor \(perhaps WYSIWYG\)
 
-Optimize speed
-
-Compile distributable binaries for major OSs
-
-Ploting and plot animation utilities (Ex. force layout functionality). Since Naquadah is meant to be a layout engine, it may be nice to include more than just the basic browser options.
 
 
 
