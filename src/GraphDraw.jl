@@ -4,7 +4,7 @@ include("DomUtilities.jl")
 
 module Naquadraw
 
-global PATH = pwd() * "/src/SamplePages/"
+global PATH = pwd() * "/src/SamplePages/BrowserImages/"
 using Cairo, Gtk.ShortNames
 using Gtk
 
