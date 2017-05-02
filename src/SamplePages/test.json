@@ -20,10 +20,15 @@
 
 	{">":"div",
   	"display":"block",
+<<<<<<< HEAD
 	"color":[1,1,1],
 	"hover":{"color":"yellow"},
+=======
+		"color":[1,1,1],
+		"hover":{"color":"yellow"},
+>>>>>>> master
   	"padding":5,
- 	"data": [107, 133, 221, 66, 102, 213],
+ 		"data": [107, 133, 221, 66, 102, 213],
   	"nodes":[
 
 		{">":"circle", "radius":25, "color":[0.83,0.39,0.37], "opacity":0.7,

@@ -4,12 +4,11 @@ using Cairo, Gtk, Gtk.ShortNames
 
 export AttatchEvents, EventType
 
-type EventType
-  pressed::Point
-  released::Point
-  EventType() = new(Point(0,0),Point(0,0))
-end
 
+<<<<<<< HEAD
+=======
+
+>>>>>>> master
 include("EventTypes.jl")
 include("EventsWiring.jl")
 function MouseSetBoth(document, px, py, rx, ry)
@@ -34,12 +33,12 @@ Gtk.GdkEventKey(
 )
 =#
 # for signals: https://developer.gnome.org/gtk3/stable/GtkWidget.html#GtkWidget-accel-closures-changed
-  signal_connect(document.win, "key-press-event") do widget, event
-    println("You pressed key ", event) #.keyval
-  end
-  signal_connect(document.win, "key-release-event") do widget, event
-    println("You pressed key ", event) #.keyval
-  end
+    signal_connect(document.win, "key-press-event") do widget, event
+      println("You pressed key ", event) #.keyval
+    end
+    signal_connect(document.win, "key-release-event") do widget, event
+      println("You pressed key ", event) #.keyval
+    end
     #.............................................................
     canvas.mouse.button1motion = @guarded (widget, event) -> begin
         MouseSetBoth(document, event.x, event.y, -1, -1)

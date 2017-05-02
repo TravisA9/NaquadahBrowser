@@ -10,8 +10,6 @@ export
           # Constructors:
           Border, BoxOutline
 
-
-
 abstract Geo
 
 
@@ -29,9 +27,6 @@ macro import_fields(t)
   end
   return ex
 end
-
-
-
 
 
 

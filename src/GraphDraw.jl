@@ -5,8 +5,13 @@ include("DomUtilities.jl")
 module Naquadraw
 
 global PATH = pwd() * "/src/SamplePages/BrowserImages/"
+<<<<<<< HEAD
 using Cairo, Gtk, Gtk.ShortNames
 
+=======
+using Cairo, Gtk.ShortNames
+using Gtk
+>>>>>>> master
 
   include("GraphTypes.jl")
   include("GraphMethods.jl")
