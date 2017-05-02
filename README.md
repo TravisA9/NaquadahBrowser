@@ -113,19 +113,19 @@ The **body** describes general structure \(similer to HTML and SVG\) and may als
 
 ```JSON
     "body":[
-            {">":"div", 
-                "class":"Button", 
+            {">":"div",
+                "class":"Button",
                 "mousedown":"doSomething()",
                 "text":"Some text"
             },
             {">":"circle",
                 "onhover":"doSomethingElse()",
-                "display":"inlineBlock", 
+                "display":"inlineBlock",
                     "radius":25,        
                     "color":"lightgreen",
                 "center":[25,25],
-                "border":{"width":"thick", 
-                    "style":"solid", 
+                "border":{"width":"thick",
+                    "style":"solid",
                     "color":"blue"},
                 "nodes":[...]
             }
@@ -191,4 +191,3 @@ julia> Start()
 
 
 travisashworth2007@gmail.com
-
