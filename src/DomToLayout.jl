@@ -212,6 +212,8 @@ if haskey(DOM, "border")
           end
           if haskey(border, "style")
               style = border["style"]
+          else
+              style = border["solid"] # default
           end
           if haskey(border, "width")
                   w = border["width"]

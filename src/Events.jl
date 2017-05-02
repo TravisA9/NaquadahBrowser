@@ -10,6 +10,7 @@ type EventType
   EventType() = new(Point(0,0),Point(0,0))
 end
 
+include("EventTypes.jl")
 include("EventsWiring.jl")
 function MouseSetBoth(document, px, py, rx, ry)
       document.event.pressed = Point(px, py)
