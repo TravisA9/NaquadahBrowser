@@ -5,7 +5,10 @@ using Cairo, Gtk, Gtk.ShortNames
 export AttatchEvents, EventType
 
 
+<<<<<<< HEAD
+=======
 
+>>>>>>> master
 include("EventTypes.jl")
 include("EventsWiring.jl")
 function MouseSetBoth(document, px, py, rx, ry)

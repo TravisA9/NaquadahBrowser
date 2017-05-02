@@ -109,7 +109,7 @@ type Border <: Geo
     width::Float32
     height::Float32
 
-    style::Any
+    style::Any # maybe AbstractString
     color::Array # this may be an array of arrays in the case that each side has a different color
     radius::Nullable{Array}
     Border(left,top, right,bottom, width,height, style,color,radius) = new(left,top, right,bottom, width,height, style,color,radius)
