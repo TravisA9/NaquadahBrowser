@@ -1,51 +1,73 @@
 include("ColorDefinitions.jl")
+include("DomUtilities.jl")
+include("ElementDefaults.jl")
+
 export AtributesToLayout
+# ordering these from most to least common should speed up testing!
+boxes = [ "div", "aside", "audio", "button", "canvas", "form", "header", "img",
+          "input", "ul", "ol", "li", "menu", "menuitem", "progress", "textarea",
+          "table", "tbody", "td", "th", "thead", "tr", "tfoot", "video"]
+text = [  "p", "a", "em", "h1", "h2", "h3", "h4", "h5", "h6",
+          "i", "s", "span", "small", "strong", "title", "abbr", "address",
+          "b", "blockquote", "q", "title", "sub", "sup"]
 # ======================================================================================
-# EX: GetTheColor(border["color"])
-# CALLED FROM:
+# Test for string in array (this probably already exists somewhere).
 # ======================================================================================
-function GetTheColor(node, DOMColor)
-                if isa(DOMColor, Array)
-                    if length(DOMColor) == 3
-                        color = [DOMColor[1]+0.0,DOMColor[2]+0.0,DOMColor[3]+0.0]
-                    else
-                        color = [DOMColor[1]+0.0,DOMColor[2]+0.0,DOMColor[3]+0.0,DOMColor[4]+0.0]
-                    end
-                else
-                    c = collect(color_names[ DOMColor ])
-                    color = [c[1]*0.00390625, c[2]*0.00390625, c[3]*0.00390625]
-                end
-        # Opacity
-          if node.shape.flags[HasOpacity] == true && length(color) == 3
-            DOM = node.DOM
-            if haskey(DOM, "opacity")
-                push!(color, DOM["opacity"])
-            end
-          end
-    return color
+function isAny(key::String, strings::Array{String})
+     for str in strings
+       if key == str
+         return str
+       end
+     end
+     return nothing
 end
+# ======================================================================================
+# Copy an entire nested dictionary to another giving preference to values of "primary"
+# ======================================================================================
+# a = Dict( "font"=>"sans", "text"=>Dict("string"=>"Hello dude!", "color"=>"green"))
+# b = Dict( "font"=>"gorgia", "text"=>Dict("string"=>"Hey man!"), "color"=>"purple")
+function CopyDict(primary::Dict, secondary::Dict)
+   allKeys = union([key for key in keys(primary)],[key for key in keys(secondary)])
+    for key in allKeys
+          if haskey(primary, key) && haskey(secondary, key)
+                if isa(primary[key], Dict) # its a sub-Dict
+                    CopyDict(primary[key], secondary[key])
+                end
+          elseif haskey(secondary, key) # secondary must have key. Just copy it!
+                primary[key] = secondary[key]
+          end
+    end
+end
+# ======================================================================================
 # ======================================================================================
 function AtributesToLayout(document, node)
     DOM = node.DOM
+    styles = document.styles
 
     h, w = document.height ,document.width
 
     if haskey(DOM, ">")
       E = DOM[">"]
-      if E == "div"
+
+      CopyDict(DOM, Tags_Default[E]) # (1) default tag values
+      # styles
+      # CopyDict(DOM, Tags_Default[E]) # (2) User defined styles
+      # CopyDict(DOM, Tags_Default[E]) # (3)
+
+      if isAny(E, boxes) !== nothing
           node.shape = NBox()
       end
 
       if E == "circle"
           node.shape = Circle()
       end
-      if E == "p"
+      if  isAny(E, text) !== nothing
           node.shape = NText()
       end
       if E == "arc"
           node.shape = Arc()
       end
-      if E == "page"
+      if E == "page" # alternatively I could use the familiar "body" tag for this!
           node.shape = NBox()
             node.shape.color = [1,1,1]
             node.shape.border = Border(0,0, 0,0, 0,0, "solid",[.8,.8,.8,1],[0,0,0,0])

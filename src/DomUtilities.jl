@@ -1,4 +1,28 @@
 # ======================================================================================
+# EX: GetTheColor(border["color"])
+# CALLED FROM:
+# ======================================================================================
+function GetTheColor(node, DOMColor)
+                if isa(DOMColor, Array)
+                    if length(DOMColor) == 3
+                        color = [DOMColor[1]+0.0,DOMColor[2]+0.0,DOMColor[3]+0.0]
+                    else
+                        color = [DOMColor[1]+0.0,DOMColor[2]+0.0,DOMColor[3]+0.0,DOMColor[4]+0.0]
+                    end
+                else
+                    c = collect(color_names[ DOMColor ])
+                    color = [c[1]*0.00390625, c[2]*0.00390625, c[3]*0.00390625]
+                end
+        # Opacity
+          if node.shape.flags[HasOpacity] == true && length(color) == 3
+            DOM = node.DOM
+            if haskey(DOM, "opacity")
+                push!(color, DOM["opacity"])
+            end
+          end
+    return color
+end
+# ======================================================================================
 # Print out Element's DOM but not children
 # CALLED FROM:
 # ======================================================================================
