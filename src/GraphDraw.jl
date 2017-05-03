@@ -21,8 +21,7 @@ export
           include("GraphFlags.jl")
           include("LayoutBuild.jl")
 
-dashes_by_name = [  "solid", "dot", "dotdashed", "longdashed",
-                    "dash", "dotdotdashed", "dotdotdotdashed"   ]
+# dashes_by_name = [  "solid", "dot", "dotdashed", "longdashed", "dash", "dotdotdashed", "dotdotdotdashed"   ]
 # ======================================================================================
 # As I aquire a better understanding of how Cairo works, no doubt, this file will change
 # drastically!
@@ -95,7 +94,7 @@ end
 # TODO: remove node from function
 # ======================================================================================
 function DrawShape(ctx::CairoContext, node, shape::Draw, clipPath)
-
+save(ctx)
     path = GetPath(shape)
     # set_antialias(ctx,4)
     setPath(ctx::CairoContext, path)
@@ -119,25 +118,28 @@ function DrawShape(ctx::CairoContext, node, shape::Draw, clipPath)
             fill(ctx);
           end
   end
-  reset_clip(ctx)
-
+  restore(ctx)
+  #reset_clip(ctx)
+     thickness = setClipPath(ctx::CairoContext, path)
+     clip(ctx)
           if isdefined(path.border, :color) && length(path.border.color) > 2
                 setcolor( ctx, path.border.color...)
                 # TODO: add clipping for the border path as well to clean up edges.
-                if clipPath !== nothing
-                    rectangle(ctx, clipPath... )
-                    clip(ctx)
-                end
+                #if clipPath !== nothing
+                    # rectangle(ctx, clipPath... )
+                    # clip(ctx)
+                #end
                 #clip_preserve()
-                save(ctx)
+                # save(ctx)
                         set_line_type(ctx, path.border.style)
-                        set_line_width(ctx, path.border.top);
+                        set_line_width(ctx, thickness);
                         setborderPath(ctx::CairoContext, path)
                         stroke(ctx)
-                restore(ctx)
+                # restore(ctx)
 
-                reset_clip(ctx)
+                # reset_clip(ctx)
           end
+        reset_clip(ctx)
 end
 # ======================================================================================
 # Temporary shortcut: draw the virticle scroll bar
@@ -308,7 +310,6 @@ end
 # Set circle path and fill with color
 # ======================================================================================#
 function setPath(ctx::CairoContext, shape::NQBox)
-
     if !isnull(shape.border.radius) #(TR + BR + BL + TL) > 0
         radius = get(shape.border.radius,[0,0,0,0])
         TR = radius[1]
@@ -326,36 +327,76 @@ function setPath(ctx::CairoContext, shape::NQBox)
     else
         rectangle(ctx, shape.left, shape.top, shape.wide, shape.tall )
     end
-
-
 end
 function setPath(ctx::CairoContext, shape::NQCircle)
         move_to(ctx, shape.left, shape.top)
         arc(ctx, shape.left, shape.top, shape.wide*.5, 0, 2*pi);
 end
+# ======================================================================================
+function setClipPath(ctx::CairoContext, shape::NQCircle)
+    b  = shape.border.top #*.5
+        move_to(ctx, shape.left + shape.radius, shape.top)
+        arc(ctx, shape.left, shape.top, shape.radius+b, 0, 2*pi);
+  return b
+end
+
+function setClipPath(ctx::CairoContext, shape::NQBox)
+  bw  = shape.border.width*.5
+  bh  = shape.border.height*.5
+  borderWidth = max(shape.border.left, shape.border.top, shape.border.right,shape.border.bottom)
+
+  if !isnull(shape.border.radius) #(TR + BR + BL + TL) > 0
+      radius = get(shape.border.radius,[0,0,0,0])
+      TR = radius[1]
+      BR = radius[2]
+      BL = radius[3]
+      TL = radius[4]
+            rot   =   1.5707963    # 90 * degrees
+        # TODO: see if curveTo() will work to simplify this.
+        borderWidth = max(shape.border.left, shape.border.top, shape.border.right,shape.border.bottom)
+        line = (borderWidth/2)
+        t = shape.top  #- (line - shape.border.top)
+        l = shape.left  #- (line - shape.border.left)
+        r = shape.right       #(shape.border.right - line)
+        b = shape.bottom      #(shape.border.bottom - line)
+            new_sub_path(ctx);
+              arc(ctx, r - TR, t + TR, TR,     -rot,   0   );    # topRight
+              arc(ctx, r - BR, b - BR, BR,     0,      rot ); # bottomRight
+              arc(ctx, l + BL, b - BL, BL,     rot,    pi  );   # bottomLeft
+              arc(ctx, l + TL, t + TL, TL,     pi,     -rot);      # topLeft
+            close_path(ctx);
+  else
+      rectangle(ctx, shape.left, shape.top, shape.wide, shape.tall )
+  end
+  return borderWidth
+end
+# ======================================================================================
+
 function setborderPath(ctx::CairoContext, shape::NQBox)
+
+  # TODO: see if curveTo() will work to simplify this.
+  borderWidth = max(shape.border.left,shape.border.top,shape.border.right,shape.border.bottom)
+  line = (borderWidth/2)
+  t = shape.top - (line - shape.border.top)
+  l = shape.left - (line - shape.border.left)
+  r = shape.right - (shape.border.right - line)
+  b = shape.bottom - (shape.border.bottom - line)
+
     if !isnull(shape.border.radius) #(TR + BR + BL + TL) > 0
-        radius = get(shape.border.radius,[0,0,0,0])
-        TR = radius[1]
-        BR = radius[2]
-        BL = radius[3]
-        TL = radius[4]
-              rot   =   1.5707963    # 90 * degrees
-          # TODO: see if curveTo() will work to simplify this.
-          borderWidth = max(shape.border.left,shape.border.top,shape.border.right,shape.border.bottom)
-          line = (borderWidth/2)
-          t = shape.top - (line - shape.border.top)
-          l = shape.left - (line - shape.border.left)
-          r = shape.right - (shape.border.right - line)
-          b = shape.bottom - (shape.border.bottom - line)
-                new_sub_path(ctx);
+      radius = get(shape.border.radius,[0,0,0,0])
+      TR = radius[1]
+      BR = radius[2]
+      BL = radius[3]
+      TL = radius[4]
+      rot   =   1.5707963    # 90 * degrees
+              new_sub_path(ctx);
                 arc(ctx, r - TR, t + TR, TR,     -rot,   0   );    # topRight
                 arc(ctx, r - BR, b - BR, BR,     0,      rot ); # bottomRight
                 arc(ctx, l + BL, b - BL, BL,     rot,    pi  );   # bottomLeft
                 arc(ctx, l + TL, t + TL, TL,     pi,     -rot);      # topLeft
-                close_path(ctx);
+              close_path(ctx);
     else
-        rectangle(ctx, shape.left, shape.top, shape.wide, shape.tall )
+        rectangle(ctx, l, t, r, b )
     end
 end
 function setborderPath(ctx::CairoContext, shape::NQCircle)
