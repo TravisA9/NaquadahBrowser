@@ -156,7 +156,7 @@ function VScroller(ctx::CairoContext, document, node, shape, clipPath)
 
         realTop = abs(t)
 
-        setcolor(ctx, .3,.3,.3, .8)
+        setcolor(ctx, .3,.3,.3, .3)
         rectangle(ctx,r,t,12,h )
         fill(ctx);
         #.............................................................
@@ -169,7 +169,7 @@ function VScroller(ctx::CairoContext, document, node, shape, clipPath)
          #.............................................................
          #.............................................................
 
-        setcolor(ctx, .6,.6,.6, 1)
+        setcolor(ctx, .4,.4,.4, 1)
         rectangle(ctx,r+1,t-y,10,scrollButHeight )
         fill(ctx);
 end
@@ -285,7 +285,9 @@ function GetPath(shape::NBox)
     b = NQBox()
     b.border  = get(shape.border,  Border(0,0,0,0,0,0, "solid",[],[0,0,0,0]))
     b.padding = get(shape.padding, BoxOutline(0,0,0,0,0,0))
-    b.left,b.top,b.wide,b.tall = getBorderBox(shape, b.border, b.padding)
+    b.left, b.top, b.wide, b.tall = getBorderBox(shape, b.border, b.padding)
+    b.left  -= (b.border.left*.6)
+    b.top   -= (b.border.top*.6)
     b.right  = b.left + b.wide
     b.bottom = b.top + b.tall
     return b

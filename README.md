@@ -8,7 +8,7 @@
 
 > Naquadah currently uses **Cairo** for graphics and **GTK** for the GUI.
 
-**Long answer**: Although, Naquadah looks and functions like a browser, there are a few differences. Naquadah principally consists of a **layout engine** and a **rendering engine** built from the ground up. For convenience, it includes a basic GUI as well. It is writen in the awesome **Julia language** and serves as a test of julia's value as a general purpose language. It is being developed for fun and for the purpose of displaying my work but if it proves to be useful, that would be great too.
+**Long answer**: Although, Naquadah looks and functions like a browser, there are a few differences. Naquadah principally consists of a **layout engine** and a **rendering engine** built from the ground up. For convenience, it includes a basic GUI as well. It is written in the awesome **Julia language** and serves as a test of julia's value as a general purpose language. It is being developed for fun and for the purpose of displaying my work but if it proves to be useful, that would be great too.
 
 ## \* Warning this project is being overhualed!
 
@@ -54,10 +54,10 @@ Progress Report
 
 
 
-| Speacial Features |  |
+| Special Features |  |
 | :--- | :--- |
 | Geometry as Nodes | So far circles are set up to work as normal page elements but other common geometries will soon be added. |
-| Tabs and Search bar are Shaddow DOM | This makes it possible to move or redesign them. This should help ensure that the browser works with any graphics engine changes and even change the appearence and functionality where needed \(Ex. mobile devices\). |
+| Tabs and Search bar are Shadow DOM | This makes it possible to move or redesign them. This should help ensure that the browser works with any graphics engine changes and even change the appearance and functionality where needed \(Ex. mobile devices\). |
 |  |  |
 
 A few things that are missing from the current version that worked in the previous:
@@ -100,7 +100,7 @@ The **head** may look something like this.
         }
 ```
 
-The **styles** section stores frequently used styles \(similer to CSS\). Styles can also be used as color swatches or as templates adding structure or other default aspects to a node.
+The **styles** section stores frequently used styles \(similar to CSS\). Styles can also be used as color swatches or as templates adding structure or other default aspects to a node.
 
 ```JSON
     "styles":{
@@ -109,7 +109,7 @@ The **styles** section stores frequently used styles \(similer to CSS\). Styles 
         }
 ```
 
-The **body** describes general structure \(similer to HTML and SVG\) and may also contain style information.
+The **body** describes general structure \(similar to HTML and SVG\) and may also contain style information.
 
 ```JSON
     "body":[
@@ -148,7 +148,7 @@ As you can see there are three major sections to a Json page and these may be on
   julia> Pkg.clone("https://github.com/TravisA9/NaquadahBrowser.git")
   ```
 
-* You may also have to add package **dependancies** for this project. You can paste the following into the Julia Console and press enter.
+* You may also have to add package **dependencies** for this project. You can paste the following into the Julia Console and press enter.
 
   ```julia
   Pkg.add("Gtk")
@@ -171,11 +171,11 @@ julia> Start()
 
 # General Goals
 
-* Mantain modularity in order to be adaptable. If in the future there is good reason to switch out something such as the graphics interface, it should be easy to do so without reworking all the code. Also, if someone wants to use just one module out of Naquadah it should be easy to do so.
-* Mantain a measure of compatability with principal features of web standards. I believe that a lot of thought was put into the design and functionality of the WWW and that in general it is a good model to follow.
-* Simplify as much as possible while increasing functionality. It is pointless to build another browser if it does not offer good fetures.
-* Take advantage of opertunities to add select functionality that may not be feasable in an ordinary browser.
-* Make Naquadah easy to modify and repurpose. Naquadah is made to be used. It may be modified for standalone apps, mobile devices, text editors and more. The more it is used, the more it will be developed.
+* Maintain modularity in order to be adaptable. If in the future there is good reason to switch out something such as the graphics interface, it should be easy to do so without reworking all the code. Also, if someone wants to use just one module out of Naquadah it should be easy to do so.
+* Maintain a measure of compatibility with principal features of web standards. I believe that a lot of thought was put into the design and functionality of the WWW and that in general it is a good model to follow.
+* Simplify as much as possible while increasing functionality. It is pointless to build another browser if it does not offer good features.
+* Take advantage of opportunities to add select functionality that may not be feasible in an ordinary browser.
+* Make Naquadah easy to modify and re-purpose. Naquadah is made to be used. It may be modified for standalone apps, mobile devices, text editors and more. The more it is used, the more it will be developed.
 * Experiment with reactively connecting to databases for real-time page updates.
 
 # Wish List:
@@ -184,7 +184,7 @@ julia> Start()
 * Integrated page editor \(perhaps WYSIWYG\)
 * Optimize speed
 * Compile distributable binaries for major OSs
-* Ploting and plot animation utilities \(Ex. force layout functionality\). Since Naquadah is meant to be a layout engine, it may be nice to include more than just the basic browser options.
+* Plotting and plot animation utilities \(Ex. force layout functionality\). Since Naquadah is meant to be a layout engine, it may be nice to include more than just the basic browser options.
 
 
 

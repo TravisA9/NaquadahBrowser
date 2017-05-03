@@ -89,7 +89,7 @@ Tags_Default = Dict(
 # <dialog>	    Defines a dialog box or window
 "dialog" => Dict( "font" =>  Dict( "size" => 13, "family" => "Sans", "color" => "black" )),
 # <div>	        Defines a section in a document
-"div" => Dict(  "display" => "inline-block", "margin" => [0,0,4,4] ),
+"div" => Dict(  "display" => "inline-block", "margin" => [0,0,0,0] ),
 # <dl>	        Defines a description list
 "dl" => Dict( "font" =>  Dict( "size" => 13, "family" => "Sans", "color" => "black" )),
 # <dt>	        Defines a term/name in a description list
