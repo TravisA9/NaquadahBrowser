@@ -19,7 +19,7 @@ In order to improve the general design and improve modularity I am making some b
 I have now moved the old version of NaquadahBrowser to a folder. The current version of Naquadah is the updated version although some functionality is still missing.
 
 Take a look at at an example page in the new version of Naquadah!  
-![window](doc/figures/NaquadahCore.png)  
+![window](doc/figures/Naquadah.png)  
 Progress Report
 
 | Feature | State of development |
