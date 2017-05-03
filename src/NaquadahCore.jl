@@ -44,7 +44,8 @@ function CreateLayoutTree(document, node)
                 CreateLayoutTree(document, child)
     end
     # Clean-up! Generally the last row of each child is not yet finalized.
-    if length(node.rows) > 0    lastRow = node.rows[end]
+    if length(node.rows) > 0
+        lastRow = node.rows[end]
         FinalizeRow(lastRow)
         # Set content height and width for scroller
         node.scroll.contentHeight = lastRow.y + lastRow.height - node.shape.top
