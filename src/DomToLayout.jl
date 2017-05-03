@@ -42,16 +42,19 @@ end
 # ======================================================================================
 function AtributesToLayout(document, node)
     DOM = node.DOM
-    styles = document.styles
+    PageStyles = document.styles
 
     h, w = document.height ,document.width
 
     if haskey(DOM, ">")
       E = DOM[">"]
 
-      CopyDict(DOM, Tags_Default[E]) # (1) default tag values
       # styles
-      # CopyDict(DOM, Tags_Default[E]) # (2) User defined styles
+      if haskey(DOM, "style")
+          style = DOM["style"]
+          CopyDict(DOM, PageStyles[style]) # (2) User defined styles
+      end
+      CopyDict(DOM, Tags_Default[E]) # (1) default tag values
       # CopyDict(DOM, Tags_Default[E]) # (3)
 
       if isAny(E, boxes) !== nothing

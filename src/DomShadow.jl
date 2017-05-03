@@ -11,7 +11,7 @@ icons = Dict(     ">"       => "div", "display" => "inline-block", "height"  => 
 downloadIcon = Dict(">"=>"circle","display" => "inline-block", "float"=>"right", "margin"=>[5,5,4,4], "radius"=>10, "image"=>"Download.png")
 NewPageIcon = Dict(">"=>"circle","display" => "inline-block", "margin"=>[5,2,4,4], "radius"=>12, "image"=>"NewPage.png")
 JuliaIcon = Dict(">"=>"circle","display" => "inline", "color"=> [1,1,1], "margin"=>[5,2,4,4], "radius"=>8, "image"=>"JuliaIcon.png")
-button = Dict(     ">"       => "div", "display" => "inline", "height"  => 15, "color"=>"lightgrey", "margin"=>[2,0,4,2],
+button = Dict(     ">"       => "div", "display" => "inline", "height"  => 15, "color"=>"lightgrey", "margin"=>[2,0,2,2],
                 "border"  => Dict( "radius"=>[5,5,5,5], "width"=>[1,1,1,1], "style"=>"solid", "color"=>[0.3,0.3,0.3] ),
                 "nodes"   => [] )
 

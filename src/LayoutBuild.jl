@@ -26,7 +26,7 @@ end
 #======================================================================================#
 function FinalizeRow(row)
     if row.flags[RowFinalized] == true
-        return
+        return 0
     end
 
     # move objects up or down (withing row space) depending on layout options.
@@ -110,11 +110,25 @@ function FinalizeRow(row)
 
     # Mark row as finalized!
     row.flags[RowFinalized] = true
+
+    return row.y + row.height
 end
 
-#======================================================================================#
+
+
+
+
+
+
+
+
+
+
+
+
+# ======================================================================================
 # PushToRow(document, Current node, the shape, (bounds->) l,t,w,h)
-#======================================================================================#
+# ======================================================================================
 function PushToRow(document, node, thing, l,t,w) # height not needed
  #temp = node.shape
       shape = getShape(thing)
@@ -122,11 +136,7 @@ function PushToRow(document, node, thing, l,t,w) # height not needed
       rows = node.rows
       row = LastRow(rows, l, t, w) #rows[end]
 
-       parent = node.parent
-       parentshape = parent.shape
-       if parentshape.flags[DisplayInline] == true
-           println("parentshape is inline!")
-       end
+
 
     # Fixed /////////////////////////////////////////////////////
     if shape.flags[Fixed] == true
@@ -156,6 +166,7 @@ function PushToRow(document, node, thing, l,t,w) # height not needed
                  push!(row.nodes, thing)
                  return
      end
+
      # Inline /////////////////////////////////////////////////////
      if shape.flags[DisplayInline] == true
          # TODO: there is a problem! I have the width arbitrarily set because a button
@@ -172,48 +183,46 @@ function PushToRow(document, node, thing, l,t,w) # height not needed
      end
     # InlineBlock /////////////////////////////////////////////////////
     if shape.flags[DisplayInlineBlock] == true && shape.width < 1
-               println("no width inline block!")
-               padding, border, margin = getReal(shape)
-               shape.width = row.space - (border.width + padding.width + margin.width)
-               row.space = 0
-               OffsetX, OffsetY = contentOffset( getReal(shape)... )
-               shape.top = row.y + OffsetY
-               shape.left = row.x + OffsetX
+               w = node.rows[end].width
+              # scroll.contentWidth
+               println("no width inline-block! content width: $w")
+               shape.width = w
                push!(row.nodes, thing)
-               FinalizeRow(row)
+               setNodePosition(shape, row, row.x, w)
                return
         # else not enough space
     end
     # Block /////////////////////////////////////////////////////
-    if shape.flags[DisplayBlock] == true && shape.width < 1
+    if shape.flags[DisplayBlock] == true
                 if length(row.nodes) > 0
-                    FinalizeRow(row)
-                    row = Row(rows, l, row.y + row.height, w)
+                    row = Row(rows, l, FinalizeRow(row), w)
+                    #row = Row(rows, l, row.y + row.height, w)
                 end
                 padding, border, margin = getReal(shape)
+            if shape.width < 1
                 shape.width = w - (border.width + padding.width + margin.width)
+            end
+
+                row.height < height && (row.height = height)
+                row.y == 0 && (row.y = t)
+                setNodePosition(shape, row, row.x, width)
                 row.space = 0
+                push!(row.nodes, thing)
+                return
         else # not enough space.. new row!
             if row.space < width
-                FinalizeRow(row)
-                row = Row(rows,  l,  row.y + row.height,  w) #  - width
-                push!(row.nodes, thing)
-                row.height = height
-                setNodePosition(shape, row, l, width)
-                return
+                row = Row(rows, l, FinalizeRow(row), w)
             end
         end
 
-#setRowMetrics(row, height, x)
     row.height < height && (row.height = height)
     row.y == 0 && (row.y = t)
-
     setNodePosition(shape, row, row.x, width)
-
     push!(row.nodes, thing)
 
-    #    node.shape.flags[LineBreakAfter] == true
 end
+
+
 #======================================================================================#
 #
 #======================================================================================#
@@ -299,8 +308,9 @@ function LineBreak(node) # .rows, parentArea
     row = node.rows[end]
     box = getContentBox(node.shape, getReal(node.shape)... )
     l, t, w, h = box
-    FinalizeRow(row)
-    return Row(node.rows,  l,  row.y + row.height,  w)
+    #FinalizeRow(row)
+    #return Row(node.rows,  l,  row.y + row.height,  w)
+    return row = Row(rows, l, FinalizeRow(row), w)
 end
 #======================================================================================#
 #
@@ -323,9 +333,13 @@ function fontWeight(shape)
     end
 end
 #======================================================================================#
-#
+# TODO: simplify / clean up
 #======================================================================================#
-function textToRows(document, node, MyText, l, t, warn) # .rows, parentArea
+function textToRows(document, node, MyText, l, t, wide) # .rows, parentArea
+    if wide == 0
+        wide = node.parent.shape.width
+        #println("container width:", node.parent.shape.width)
+    end
       shape = node.shape
       MyTextShape = MyText.shape
       c = CairoRGBSurface(0,0);
@@ -335,18 +349,18 @@ function textToRows(document, node, MyText, l, t, warn) # .rows, parentArea
       select_font_face(ctx, MyTextShape.family, slant, weight);
       set_font_size(ctx, MyTextShape.size);
 
-# when we want to add text to a row that already has content
+      # when we want to add text to a row that already has content
       rows = node.rows
-
       if length(rows) == 0 # no row!
-        Row(rows, l, t, warn)
+        Row(rows, l, t, wide)
       end
-      if length(rows[end].nodes) > 0 # Already has nodes!
-          lineWidth = rows[end].space
-          lineLeft = rows[end].x
+      row = rows[end]
+      if length(row.nodes) > 0 # Already has nodes!
+          lineWidth = row.space
+          lineLeft = row.x
           isPartRow = true
       else
-          lineWidth = warn
+          lineWidth = wide
           lineLeft = l
           isPartRow = false
       end
@@ -360,19 +374,33 @@ function textToRows(document, node, MyText, l, t, warn) # .rows, parentArea
      # split(MyTextShape.text) # TODO: this needs improved!
      line = words[1]
 
+
+     firstWordWidth = text_extents(ctx, line )[3]
+     if firstWordWidth > lineWidth
+         println("------Space for $line: ", lineWidth)
+         Row(rows,  l,  FinalizeRow(row),  wide)
+     end
+
+
+
+
     for w in 2:length(words)
         lastLine = line
         line = lastLine * words[w]
         extetents = text_extents(ctx,line )
         # long enough ...cut!
         if extetents[3] >= lineWidth
-            te = text_extents(ctx, lastLine )
-            textLine = TextLine(MyText, lastLine, lineLeft, 0, te[3], MyTextShape.height)
-            PushToRow(document, node, textLine, l, t, warn)
+            lastLine = split(lastLine, r"^[\s]+")[end]
+
+            textWidth = text_extents(ctx, lastLine )[3]
+            textLine = TextLine(MyText, lastLine, lineLeft,   0, textWidth, MyTextShape.height)
+            println("textWidth ",textWidth)
+            #          TextLine(MyText,     text,     left, top,     width, height)
+            pushText(document, node, textLine, l, t, wide)
             line = words[w]
-            # What's this for?
+            # reset default values
             if isPartRow == true
-                lineWidth = warn
+                lineWidth = wide
                 lineLeft = l
                 isPartRow = false
             end
@@ -380,7 +408,29 @@ function textToRows(document, node, MyText, l, t, warn) # .rows, parentArea
 
     end
     # Make sure we flush out the last row!
-    te = text_extents(ctx,line )
-    textLine = TextLine(MyText, line, lineLeft, 0, te[3], MyTextShape.height)
-    PushToRow(document, node, textLine, l, t, warn)
+    line = split(line, r"^[\s]+")[end]
+
+    textWidth = text_extents(ctx,line )[3]
+    textLine = TextLine(MyText, line, lineLeft, 0, textWidth, MyTextShape.height)
+    pushText(document, node, textLine, l, t, wide)
+end
+#======================================================================================#
+# TODO: simplify / clean up
+#======================================================================================#
+function pushText(document, node, thing, l,t,w) # height not needed
+       shape = getShape(thing)
+      width, height = getSize(shape)
+      rows = node.rows
+      row = LastRow(rows, l, t, w)
+
+      if row.space < width
+          row = Row(rows, l, FinalizeRow(row), w)
+      end
+
+    row.height < height && (row.height = height)
+    row.y == 0 && (row.y = t)
+
+    setNodePosition(shape, row, row.x, width)
+    push!(row.nodes, thing)
+
 end
