@@ -24,40 +24,38 @@ Progress Report
 
 | Feature | State of development |
 | :--- | :--- |
-| Tags | div, p, circle, page |
-| Styles | color, opacity, gradients, size, display, position, border, radius, padding, margin, font, alignment and more! |
+| Tags |  :+1: div, p, circle, page |
+| Styles | :+1: color, opacity, gradients, size, display, position, border, radius, padding, margin, font, alignment and more! |
 | Classes | Not yet finished |
 | Floats | Left is working but I need to finish Right \(I think\) |
-| Display | inline, inline-block, block \(mostly all working\) |
-| Position | fixed, absolute, relative |
-| Box-Modal | content, padding, border, margin |
-| Colors | Any color with or without opacity |
+| Display | :+1: inline, inline-block, block \(mostly all working\) |
+| Position | :+1: fixed, absolute, relative |
+| Box-Modal | :+1: content, padding, border, margin |
+| Colors | :+1: Any color with or without opacity |
 | Events | mousedown, mouseup, click, drag, scroll and hover fire but do not yet trigger meaningfull actions. |
 | Clipping | Mostly set up and working. |
 | Text selection and highlighting | Not yet started |
-| Gradients | Mostly working |
-| Border Radius | Working fine |
+| Gradients | :+1: Mostly working |
+| Border Radius | :+1: Working fine |
 | Overflow | Don't remember |
-| Links | Not yet finished |
+| Links | :warning: Not yet finished |
 | Shadow DOM | Scrollbars, window controls |
-| Transforms | Not yet started |
-| Transitions | Not yet started |
-| Animations | Not yet started |
+| Transforms/Transitions/Animations | :warning: Not yet started |
 | Shadows | Temporary hack for text/basically not yet begun |
-| Backgrounds | color, radial-gradient, linear-gradient, image \(most all with optional opacity\) |
-| Columns | Not yet started |
-| Media queries | Not yet started |
+| Backgrounds | :+1: color, radial-gradient, linear-gradient, image \(most all with optional opacity\) |
+| Columns | :warning: Not yet started |
+| Media queries | :warning: Not yet started |
 | Selectors \(.\),   \#,   \[\],   $=,   \*=,   &gt; | Not yet started |
-| Max/min | Not yet available |
-| Tables | Not yet |
-| Lists | Not yet |
+| Max/min | :warning: Not yet available |
+| Tables | :warning: Not yet |
+| Lists |  :warning: Not yet |
 
 
 
 | Special Features |  |
 | :--- | :--- |
-| Geometry as Nodes | So far circles are set up to work as normal page elements but other common geometries will soon be added. |
-| Tabs and Search bar are Shadow DOM | This makes it possible to move or redesign them. This should help ensure that the browser works with any graphics engine changes and even change the appearance and functionality where needed \(Ex. mobile devices\). |
+| Geometry as Nodes |  :sparkles: So far circles are set up to work as normal page elements but other common geometries will soon be added. |
+| Tabs and Search bar are Shadow DOM |  :sparkles: This makes it possible to move or redesign them. This should help ensure that the browser works with any graphics engine changes and even change the appearance and functionality where needed \(Ex. mobile devices\). |
 |  |  |
 
 A few things that are missing from the current version that worked in the previous:
