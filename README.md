@@ -26,26 +26,26 @@ Progress Report
 | :--- | :--- |
 | Tags |  :+1: div, p, circle, page |
 | Styles | :+1: color, opacity, gradients, size, display, position, border, radius, padding, margin, font, alignment and more! |
-| Classes | Not yet finished |
-| Floats | Left is working but I need to finish Right \(I think\) |
+| Classes |  :soon: Not yet finished |
+| Floats | :soon: Left is working but I need to finish Right \(I think\) |
 | Display | :+1: inline, inline-block, block \(mostly all working\) |
 | Position | :+1: fixed, absolute, relative |
 | Box-Modal | :+1: content, padding, border, margin |
 | Colors | :+1: Any color with or without opacity |
-| Events | mousedown, mouseup, click, drag, scroll and hover fire but do not yet trigger meaningfull actions. |
-| Clipping | Mostly set up and working. |
-| Text selection and highlighting | Not yet started |
+| Events | :soon: mousedown, mouseup, click, drag, scroll and hover fire but do not yet trigger meaningfull actions. |
+| Clipping | :+1: Mostly set up and working. |
+| Text selection and highlighting | :soon: Not yet started |
 | Gradients | :+1: Mostly working |
 | Border Radius | :+1: Working fine |
-| Overflow | Don't remember |
+| Overflow | :warning: Don't remember |
 | Links | :warning: Not yet finished |
-| Shadow DOM | Scrollbars, window controls |
+| Shadow DOM | :soon: Scrollbars, window controls |
 | Transforms/Transitions/Animations | :warning: Not yet started |
-| Shadows | Temporary hack for text/basically not yet begun |
+| Shadows | :soon: Temporary hack for text/basically not yet begun |
 | Backgrounds | :+1: color, radial-gradient, linear-gradient, image \(most all with optional opacity\) |
 | Columns | :warning: Not yet started |
 | Media queries | :warning: Not yet started |
-| Selectors \(.\),   \#,   \[\],   $=,   \*=,   &gt; | Not yet started |
+| Selectors \(.\),   \#,   \[\],   $=,   \*=,   &gt; | :warning: Not yet started |
 | Max/min | :warning: Not yet available |
 | Tables | :warning: Not yet |
 | Lists |  :warning: Not yet |
