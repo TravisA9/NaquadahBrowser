@@ -22,40 +22,40 @@ Take a look at at an example page in the new version of Naquadah!
 ![window](doc/figures/Naquadah_2017.png)  
 Progress Report
 
-| Feature | State of development |
-| :--- | :--- |
-| Tags |   :white_check_mark: div, p, circle, page |
-| Styles |  :white_check_mark: color, opacity, gradients, size, display, position, border, radius, padding, margin, font, alignment and more! |
-| Classes |  :soon: Not yet finished |
-| Floats | :soon: Left is working but I need to finish Right \(I think\) |
-| Display |  :white_check_mark: inline, inline-block, block \(mostly all working\) |
-| Position |  :white_check_mark: fixed, absolute, relative |
-| Box-Modal |  :white_check_mark: content, padding, border, margin |
-| Colors |  :white_check_mark: Any color with or without opacity |
-| Events | :soon: mousedown, mouseup, click, drag, scroll and hover fire but do not yet trigger meaningfull actions. |
-| Clipping |  :white_check_mark: Mostly set up and working. |
-| Text selection and highlighting | :soon: Not yet started |
-| Gradients |  :white_check_mark: Mostly working |
-| Border Radius |  :white_check_mark: Working fine |
-| Overflow |  :interrobang: Don't remember |
-| Links |  :heavy_exclamation_mark: Not yet finished |
-| Shadow DOM | :soon: Scrollbars, window controls |
-| Transforms/Transitions/Animations |  :heavy_exclamation_mark: Not yet started |
-| Shadows | :soon: Temporary hack for text/basically not yet begun |
-| Backgrounds |  :white_check_mark: color, radial-gradient, linear-gradient, image \(most all with optional opacity\) |
-| Columns | :warning: Not yet started |
-| Media queries |  :heavy_exclamation_mark: Not yet started |
-| Selectors \(.\),   \#,   \[\],   $=,   \*=,   &gt; |  :heavy_exclamation_mark: Not yet started |
-| Max/min |  :heavy_exclamation_mark: Not yet available |
-| Tables |  :heavy_exclamation_mark: Not yet |
-| Lists |   :heavy_exclamation_mark: Not yet |
+| Feature | |  State of development |
+| :--- | |  :--- |
+| Tags |   :white_check_mark: |  div, p, circle, page |
+| Styles |  :white_check_mark: |  color, opacity, gradients, size, display, position, border, radius, padding, margin, font, alignment and more! |
+| Classes |  :soon: |  Not yet finished |
+| Floats | :soon: |  Left is working but I need to finish Right \(I think\) |
+| Display |  :white_check_mark: |  inline, inline-block, block \(mostly all working\) |
+| Position |  :white_check_mark: |  fixed, absolute, relative |
+| Box-Modal |  :white_check_mark: |  content, padding, border, margin |
+| Colors |  :white_check_mark: |  Any color with or without opacity |
+| Events | :soon: |  mousedown, mouseup, click, drag, scroll and hover fire but do not yet trigger meaningfull actions. |
+| Clipping |  :white_check_mark: |  Mostly set up and working. |
+| Text selection and highlighting | :soon: |  Not yet started |
+| Gradients |  :white_check_mark: |  Mostly working |
+| Border Radius |  :white_check_mark: |  Working fine |
+| Overflow |  :interrobang: |  Don't remember |
+| Links |  :heavy_exclamation_mark: |  Not yet finished |
+| Shadow DOM | :soon: |  Scrollbars, window controls |
+| Transforms/Transitions/Animations |  :heavy_exclamation_mark: |  Not yet started |
+| Shadows | :soon: |  Temporary hack for text/basically not yet begun |
+| Backgrounds |  :white_check_mark: |  color, radial-gradient, linear-gradient, image \(most all with optional opacity\) |
+| Columns |  :heavy_exclamation_mark: |  Not yet started |
+| Media queries |  :heavy_exclamation_mark: |  Not yet started |
+| Selectors \(.\),   \#,   \[\],   $=,   \*=,   &gt; |  :heavy_exclamation_mark: |  Not yet started |
+| Max/min |  :heavy_exclamation_mark: |  Not yet available |
+| Tables |  :heavy_exclamation_mark: |  Not yet |
+| Lists |   :heavy_exclamation_mark: |  Not yet |
 
 
 
-| Special Features |  |
-| :--- | :--- |
-| Geometry as Nodes |  :sparkles: So far circles are set up to work as normal page elements but other common geometries will soon be added. |
-| Tabs and Search bar are Shadow DOM |  :sparkles: This makes it possible to move or redesign them. This should help ensure that the browser works with any graphics engine changes and even change the appearance and functionality where needed \(Ex. mobile devices\). |
+| Special Features | |   |
+| :--- | |  :--- |
+| Geometry as Nodes |  :sparkles: |  So far circles are set up to work as normal page elements but other common geometries will soon be added. |
+| Tabs and Search bar are Shadow DOM |  :sparkles: |  This makes it possible to move or redesign them. This should help ensure that the browser works with any graphics engine changes and even change the appearance and functionality where needed \(Ex. mobile devices\). |
 |  |  |
 
 A few things that are missing from the current version that worked in the previous:
