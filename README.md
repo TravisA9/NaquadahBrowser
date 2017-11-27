@@ -22,8 +22,8 @@ Take a look at at an example page in the new version of Naquadah!
 ![window](doc/figures/Naquadah_2017.png)  
 Progress Report
 
-| Feature | |  State of development |
-| :--- | |  :--- |
+| Feature |  :construction_worker:|  State of development |
+| :--- | :--- |  :--- |
 | Tags |   :white_check_mark: |  div, p, circle, page |
 | Styles |  :white_check_mark: |  color, opacity, gradients, size, display, position, border, radius, padding, margin, font, alignment and more! |
 | Classes |  :soon: |  Not yet finished |
@@ -52,8 +52,8 @@ Progress Report
 
 
 
-| Special Features | |   |
-| :--- | |  :--- |
+| Special Features |  :construction_worker:|   |
+| :--- |  :---|  :--- |
 | Geometry as Nodes |  :sparkles: |  So far circles are set up to work as normal page elements but other common geometries will soon be added. |
 | Tabs and Search bar are Shadow DOM |  :sparkles: |  This makes it possible to move or redesign them. This should help ensure that the browser works with any graphics engine changes and even change the appearance and functionality where needed \(Ex. mobile devices\). |
 |  |  |
