@@ -26,7 +26,7 @@ Progress Report
 | :--- | :--- |  :--- |
 | Tags |   :white_check_mark: |  div, p, circle, page |
 | Styles |  :white_check_mark: |  color, opacity, gradients, size, display, position, border, radius, padding, margin, font, alignment and more! |
-| Classes |  :soon: |  Not yet finished |
+| Classes |  :white_check_mark: |  Not yet finished |
 | Floats | :soon: |  Left is working but I need to finish Right \(I think\) |
 | Display |  :white_check_mark: |  inline, inline-block, block \(mostly all working\) |
 | Position |  :white_check_mark: |  fixed, absolute, relative |
