@@ -28,7 +28,7 @@ Progress Report
 | Styles |  :white_check_mark: |  color, opacity, gradients, size, display, position, border, radius, padding, margin, font, alignment and more! |
 | Classes |  :white_check_mark: |  Not yet finished |
 | Floats | :soon: |  Left is working but I need to finish Right \(I think\) |
-| Display |  :white_check_mark: |  inline, inline-block, block \(mostly all working\) |
+| Display |  :white_check_mark: |  inline, inline-block, block, none |
 | Position |  :white_check_mark: |  fixed, absolute, relative |
 | Box-Modal |  :white_check_mark: |  content, padding, border, margin |
 | Colors |  :white_check_mark: |  Any color with or without opacity |
