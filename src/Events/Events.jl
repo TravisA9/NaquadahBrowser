@@ -1,11 +1,13 @@
+include("EventsWiring.jl")
 
-# module NaquadahEvents
 using Cairo, Gtk, Gtk.ShortNames
 
-export AttatchEvents, EventType
+export AttatchEvents
 
-include("EventTypes.jl")
-include("EventsWiring.jl")
+
+
+
+
 function MouseSetBoth(document, px, py, rx, ry)
       document.event.pressed = Point(px, py)
       document.event.released = Point(rx, ry)
@@ -43,7 +45,7 @@ Gtk.GdkEventKey(
     #.............................................................
     canvas.mouse.button1press = @guarded (widget, event) -> begin
         MouseSetBoth(document, event.x, event.y, -1, -1)
-        MouseDownEvent(document, widget, document.event)
+        MouseDownEvent(document, widget, event)
     end
 
     #.............................................................
@@ -67,6 +69,16 @@ end
 
 #======================================================================================#
 #    Similar to MoveAll() in LayoutBuild.jl
+"""
+##
+
+...
+
+# Examples
+```julia-repl
+```
+[Source](https://github.com/TravisA9/NaquadahBrowser/blob/39c41cbb1ac28fe94876fe01beaa6e046c8b63d3/src/DOM/DomTree.jl#L54)
+"""
 #======================================================================================#
 function VmoveAll(node,y)
   shape = getShape(node)
@@ -84,5 +96,3 @@ function VmoveAll(node,y)
       end
     end
 end
-
-# end # module

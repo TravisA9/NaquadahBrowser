@@ -1,11 +1,18 @@
 # ======================================================================================
-# Create a node with default settings
-# CALLED FROM: Above traceElementTree()
-#   Instead of setting all the default variables it may be more sensible to test for
-#   attributes and set defaults if none are explicitly set from the DOM. It would be
-#   good to test for and set styles at the same time...
+
+"""
+## CreateDefaultNode(document::Page, parent::Element, DOM::Dict)
+
+Create a node with default settings
+CALLED FROM: Above traceElementTree()
+Instead of setting all the default variables it may be more sensible to test for
+attributes and set defaults if none are explicitly set from the DOM. It would be
+good to test for and set styles at the same time...
+
+[Source](https://github.com/TravisA9/NaquadahBrowser/blob/39c41cbb1ac28fe94876fe01beaa6e046c8b63d3/src/DOM/DomBuildDefault.jl#L15)
+"""
 # ======================================================================================
-function CreateDefaultNode(document::Page, parent::MyElement, DOM::Dict) # node::MyElement ,
+function CreateDefaultNode(document::Page, parent::Element, DOM::Dict) # node::MyElement ,
     node = BuildElement(parent, DOM)
     #node = parent.node[end]
     SameThing(node, parent.node[end], "CreateDefaultNode(), file: BuildDefaultNode.jl")
@@ -81,7 +88,21 @@ function CreateDefaultNode(document::Page, parent::MyElement, DOM::Dict) # node:
     #return node
 end
 # ======================================================================================
-# just to keep things clean below. TODO: inline
+"""
+## Copy(primary::Dict, secondary::Dict, attribute::String)
+
+Copy secondary attribute to primary. Sugar.
+
+# Examples
+```julia-repl
+julia> prim = Dict( "thing" => "hello" )
+julia> sec  = Dict( "thing" => "hello", "otherThing" => "world!")
+julia> Copy(prim, sec, "something")
+julia>
+
+```
+[Source](https://github.com/TravisA9/NaquadahBrowser/blob/39c41cbb1ac28fe94876fe01beaa6e046c8b63d3/src/DOM/DomBuildDefault.jl#L54)
+"""
 # ======================================================================================
 function Copy(primary::Dict, secondary::Dict, attribute::String)
       if !haskey(primary, attribute) && haskey(secondary, attribute)
@@ -89,10 +110,14 @@ function Copy(primary::Dict, secondary::Dict, attribute::String)
       end
 end
 # ======================================================================================
-# Take primary's attributes and fill in gaps with secondary's as fallback/default.
-# NOTE: move from most important to least. Example:
-#       imediate-styles -> ID-style -> last-class-style -> ... -> first-class-style -> default-style
-# CALLED FROM: Above CreateDefaultNode()
+function CopyLoop(primary, secondary, attributelist)
+    for attribute in attributelist
+        if !haskey(primary, attribute) && haskey(secondary, attribute)
+            primary[attribute] = secondary[attribute]
+        end
+    end
+end
+
 #   list, table, text, column, color, border, padding, margin, background, font,
 #   position, display, z-index,
 #
@@ -102,33 +127,29 @@ end
 # font:{ color, size, style, align, lineHeight, weight, family },
 # border:{ radius, style, width, color }
 # EVENTS: mousedown, mouseup, click, drag, hover
+"""
+## MergeAttributes(primary::Dict, secondary::Dict)
+CALLED FROM: Above CreateDefaultNode()
+
+
+Take primary's attributes and fill in gaps with secondary's as fallback/default.
+Must be carried out in the order from most important to least:
+imediate-styles -> ID-style -> last-class-style -> ... -> first-class-style -> default-style
+
+Similat to `Copy()` but more detailed.
+
+[Source](https://github.com/TravisA9/NaquadahBrowser/blob/39c41cbb1ac28fe94876fe01beaa6e046c8b63d3/src/DOM/DomBuildDefault.jl#L134)
+"""
 # ======================================================================================
 function MergeAttributes(primary::Dict, secondary::Dict)
 
     # Top-Level........................................
     # hover:, position, text, href, display, width, height, color, padding, margin
-    Copy(primary, secondary, "hover")
-    Copy(primary, secondary, "position")
-    Copy(primary, secondary, "text")
-    Copy(primary, secondary, "href")
-    Copy(primary, secondary, "display")
-    Copy(primary, secondary, "width")
-    Copy(primary, secondary, "height")
-    Copy(primary, secondary, "color")
-    Copy(primary, secondary, "padding")
-    Copy(primary, secondary, "margin")
-    Copy(primary, secondary, "opacity")
-    Copy(primary, secondary, "z-index")
-    Copy(primary, secondary, "gradient")
-    Copy(primary, secondary, "text-color")
+    list = ["hover", "position", "text", "href", "display", "width", "height",
+            "color", "padding", "margin", "opacity", "z-index", "gradient",
+             "text-color", "center", "radius", "angle"]
 
-
-
-    Copy(primary, secondary, "center")
-    Copy(primary, secondary, "radius")
-    Copy(primary, secondary, "angle")
-    # Copy(primary, secondary, "")
-
+             CopyLoop(primary, secondary, list)
     # FONT.............................................
         if haskey(secondary, "font")
               if !haskey(primary, "font")
@@ -136,19 +157,8 @@ function MergeAttributes(primary::Dict, secondary::Dict)
               else
                 font = primary["font"]
                 defaultfont = secondary["font"]
-                # primary does not have attribute but secondary does
-                          Copy(font, defaultfont, "color")
-                          Copy(font, defaultfont, "size")
-                          Copy(font, defaultfont, "style")
-                          Copy(font, defaultfont, "weight")
-                          Copy(font, defaultfont, "lineHeight")
-                          Copy(font, defaultfont, "family")
-                          Copy(font, defaultfont, "align")
-                          Copy(font, defaultfont, "text-decoration")
-
-
-
-
+                    list = ["color", "size", "style", "weight", "lineHeight", "family", "align", "text-decoration"]
+                CopyLoop(font, defaultfont, list)
               end
         end
 
@@ -159,12 +169,8 @@ function MergeAttributes(primary::Dict, secondary::Dict)
               else
                 border = primary["border"]
                 defaultborder = secondary["border"]
-                # primary does not have attribute but secondary does
-                # radius, style, width, color
-                          Copy(border, defaultborder, "radius")
-                          Copy(border, defaultborder, "style")
-                          Copy(border, defaultborder, "width")
-                          Copy(border, defaultborder, "color")
+                list = ["color", "radius", "width", "style"]
+                CopyLoop(border, defaultborder, list)
               end
         end
 end

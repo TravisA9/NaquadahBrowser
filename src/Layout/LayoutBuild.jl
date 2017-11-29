@@ -1,10 +1,23 @@
-export setWindowSize, MoveAll, VmoveAllChildren,
-        PushToRow, textToRows, FinalizeRow
+export setUpWindow, MoveAll, VmoveAllChildren,
+        PushToRow, FinalizeRow
 # ======================================================================================
 #
+"""
+## Types exported from Graphics
+
+...
+
+# Examples
+```julia-repl
+```
+[Source](https://github.com/TravisA9/NaquadahBrowser/blob/39c41cbb1ac28fe94876fe01beaa6e046c8b63d3/src/DOM/DomTree.jl#L54)
+"""
 # ======================================================================================
-function setWindowSize(w,h, n)
-  n.shape = NBox()
+function setUpWindow(document::Page, w::Float64,h::Float64)
+    println("W: $(w), H: $(h)")
+
+    n = document.children[1]
+    n.shape = NBox()
      n.shape.color = [1,1,1]
      n.shape.padding = BoxOutline(0,0,0,0,0,0)
      n.shape.border = Border(0,0, 0,0, 0,0, "solid",[.5,.5,.5,1],[0,0,0,0])
@@ -12,8 +25,30 @@ function setWindowSize(w,h, n)
      n.shape.top     = 0
      n.shape.width   = w # S hould be window width  - controls
      n.shape.height  = h # S hould be window height - controls
+
+    document.fixed.rows = [] #Row(0, 0, w)
+    fn = document.fixed
+    fn.shape = NBox()
+      fn.shape.color = [1,1,1]
+      fn.shape.padding = BoxOutline(0,0,0,0,0,0)
+      fn.shape.border = Border(0,0, 0,0, 0,0, "solid",[.5,.5,.5,1],[0,0,0,0])
+      fn.shape.left    = 0
+      fn.shape.top     = 0
+      fn.shape.width   = w # S hould be window width  - controls
+      fn.shape.height  = h # S hould be window height - controls
+
 end
 #======================================================================================#
+"""
+## Types exported from Graphics
+
+...
+
+# Examples
+```julia-repl
+```
+[Source](https://github.com/TravisA9/NaquadahBrowser/blob/39c41cbb1ac28fe94876fe01beaa6e046c8b63d3/src/DOM/DomTree.jl#L54)
+"""
 function getShape(item)
       if isa(item, TextLine)
         return item
@@ -23,23 +58,32 @@ function getShape(item)
 end
 #======================================================================================#
 #thing,
+"""
+## Types exported from Graphics
+
+move objects up or down (withing row space) depending on layout options.
+Be sure that the heights of all objects have been set.
+Float the floats
+The contents of a container may effect the container itself. Such as height; set that!
+Set any node heights that are % values.
+
+
+# Examples
+```julia-repl
+```
+[Source](https://github.com/TravisA9/NaquadahBrowser/blob/39c41cbb1ac28fe94876fe01beaa6e046c8b63d3/src/DOM/DomTree.jl#L54)
+"""
 #======================================================================================#
-function FinalizeRow(row)
+function FinalizeRow(row::Row)
     if row.flags[RowFinalized] == true
-        return 0
+        return 0 # maybe this should return row.y (!?!)
     end
 
-    # move objects up or down (withing row space) depending on layout options.
-    # Be sure that the heights of all objects have been set.
-    # Float the floats
-    # The contents of a container may effect the container itself. Such as height; set that!
-    # Set any node heights that are % values.
-  # thing.width
-  shiftAll = 0
+  shiftAll = 0.0
   #..........................................
   # vertical/hirizintal shift
   #..........................................
-      X = 0
+      X = 0.0
     for i in 1:length(row.nodes)
         item = row.nodes[i]
         Y = 0
@@ -52,10 +96,12 @@ function FinalizeRow(row)
 
         if shape.flags[Absolute] == false
 
-        # set row height
-        if shape.height > row.height
+        # set row height: this may need changed to take NText into account
+        if !isa(shape, NText)
             width, height = getSize(shape)
-            row.height = height
+            if height > row.height
+                row.height = height
+            end
         end
 
 
@@ -65,10 +111,27 @@ function FinalizeRow(row)
                     X = row.space
                     row.space = 0
                 end
+                if isa(item, TextLine)
+                    node = item.reference
+                    #f = node.parent.shape.flags
+                    #println("one: ", f)
+                else
+                    node = item
+                    #f = node.parent.shape.flags
+                    #println("two: ", f)
+                end
+                #node.parent.shape.flags[AlignBase]    &&  (Y = (row.height - shape.height))
+                if node.parent.shape.flags[AlignBase] == true
+                    Y = (row.height - shape.height)
+                    #println("AlignBase: $Y")
+                end
+                # if parent.shape.flags[FixedHeight] == false
+                #     parent.shape.height = parent.scroll.contentHeight
+                # end
 
-                shape.flags[AlignBase]    &&  (Y = (row.height - shape.height))
+                #shape.flags[AlignBase]    &&  (Y = (row.height - shape.height))
                 if shape.flags[AlignMiddle]  &&  row.height > shape.height
-                    Y = (row.height - shape.height) *.5
+                    Y::Float64 = (row.height - shape.height) *.5
                 end
 
 
@@ -85,9 +148,9 @@ function FinalizeRow(row)
         if shape.flags[FloatLeft] == true && shape.flags[Absolute] == false
             w, h = getSize(shape)
             s = getShape(row.nodes[1])
-            MoveAll(row.nodes[i], -(shape.left - s.left) ,0)
+            MoveAll(row.nodes[i], -(shape.left - s.left) ,0.0)
             for j in 1:(i-1)
-              MoveAll(row.nodes[j],w,0)
+              MoveAll(row.nodes[j],w,0.0)
             end
             MoveNodeToLeft(row, i)
         end
@@ -128,17 +191,30 @@ end
 
 # ======================================================================================
 # PushToRow(document, Current node, the shape, (bounds->) l,t,w,h)
+"""
+## Types exported from Graphics
+
+...
+
+# Examples
+```julia-repl
+```
+[Source](https://github.com/TravisA9/NaquadahBrowser/blob/39c41cbb1ac28fe94876fe01beaa6e046c8b63d3/src/Layout/LayoutBuild.jl#L203)
+"""
 # ======================================================================================
-function PushToRow(document, node, thing, l,t,w) # height not needed
- #temp = node.shape
-      shape = getShape(thing)
-      width, height = getSize(shape)
+function PushToRow(document::Page, node::Element, thing, shape, l::Float64,t::Float64,w::Float64) # height not needed
+ #temp = node.shape ::Draw
+ #length(thing.children) > 0   &&   Row(thing.rows, l,t,w)
+      # shape = getShape(thing)
+      width::Float64, height::Float64 = getSize(shape)
       rows = node.rows
       row = LastRow(rows, l, t, w) #rows[end]
 
 
 
     # Fixed /////////////////////////////////////////////////////
+    # push to document instead of current node! Fixed nodes' positions are
+    # measured relative to the viewport, not any specific node.
     if shape.flags[Fixed] == true
         rows = document.fixed.rows
         row = LastRow(rows, l, t, w)
@@ -162,7 +238,7 @@ function PushToRow(document, node, thing, l,t,w) # height not needed
     # I think the only way to set an Absolute position is to wait until the parent is totaly finished
      if shape.flags[Absolute] == true
                  node.shape.flags[HasAbsolute] = true
-                 ##setNodePosition(shape, row, row.x, width)
+                 ## push to row but do not change any Row metrics
                  push!(row.nodes, thing)
                  return
      end
@@ -175,9 +251,9 @@ function PushToRow(document, node, thing, l,t,w) # height not needed
              shape.width = 25
              padding, border, margin = getReal(shape)
              width = shape.width + (border.width + padding.width + margin.width)
-              row.height < height && (row.height = height)
+             # row.height < height && (row.height = height)
              # row.y == 0 && (row.y = t)
-             setNodePosition(shape, row, row.x, width)
+             setNodePosition(shape, row, row.x, width, height)
              push!(row.nodes, thing)
              return
      end
@@ -185,7 +261,6 @@ function PushToRow(document, node, thing, l,t,w) # height not needed
     if shape.flags[DisplayInlineBlock] == true && shape.width < 1
                w = node.rows[end].width
               # scroll.contentWidth
-               println("no width inline-block! content width: $w")
                shape.width = w
                push!(row.nodes, thing)
                setNodePosition(shape, row, row.x, w)
@@ -203,9 +278,10 @@ function PushToRow(document, node, thing, l,t,w) # height not needed
                 shape.width = w - (border.width + padding.width + margin.width)
             end
 
-                row.height < height && (row.height = height)
+                #row.height < height && (row.height = height)
                 row.y == 0 && (row.y = t)
-                setNodePosition(shape, row, row.x, width)
+                b = get(shape.border,  Border(0,0,0,0,0,0, 0,[],[0,0,0,0]))
+                setNodePosition(shape, row, row.x, width, height)
                 row.space = 0
                 push!(row.nodes, thing)
                 return
@@ -215,24 +291,42 @@ function PushToRow(document, node, thing, l,t,w) # height not needed
             end
         end
 
-    row.height < height && (row.height = height)
+    #row.height < height && (row.height = height)
     row.y == 0 && (row.y = t)
-    setNodePosition(shape, row, row.x, width)
+    setNodePosition(shape, row, row.x, width, height)
     push!(row.nodes, thing)
 
 end
 
 
+
 #======================================================================================#
 #
 #======================================================================================#
-function setRowMetrics(shape, row, x)
+function setRowMetrics(shape::Draw, row::Row, x)
 
 end
 #======================================================================================#
-function setNodePosition(shape, row, x, width)
+"""
+## Types exported from Graphics
+
+...
+
+# Examples
+```julia-repl
+```
+[Source](https://github.com/TravisA9/NaquadahBrowser/blob/39c41cbb1ac28fe94876fe01beaa6e046c8b63d3/src/DOM/DomTree.jl#L54)
+"""
+function setNodePosition(shape::Draw, row::Row, x::Float64, width::Float64, height::Float64=0.0)
+
         if !isa(shape, TextLine)
-            OffsetX, OffsetY = contentOffset( getReal(shape)... )
+            c = get(shape.padding, BoxOutline(0,0,0,0,0,0))
+            b = get(shape.border,  Border(0,0,0,0,0,0, 0,[],[0,0,0,0]))
+            m = get(shape.margin,  BoxOutline(0,0,0,0,0,0))
+
+
+            # OffsetX, OffsetY = contentOffset( getReal(shape)... )
+            OffsetX, OffsetY = contentOffset( c, b, m )
             shape.top = row.y + OffsetY
             shape.left = x + OffsetX
         else
@@ -241,10 +335,20 @@ function setNodePosition(shape, row, x, width)
         end
         row.space -= width
         row.x += width
+        row.height < height && (row.height = height)
 end
-
 #======================================================================================#
-function MoveNodeToLeft(row, index)
+"""
+## Types exported from Graphics
+
+...
+
+# Examples
+```julia-repl
+```
+[Source](https://github.com/TravisA9/NaquadahBrowser/blob/39c41cbb1ac28fe94876fe01beaa6e046c8b63d3/src/DOM/DomTree.jl#L54)
+"""
+function MoveNodeToLeft(row::Row, index::Int64)
   node = row.nodes[index]
   for n in index:-1:2
     row.nodes[n] = row.nodes[n-1]
@@ -252,7 +356,8 @@ function MoveNodeToLeft(row, index)
   row.nodes[1] = node
 end
 #======================================================================================#
-function MoveNodeToRight(row, index)
+function MoveNodeToRight(row::Row, index::Int64)
+
   node = row.nodes[index]
   for n in index:length(row.nodes)-1
     row.nodes[n] = row.nodes[n+1]
@@ -261,8 +366,20 @@ function MoveNodeToRight(row, index)
 end
 #======================================================================================#
 #    Similar to MoveAll() in LayoutBuild.jl
+"""
+## Types exported from Graphics
+
+...
+
+# Examples
+```julia-repl
+```
+[Source](https://github.com/TravisA9/NaquadahBrowser/blob/39c41cbb1ac28fe94876fe01beaa6e046c8b63d3/src/DOM/DomTree.jl#L54)
+"""
 #======================================================================================#
-function VmoveAllChildren(node, y, moveNode)
+# may be: TextLine -or- Element
+function VmoveAllChildren(node, y::Float64, moveNode::Bool)
+
   shape = getShape(node)
   if shape.flags[Fixed] == true
     return
@@ -283,8 +400,19 @@ end
 #======================================================================================#
 #    This is only to translate a shape with all children by x,y
 #    It may also be nesesary to move the node to another location in its row!
+"""
+## Types exported from Graphics
+
+...
+
+# Examples
+```julia-repl
+```
+[Source](https://github.com/TravisA9/NaquadahBrowser/blob/39c41cbb1ac28fe94876fe01beaa6e046c8b63d3/src/DOM/DomTree.jl#L54)
+"""
 #======================================================================================#
-function MoveAll(node,x,y)
+# may be: TextLine -or- Element
+function MoveAll(node, x::Float64, y::Float64)
   shape = getShape(node)
   if shape.flags[Fixed] == true
     return
@@ -303,19 +431,37 @@ function MoveAll(node,x,y)
     end
 end
 #======================================================================================#
+"""
+## Types exported from Graphics
+
+...
+
+# Examples
+```julia-repl
+```
+[Source](https://github.com/TravisA9/NaquadahBrowser/blob/39c41cbb1ac28fe94876fe01beaa6e046c8b63d3/src/DOM/DomTree.jl#L54)
+"""
 #======================================================================================#
-function LineBreak(node) # .rows, parentArea
+function LineBreak(node::Element) # .rows, parentArea
     row = node.rows[end]
     box = getContentBox(node.shape, getReal(node.shape)... )
     l, t, w, h = box
-    #FinalizeRow(row)
-    #return Row(node.rows,  l,  row.y + row.height,  w)
     return row = Row(rows, l, FinalizeRow(row), w)
 end
 #======================================================================================#
 #
+"""
+## Types exported from Graphics
+
+...
+
+# Examples
+```julia-repl
+```
+[Source](https://github.com/TravisA9/NaquadahBrowser/blob/39c41cbb1ac28fe94876fe01beaa6e046c8b63d3/src/DOM/DomTree.jl#L54)
+"""
 #======================================================================================#
-function fontSlant(shape)
+function fontSlant(shape::NText)
     if shape.flags[TextItalic] == true
         return Cairo.FONT_SLANT_ITALIC
     elseif shape.flags[TextOblique] == true
@@ -325,7 +471,7 @@ function fontSlant(shape)
     end
 end
 #======================================================================================#
-function fontWeight(shape)
+function fontWeight(shape::NText)
     if shape.flags[TextBold] == true
         return Cairo.FONT_WEIGHT_BOLD
     else
@@ -334,20 +480,26 @@ function fontWeight(shape)
 end
 #======================================================================================#
 # TODO: simplify / clean up
-#======================================================================================#
-function textToRows(document, node, MyText, l, t, wide) # .rows, parentArea
+"""
+## PushToRow(document::Page, node::Element, MyText::Element, shape::NText, l::Float64, t::Float64, wide::Float64)
+
+Push text to rows.
+
+[Source](https://github.com/TravisA9/NaquadahBrowser/blob/39c41cbb1ac28fe94876fe01beaa6e046c8b63d3/src/DOM/DomTree.jl#L54)
+"""
+##======================================================================================#
+#function textToRows(document::Page, node::Element, MyText::Element, l::Float64, t::Float64, wide::Float64) # .rows, parentArea
+function PushToRow(document::Page, node::Element, MyText::Element, shape::NText, l::Float64, t::Float64, wide::Float64) # .rows, parentArea
     if wide == 0
         wide = node.parent.shape.width
-        #println("container width:", node.parent.shape.width)
     end
-      shape = node.shape
-      MyTextShape = MyText.shape
+
       c = CairoRGBSurface(0,0);
       ctx = CairoContext(c);
-      slant  = fontSlant(MyTextShape)
-      weight = fontWeight(MyTextShape)
-      select_font_face(ctx, MyTextShape.family, slant, weight);
-      set_font_size(ctx, MyTextShape.size);
+      slant  = fontSlant(shape)
+      weight = fontWeight(shape)
+      select_font_face(ctx, shape.family, slant, weight);
+      set_font_size(ctx, shape.size);
 
       # when we want to add text to a row that already has content
       rows = node.rows
@@ -369,15 +521,16 @@ function textToRows(document, node, MyText, l, t, wide) # .rows, parentArea
      # set up some variables to get started
      lines = []
      lastLine = ""
-     lineTop = t + MyTextShape.size # Because text is drawn above the line!
-     words = split(MyTextShape.text, r"(?<=.)(?=[\s])")
-     # split(MyTextShape.text) # TODO: this needs improved!
+     #lineTop = t + shape.size # Because text is drawn above the line!
+     words = split(shape.text, r"(?<=.)(?=[\s])")
+     # split(shape.text) # TODO: this needs improved!
      line = words[1]
 
 
      firstWordWidth = text_extents(ctx, line )[3]
+     #firstWordHeight = text_extents(ctx, line )[4]
+
      if firstWordWidth > lineWidth
-         println("------Space for $line: ", lineWidth)
          Row(rows,  l,  FinalizeRow(row),  wide)
      end
 
@@ -393,8 +546,7 @@ function textToRows(document, node, MyText, l, t, wide) # .rows, parentArea
             lastLine = split(lastLine, r"^[\s]+")[end]
 
             textWidth = text_extents(ctx, lastLine )[3]
-            textLine = TextLine(MyText, lastLine, lineLeft,   0, textWidth, MyTextShape.height)
-            println("textWidth ",textWidth)
+            textLine = TextLine(MyText, lastLine, lineLeft,   0, textWidth, shape.height)
             #          TextLine(MyText,     text,     left, top,     width, height)
             pushText(document, node, textLine, l, t, wide)
             line = words[w]
@@ -411,13 +563,24 @@ function textToRows(document, node, MyText, l, t, wide) # .rows, parentArea
     line = split(line, r"^[\s]+")[end]
 
     textWidth = text_extents(ctx,line )[3]
-    textLine = TextLine(MyText, line, lineLeft, 0, textWidth, MyTextShape.height)
+    textLine = TextLine(MyText, line, lineLeft, 0, textWidth, shape.height)
     pushText(document, node, textLine, l, t, wide)
 end
 #======================================================================================#
 # TODO: simplify / clean up
+"""
+## pushText(document::Page, node::Element, thing::TextLine, l::Float64,t::Float64,w::Float64)
+
+...
+
+# Examples
+```julia-repl
+```
+[Source](https://github.com/TravisA9/NaquadahBrowser/blob/39c41cbb1ac28fe94876fe01beaa6e046c8b63d3/src/DOM/DomTree.jl#L54)
+"""
 #======================================================================================#
-function pushText(document, node, thing, l,t,w) # height not needed
+function pushText(document::Page, node::Element, thing::TextLine, l::Float64,t::Float64,w::Float64) # height not needed
+
        shape = getShape(thing)
       width, height = getSize(shape)
       rows = node.rows
@@ -427,10 +590,10 @@ function pushText(document, node, thing, l,t,w) # height not needed
           row = Row(rows, l, FinalizeRow(row), w)
       end
 
-    row.height < height && (row.height = height)
+    #row.height < height && (row.height = height)
     row.y == 0 && (row.y = t)
 
-    setNodePosition(shape, row, row.x, width)
+    setNodePosition(shape, row, row.x, width, height)
     push!(row.nodes, thing)
 
 end

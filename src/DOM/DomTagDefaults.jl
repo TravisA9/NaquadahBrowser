@@ -1,5 +1,15 @@
+"""
+## Element Tag defaults
 
+Dict() containing default styles for standard and extended Tag types.
 
+NOTE: window, page, h-scroll, v-scroll should probably be moved to DomShadow.jl
+
+# Examples
+```julia-repl
+```
+[Source](https://github.com/TravisA9/NaquadahBrowser/blob/39c41cbb1ac28fe94876fe01beaa6e046c8b63d3/src/DOM/DomTagDefaults.jl#L13)
+"""
 Tags_Default = Dict(
 
 # SHADOW DOM stuff
@@ -25,8 +35,11 @@ Tags_Default = Dict(
                     "hover" => Dict("opacity" => 0.9 ),
 										"nodes" => [ Dict(">" => "scrollbar-thumb", "color" => "grey", "height" =>  12,"width" =>  10 ) ]
 									),
+"page" => Dict("display" => "Block"),
 
-
+# <circle>	    Defines a circle node as would be found in svg
+"circle" => Dict( "display" => "inline", "radius" => 25,"color" => [0.66,0.48,0.75],
+                  "border" =>  Dict( "color" => "black", "width" => "thin", "style" => "solid", "color" => "darkgrey" )),
 
 
 # NORMAL DOM stuff
@@ -275,28 +288,3 @@ Tags_Default = Dict(
 "wbr" => Dict( "font" =>  Dict( "size" => 13, "family" => "Sans", "color" => "black" ))
 
 )
-
-
-
-#=type ElementAttributes
-		Font
-		FontFamily
-		FontSize
-		FontStyle
-		FontVariant 	# Specifies whether or not a text should be displayed in a small-caps font
-		FontWeight
-
-		TextAlign  # left center right justify
-		TextDecoration  # none overline line-through underline
-		TextTransform   # uppercase lowercase capitalize
-		TextIndent
-		LetterSpacing
-		LineHeight
-		Direction       # rtl
-		WordSpacing
-		Color
-		TextShadow
-		UnicodeBidi
-		VerticalAlign
-		WhiteSpace
-end=#

@@ -1,25 +1,24 @@
-
-
-include("DomUtilities.jl")
-
-module Naquadraw
-
 global PATH = pwd() * "/src/SamplePages/BrowserImages/"
 
 using Cairo, Gtk, Gtk.ShortNames
-
-
-  include("GraphTypes.jl")
-  include("GraphMethods.jl")
 
 
 export
           DrawViewport, DrawContent, DrawClippedContent, DrawBox, DrawShape,
           DrawRoundedBox, DrawText, setcolor
 
-          include("Events.jl")
-          include("GraphFlags.jl")
-          include("LayoutBuild.jl")
+"""
+## Graphics: exported functions
+
+```julia-repl
+DrawViewport, DrawContent, DrawClippedContent, DrawBox, DrawShape,
+DrawRoundedBox, DrawText, setcolor
+```
+[Source](https://github.com/TravisA9/NaquadahBrowser/blob/39c41cbb1ac28fe94876fe01beaa6e046c8b63d3/src/Graphics/GraphDraw.jl#L6)
+"""
+#          include("Events.jl")
+#          include("GraphFlags.jl")
+#          include("LayoutBuild.jl")
 
 # dashes_by_name = [  "solid", "dot", "dotdashed", "longdashed", "dash", "dotdotdashed", "dotdotdotdashed"   ]
 # ======================================================================================
@@ -32,19 +31,28 @@ export
 # ======================================================================================
 # Accept color values with or without alpha
 # ======================================================================================
-setcolor( ctx, r, g, b, a) = set_source_rgba(ctx, r, g, b, a);
-setcolor( ctx, r, g, b) = set_source_rgb(ctx, r, g, b);
+setcolor( ctx::Cairo.CairoContext, r, g, b, a) = set_source_rgba(ctx, r, g, b, a);
+setcolor( ctx::Cairo.CairoContext, r, g, b) = set_source_rgb(ctx, r, g, b);
 # ======================================================================================
 # First draw all page elements (not controls) that flow and then draw "fixed" elements
 # ======================================================================================
-function DrawViewport(ctx, document, node)
+function DrawViewport(ctx::Cairo.CairoContext, document::Page, node::Element)
     DrawContent(ctx, document, node)
     DrawContent(ctx, document, document.fixed)
 end
 # ======================================================================================
-# This takes a node and draws it along with all its children.
+"""
+## DrawContent(ctx, document, node, clipPath=nothing)
+
+This takes a node and draws it along with all its children.
+
+# Examples
+```julia-repl
+```
+[Source](https://github.com/TravisA9/NaquadahBrowser/blob/39c41cbb1ac28fe94876fe01beaa6e046c8b63d3/src/Graphics/GraphDraw.jl#L54)
+"""
 # ======================================================================================
-function DrawContent(ctx, document, node, clipPath=nothing)
+function DrawContent(ctx::Cairo.CairoContext, document::Page, node::Element, clipPath=nothing)
       rows = node.rows
       border = get(node.shape.border,  Border(0,0,0,0,0,0, 0,[],[0,0,0,0]))
       padding = get(node.shape.padding, BoxOutline(0,0,0,0,0,0))
@@ -92,9 +100,17 @@ end
 # http://www.nongnu.org/guile-cairo/docs/html/Patterns.html
 # Draw a circle.
 # TODO: remove node from function
+"""
+## DrawShape(ctx::CairoContext, node, shape, clipPath)
+
+Draw ...
+
+
+[Source](https://github.com/TravisA9/NaquadahBrowser/blob/39c41cbb1ac28fe94876fe01beaa6e046c8b63d3/src/Graphics/GraphDraw.jl#L54)
+"""
 # ======================================================================================
-function DrawShape(ctx::CairoContext, node, shape::Draw, clipPath)
-save(ctx)
+function DrawShape(ctx::CairoContext, node::Element, shape::Draw, clipPath)
+    Cairo.save(ctx)
     path = GetPath(shape)
     # set_antialias(ctx,4)
     setPath(ctx::CairoContext, path)
@@ -143,8 +159,18 @@ save(ctx)
 end
 # ======================================================================================
 # Temporary shortcut: draw the virticle scroll bar
+"""
+## VScroller(ctx::CairoContext, document, node, shape, clipPath)
+
+Temporary hack: draw the virticle scroll bar
+
+# Examples
+```julia-repl
+```
+[Source](https://github.com/TravisA9/NaquadahBrowser/blob/39c41cbb1ac28fe94876fe01beaa6e046c8b63d3/src/Graphics/GraphDraw.jl#L54)
+"""
 # ======================================================================================
-function VScroller(ctx::CairoContext, document, node, shape, clipPath)
+function VScroller(ctx::CairoContext, document::Page, node::Element, shape::Draw, clipPath)
 
     canvas = document.canvas
     ctx = getgc(canvas)
@@ -195,7 +221,10 @@ end
 
 
 
-
+#  (from Cairo/src/cairo.jl):
+#  function CairoImageSurface(img::Array{Uint32,2}, format::Integer; flipxy::Bool = true)
+# CairoImageSurface(ary, fmt) copies the input array, but you can access the raw pixels
+#  (R/W) by using the .data attribute of the surface.
 # ======================================================================================
 #
 # CALLED FROM:
@@ -216,32 +245,39 @@ paint(cr);
 
 type NQCircle
     border::Border
-    radius::Float32
-    left::Float32
-    top::Float32
-    wide::Float32
-    tall::Float32
+    radius::Float64
+    left::Float64
+    top::Float64
+    wide::Float64
+    tall::Float64
     NQCircle() = new()
 end
 type NQBox
     border::Border
     padding::BoxOutline
-    left::Float32
-    top::Float32
-    wide::Float32
-    tall::Float32
-    right::Float32
-    bottom::Float32
+    left::Float64
+    top::Float64
+    wide::Float64
+    tall::Float64
+    right::Float64
+    bottom::Float64
     NQBox() = new()
 end
 
 # ======================================================================================
-# Draw the background image at 100% width and height.
+"""
+## BackgroundImage(ctx::CairoContext, wide::Float64, tall::Float64, l::Float64, t::Float64, path)
+
+Draw the background image at 100% width and height.
 # Examples
-# Stream: https://github.com/JuliaGraphics/Cairo.jl/blob/master/samples/sample_imagestream.jl
-# Alpha:  https://github.com/JuliaGraphics/Cairo.jl/blob/master/samples/sample_alpha_paint.jl
+ Stream: https://github.com/JuliaGraphics/Cairo.jl/blob/master/samples/sample_imagestream.jl
+ Alpha:  https://github.com/JuliaGraphics/Cairo.jl/blob/master/samples/sample_alpha_paint.jl
+
+
+[Source](https://github.com/TravisA9/NaquadahBrowser/blob/39c41cbb1ac28fe94876fe01beaa6e046c8b63d3/src/Graphics/GraphDraw.jl#L54)
+"""
 # ======================================================================================
-function BackgroundImage(ctx::CairoContext, wide, tall, l, t, path)
+function BackgroundImage(ctx::CairoContext, wide::Float64, tall::Float64, l::Float64, t::Float64, path)
 
      image = read_from_png(path);
      w = image.width;  # w = (image.width/2);
@@ -255,19 +291,33 @@ function BackgroundImage(ctx::CairoContext, wide, tall, l, t, path)
 end
 # ======================================================================================
 # Draw a linear gradient
+"""
+## linearGrad(ctx::CairoContext, shape, gradient)
+
+Draw a linear gradient.
+
+[Source](https://github.com/TravisA9/NaquadahBrowser/blob/39c41cbb1ac28fe94876fe01beaa6e046c8b63d3/src/Graphics/GraphDraw.jl#L54)
+"""
 # ======================================================================================
 function linearGrad(ctx::CairoContext, shape, gradient)
     pat = pattern_create_linear(shape.left+0.0, shape.top+180.0, shape.left+180.0, shape.top+0.0 );
     for i in 1:length(gradient)
             pattern_add_color_stop_rgba(pat, gradient[i] ...);
     end
-    setPath(ctx::CairoContext, shape)
+    setPath(ctx, shape)
     set_source(ctx, pat);
     fill(ctx);
     destroy(pat);
 end
+"""
+## radialGrad(ctx, path, gradient)
+
+Draw a radial gradient.
+
+[Source](https://github.com/TravisA9/NaquadahBrowser/blob/39c41cbb1ac28fe94876fe01beaa6e046c8b63d3/src/Graphics/GraphDraw.jl#L54)
+"""
 # ======================================================================================
-function radialGrad(ctx, path, gradient)
+function radialGrad(ctx::CairoContext, path, gradient)
     offsetX, offsetY = 0, 0 #This can be added later to the second x,y coords
     # color, offset, start
     pat = pattern_create_radial(path.left,         path.top,         1,
@@ -276,17 +326,31 @@ function radialGrad(ctx, path, gradient)
             pattern_add_color_stop_rgba(pat, .5, 0, 0, 0, 1);
             pattern_add_color_stop_rgba(pat, 1, 0, 0, 1, 1);
             set_source(ctx, pat);
-            setPath(ctx::CairoContext, path)
+            setPath(ctx, path)
             fill(ctx);
             destroy(pat);
 end
 # ======================================================================================
-# CirclePath(ctx::CairoContext, shape::NQCircle)
+"""
+## GetPath(shape::NBox)
+
+...
+
+## GetPath(shape::Circle)
+[Source](https://github.com/TravisA9/NaquadahBrowser/blob/39c41cbb1ac28fe94876fe01beaa6e046c8b63d3/src/Graphics/GraphDraw.jl#L54)
+"""
 # ======================================================================================
 function GetPath(shape::NBox)
     b = NQBox()
     b.border  = get(shape.border,  Border(0,0,0,0,0,0, "solid",[],[0,0,0,0]))
     b.padding = get(shape.padding, BoxOutline(0,0,0,0,0,0))
+
+
+        # b.left = shape.left   - b.padding.left   - (b.border.left *.5)
+        # b.top  = shape.top    - b.padding.top    - (b.border.top *.5)
+        # b.wide = shape.width  + b.padding.width  + (b.border.width)
+        # b.tall = shape.height + b.padding.height + (b.border.height)
+
     b.left, b.top, b.wide, b.tall = getBorderBox(shape, b.border, b.padding)
     b.left  -= (b.border.left*.6)
     b.top   -= (b.border.top*.6)
@@ -308,6 +372,14 @@ function GetPath(shape::Circle)
 end
 # ======================================================================================#
 # Set circle path and fill with color
+"""
+## setPath(ctx::CairoContext, shape::NQBox)
+
+...
+
+
+[Source](https://github.com/TravisA9/NaquadahBrowser/blob/39c41cbb1ac28fe94876fe01beaa6e046c8b63d3/src/Graphics/GraphDraw.jl#L54)
+"""
 # ======================================================================================#
 function setPath(ctx::CairoContext, shape::NQBox)
     if !isnull(shape.border.radius) #(TR + BR + BL + TL) > 0
@@ -328,11 +400,21 @@ function setPath(ctx::CairoContext, shape::NQBox)
         rectangle(ctx, shape.left, shape.top, shape.wide, shape.tall )
     end
 end
-function setPath(ctx::CairoContext, shape::NQCircle)
+function setPath(ctx, shape::NQCircle)
         move_to(ctx, shape.left, shape.top)
         arc(ctx, shape.left, shape.top, shape.wide*.5, 0, 2*pi);
 end
 # ======================================================================================
+"""
+## setClipPath(ctx::CairoContext, shape::NQCircle)
+
+...
+
+# Examples
+```julia-repl
+```
+[Source](https://github.com/TravisA9/NaquadahBrowser/blob/39c41cbb1ac28fe94876fe01beaa6e046c8b63d3/src/Graphics/GraphDraw.jl#L54)
+"""
 function setClipPath(ctx::CairoContext, shape::NQCircle)
     b  = shape.border.top #*.5
         move_to(ctx, shape.left + shape.radius, shape.top)
@@ -371,7 +453,13 @@ function setClipPath(ctx::CairoContext, shape::NQBox)
   return borderWidth
 end
 # ======================================================================================
+"""
+## setborderPath(ctx::CairoContext, shape::NQBox)
 
+...
+
+[Source](https://github.com/TravisA9/NaquadahBrowser/blob/39c41cbb1ac28fe94876fe01beaa6e046c8b63d3/src/Graphics/GraphDraw.jl#L54)
+"""
 function setborderPath(ctx::CairoContext, shape::NQBox)
 
   # TODO: see if curveTo() will work to simplify this.
@@ -410,193 +498,55 @@ end
 
 # ======================================================================================
 # Draw text.
+"""
+## DrawText(ctx, row, node, clipPath)
+
+Draw text.
+
+[Source](https://github.com/TravisA9/NaquadahBrowser/blob/39c41cbb1ac28fe94876fe01beaa6e046c8b63d3/src/Graphics/GraphDraw.jl#L54)
+"""
 # ======================================================================================
-function DrawText(ctx, row, node, clipPath)
-  MyText = node.reference.shape
-  left = node.left
-set_antialias(ctx,6)
+# -extents[4] is the top of the text
+# ======================================================================================
+function DrawText(ctx::CairoContext, row::Row, node::TextLine, clipPath)
+    MyText = node.reference.shape
+    left = node.left
+    set_antialias(ctx,6)
     slant  = fontSlant(MyText)
     weight = fontWeight(MyText)
     select_font_face(ctx, MyText.family, slant, weight);
     set_font_size(ctx, MyText.size);
+
     if MyText.flags[TextPath] == false
-        move_to(ctx, node.left, node.top + MyText.size);
-        setcolor(ctx, MyText.color...)
-        show_text(ctx, node.text);
-    else
+          move_to(ctx, node.left, node.top + (MyText.size*1.14)); #  + MyText.size
+          setcolor(ctx, MyText.color...)
+          show_text(ctx, node.text);
 
-      move_to(ctx, node.left+4, node.top + MyText.size+4);
-      text_path(ctx, node.text);
-      setcolor(ctx,  0,0,0,0.4) # fill color
-      fill_preserve(ctx);
-      setcolor(ctx,  0,0,0,0.1) # outline color
-      set_line_width(ctx,  4 ); # 2.56 MyText.lineWidth
-      stroke(ctx);
+    else  # shaddow
+          move_to(ctx, node.left+4, node.top + MyText.size+4);
+          text_path(ctx, node.text);
+          setcolor(ctx,  0,0,0,0.4) # fill color
+          fill_preserve(ctx);
+          setcolor(ctx,  0,0,0,0.1) # outline color
+          set_line_width(ctx,  4 ); # 2.56 MyText.lineWidth
+          stroke(ctx);
 
-      move_to(ctx, node.left+4, node.top + MyText.size+4);
-      text_path(ctx, node.text);
-      setcolor(ctx,  0,0,0,0.2) # fill color
-      fill_preserve(ctx);
-      setcolor(ctx,  0,0,0,0.1) # outline color
-      set_line_width(ctx,  2 ); # 2.56 MyText.lineWidth
-      stroke(ctx);
+          move_to(ctx, node.left+4, node.top + MyText.size+4);
+          text_path(ctx, node.text);
+          setcolor(ctx,  0,0,0,0.2) # fill color
+          fill_preserve(ctx);
+          setcolor(ctx,  0,0,0,0.1) # outline color
+          set_line_width(ctx,  2 ); # 2.56 MyText.lineWidth
+          stroke(ctx);
 
-      #move_to(ctx, node.left+4, node.top + MyText.size+4);
-      #setcolor(ctx, 0,0,0,0.5) # shaddow color
-      #show_text(ctx, node.text);
-
-        move_to(ctx, node.left, node.top + MyText.size);
-        text_path(ctx, node.text);
-        setcolor(ctx, MyText.fill...) # fill color
-        fill_preserve(ctx);
-        setcolor(ctx, MyText.color...) # outline color
-        set_line_width(ctx, MyText.lineWidth ); # 2.56 MyText.lineWidth
-        stroke(ctx);
+          move_to(ctx, node.left, node.top + MyText.size);
+          text_path(ctx, node.text);
+          setcolor(ctx, MyText.fill...) # fill color
+          fill_preserve(ctx);
+          setcolor(ctx, MyText.color...) # outline color
+          set_line_width(ctx, MyText.lineWidth ); # 2.56 MyText.lineWidth
+          stroke(ctx);
     end
 
 
 end
-
-end # module
-# #### trash
-
-#=
-# ======================================================================================
-# Set circle path and fill with color
-# ======================================================================================
-function Circle(ctx::CairoContext, left,top, rad, color)
-        move_to(ctx, left+rad, top)
-        arc(ctx, left, top, rad, 0, 2*pi);
-        setcolor( ctx, color...)
-        fill(ctx);
-end
-# ======================================================================================
-# TODO: I wonder if we can make this into a macro
-# ======================================================================================
-macro Circle(ctx::CairoContext, left,top, rad, color)
-    quote
-        #setcolor(left  - $(padding).left  - ($(border).left *.5))
-
-        setcolor( ctx, color...)
-        move_to(ctx, left, top)
-        arc(ctx, left, top, rad, 0, 2*pi);
-    end
-end
-# ======================================================================================
-# Draw a box with no corner radius.
-# ======================================================================================
-function DrawBox(ctx::CairoContext, box::NBox, clipPath)
-    border = get(box.border,  Border(0,0,0,0,0,0, 0,[],[0,0,0,0]))
-    padding = get(box.padding, BoxOutline(0,0,0,0,0,0))
-    l,t,w,h = getBorderBox(box, border, padding)
-    r, b = l+w, t+h
-    if box.flags[BordersSame] == true
-      if isdefined(box, :color) &&  length(box.color) > 2
-        rectangle(ctx,l,t,w,h )
-        setcolor(ctx, box.color...)
-        fill(ctx);
-      end
-
-        setcolor(ctx, border.color...)
-        set_line_width(ctx, border.left);
-        rectangle(ctx,l,t,w,h )
-        stroke(ctx);
-    else
-          borderWidth = max(border.left,border.top,border.right,border.bottom)
-          if  box.flags[LinearGrad] == true
-                pat = pattern_create_linear(l+0.0, t+180.0,
-                l+180.0, t+0.0 );
-
-                for i in 1:length(box.gradient)
-                    pattern_add_color_stop_rgba(pat, box.gradient[i] ...);
-                end
-                rectangle(ctx,l,t,w,h )
-                set_source(ctx, pat);
-                fill(ctx);
-                destroy(pat);
-          else
-              rectangle(ctx,l,t,w,h )
-              clip(ctx)
-
-                line = (borderWidth/2)
-                t -= (line - border.top)
-                l -= (line - border.left)
-                w += (line - border.left)+(line - border.right)
-                h += (line - border.left)+(line - border.bottom)
-              if isdefined(box, :color) &&  length(box.color) > 2
-                rectangle(ctx,l,t,w,h )
-                setcolor(ctx, box.color...)
-          		  fill_preserve(ctx);
-              end
-    end
-
-              # Borders...
-              if isdefined(border, :color) && length(border.color) > 2
-                  setcolor(ctx, border.color...)
-          		    set_line_width(ctx, borderWidth);
-              end
-
-
-          		stroke(ctx);
-          		set_antialias(ctx,1)
-          reset_clip(ctx)
-      end
-end
-# ======================================================================================
-# Draw a box with rounded edges.
-# ======================================================================================
-function DrawRoundedBox(ctx::CairoContext, box::NBox, clipPath)
-    border = get(box.border,  Border(0,0,0,0,0,0, 0,[],[0,0,0,0]))
-    padding = get(box.padding, BoxOutline(0,0,0,0,0,0))
-    l,t,w,h = getBorderBox(box, border, padding)
-    l -= (border.left*.5)
-    t -= (border.top*.5)
-    r, b = l+w, t+h
-    set_antialias(ctx,1)
-
-        set_antialias(ctx,6)
-        borderWidth = max(border.left,border.top,border.right,border.bottom)
-  radius = get(border.radius,[0,0,0,0])
-                    TR = radius[1]
-                    BR = radius[2]
-                    BL = radius[3]
-                    TL = radius[4]
-
-        rot   =   1.5707963    # 90 * degrees
-    # TODO: see if curveTo() will work to simplify this.
-    new_sub_path(ctx);
-   		arc(ctx, r - TR, t + TR, TR,     -rot,   0   );    # topRight
-   		arc(ctx, r - BR, b - BR, BR,     0,      rot ); # bottomRight
-   		arc(ctx, l + BL, b - BL, BL,     rot,    pi  );   # bottomLeft
-   		arc(ctx, l + TL, t + TL, TL,     pi,     -rot);      # topLeft
- 	close_path(ctx);
-
-clip(ctx)
-# border.left, border.top, border.right, border.bottom
-line = (borderWidth/2)
-t -= (line - border.top)
-l -= (line - border.left)
-r -= (border.right - line)
-b -= (border.bottom - line)
-		new_sub_path(ctx);
-		arc(ctx, r - TR, t + TR, TR,     -rot,   0   );    # topRight
-		arc(ctx, r - BR, b - BR, BR,     0,      rot ); # bottomRight
-		arc(ctx, l + BL, b - BL, BL,     rot,    pi  );   # bottomLeft
-		arc(ctx, l + TL, t + TL, TL,     pi,     -rot);      # topLeft
-		close_path(ctx);
-
-      setcolor(ctx, box.color...)
-		fill_preserve(ctx);
-
-		# Borders...
-    setcolor(ctx, border.color...)
-			set_line_width(ctx, borderWidth);
-			stroke(ctx);
-			set_antialias(ctx,1)
-reset_clip(ctx)
-end
-
-
-
-
-=#

@@ -1,9 +1,21 @@
 
-# module NaquadahEvents
-using Cairo, Gtk, Gtk.ShortNames
+#module NaquadahEvents
+# using Cairo, Gtk, Gtk.ShortNames
 
-export  splotch, ScrollEvent,
+export  splotch, ScrollEvent, # not sure all this needs exported (?)
         DragEvent, MouseDownEvent, ClickEvent #, Event,
+
+
+"""
+##
+
+...
+
+# Examples
+```julia-repl
+```
+[Source](https://github.com/TravisA9/NaquadahBrowser/blob/39c41cbb1ac28fe94876fe01beaa6e046c8b63d3/src/DOM/DomTree.jl#L54)
+"""
 # ======================================================================================
 #
 # ======================================================================================
@@ -14,13 +26,57 @@ end
 #
 # ======================================================================================
 function DrawEvent(document, widget, event)
-  println("move x$(event.x) y$(event.y)")
+    println("move x$(event.x) y$(event.y)")
+end
+# ======================================================================================
+#
+# ======================================================================================
+function onArea( shape , x, y)
+    l, t, r, b = getBorderBox(shape::Draw)
+    #println("$l, $t, $r, $b")
+    if x > l && x < l+r && y > t && y < t+b
+        return true
+    end
+    return false
 end
 # ======================================================================================
 #
 # ======================================================================================
 function MouseDownEvent(document, widget, event)
-    println("press")
+    down = document.eventsList.mousedown
+    println("clicked: ", event.x, event.y)
+    for node in down
+        l, t = node.shape.left, node.shape.top
+        println("(1) Left: $(l), Top: $(t)")
+        if onArea( node.shape, event.x, event.y)
+            c = getgc(document.canvas)
+            page = document.children[1].children[3]
+            node.shape.top += abs(page.scroll.y)
+            println("page.scroll.y: ....... $(abs(page.scroll.y))")
+            #contentHeight
+
+            #d = Dict("color" => "red")
+
+            setAttribute(node, "color", "red")
+            println("(2) Left: $(l), Top: $(t)")
+                    AtributesToLayout(document, node, false)
+            # VmoveAllChildren(page, page.scroll.y, false)
+            println("(3) Left: $(l), Top: $(t)")
+            CreateLayoutTree(document, node)
+            println("(4) Left: $(l), Top: $(t)")
+            DrawContent(c, document, node)
+            show(c)
+            # d.shape mousedown
+            println("(5) Left: $(l), Top: $(t)")
+        end
+    end
+end
+# ======================================================================================
+
+# ======================================================================================
+function setAttribute(d, key::String, attribute::String)
+    println(d.DOM)
+    d.DOM[key] = attribute
 end
 # ======================================================================================
 #
@@ -42,7 +98,7 @@ function ScrollEvent(document, widget, event)
   ctx = getgc(widget)
   node = document.children[1].children[3] # TODO: fix! ..test to see if mouse is over object.
 
-  Unit = 75
+  Unit = 50.0
 
   # I am scrolling(jumping) by 30px here but Opera scrolls by about 50px
   # Opera lacks smoothness too but it seems to transition-scroll by the 50px
@@ -123,4 +179,5 @@ function splotch(widget,event,r,g,b)
         arc(ctx, event.x, event.y, 11, s3, e3)
         stroke(ctx)
         reveal(widget)
-end
+    end
+#end # module

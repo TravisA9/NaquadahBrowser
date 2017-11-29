@@ -17,12 +17,13 @@
 
 	{">":"div",
   		"display":"block",
-		"color":[1,1,1],
+		"color":"steelblue",
 		"hover":{"color":"yellow"},
   		"padding":5,
+		"margin": [0, 0, 0, 20],
  		"data": [107, 133, 221, 66, 102, 213],
   	"nodes":[
-		{">":"div",	"display":"inline-block", "width":94, "height":90, "margin": 10,
+		{">":"div",	"display":"inline-block", "width":94, "height":90, "margin": 10, "color":"lightgrey",
 			"border":{"width":"thin", "style":"longdashed", "color":"forestgreen", "radius":7},
 					"nodes":[
 					{">":"circle", "radius":25, "color":[0.83,0.39,0.37], "opacity":0.7,
@@ -40,31 +41,28 @@
 			},
 
 
-			{">":"p",   "font":{ "color":"steelblue", "size":32, "align":"center", "lineHeight":1.4, "family":"Georgia", "vertical-align":"middle" },
+			{">":"p",   "font":{ "color":"white", "size":32, "align":"center", "lineHeight":1.4, "family":"Georgia", "vertical-align":"middle" },
 						"text":"Presenting Naquadah: As a test of "
 			},
-
-
-
 
 	{">":"div",	"display":"inline-block", "width":140, "height":80,
 				"margin": 10,
 				"nodes":[
-								{">":"p", "display":"inline-block",  "font":{ "color":"black", "size":64, "align":"center", "lineHeight":1.4, "family":"Georgia", "vertical-align":"middle" },
-											"text":"julia "
-								},
-					 	 		{">":"circle", "radius":5,"color":[0.55,0.4,0.8],
-									"position":"absolute", "top":15, "left":8, "width":3, "height":3
-									},
-					 	 		{">":"circle", "radius":5, "color":[0.39,0.23,0.22],
-									"position":"absolute", "top":15, "left":82, "width":3, "height":3
-	 								},
-						 	 		{">":"circle", "radius":5,"color":[0.57,0.35,0.68],
-										"position":"absolute", "top":15, "left":95, "width":3, "height":3
-										},
-						 	 		{">":"circle", "radius":5, "color":[0.23,0.58,0.17],
-										"position":"absolute", "top":4, "left":89, "width":3, "height":3
-		 								}
+								{">":"p", "display":"inline-block",  "font":{ "color":"black", "size":64, "align":"center", "lineHeight":1.4, "family":"Georgia",
+									"vertical-align":"middle" },
+											"text":"julia ",
+											"nodes":[
+
+												{">":"circle", "radius":5,"color":[0.55,0.4,0.8],
+													"position":"absolute", "top":15, "left":8, "width":3, "height":3 },
+													{">":"circle", "radius":5, "color":[0.39,0.23,0.22],
+														"position":"absolute", "top":15, "left":82, "width":3, "height":3},
+														{">":"circle", "radius":5,"color":[0.57,0.35,0.68],
+															"position":"absolute", "top":15, "left":95, "width":3, "height":3},
+															{">":"circle", "radius":5, "color":[0.23,0.58,0.17],
+																"position":"absolute", "top":4, "left":89, "width":3, "height":3}
+											]
+								}
 							]
 				},
 
@@ -73,7 +71,8 @@
 
 
 
-			{">":"p",   "font":{ "color":"steelblue", "size":32, "align":"center", "lineHeight":1.4, "family":"Georgia", "vertical-align":"middle" },
+			{">":"p",   "font":{ "color":"white", "size":32, "align":"center", "lineHeight":1.4, "family":"Georgia",
+				"vertical-align":"middle" },
 						"text":"in Technical and General Computing!"
 			}]
 	},
@@ -83,6 +82,11 @@
 
 
 
+
+
+
+	{">":"div", "display":"none", "width":125, "margin": 10, "padding":5, "color": "lemonchiffon", "height":200,
+		"border":{"width":"thin", "style":"dashed", "color":"goldenrod"}},
 
 
 
@@ -120,7 +124,7 @@
 			"border":{"radius":7, "width":"thick", "style":"longdashed", "color":"brown"},
    				 "nodes":[
 
-			{">":"div", "display":"inline-block", "width":200, "padding":2,
+			{">":"div", "display":"inline-block", "width":200, "padding":2, "color":"white",
 			 	"border":{ "width":"thin", "style":"solid", "color":"black"},
 			    "nodes":[
    					 {">":"p",
@@ -140,21 +144,27 @@
    								"radius":100,
    								"image":"Mountains.png",
    								"color":"lightgreen",
-   								"border":{"width":"thick", "style":"solid", "color":"steelblue"}}
-   				 ]
+   								"border":{"width":"thick", "style":"solid", "color":"steelblue"}},
+					{">":"div", "width":20, "height":20,
+	       						"image":"Search.png",
+	       						"color":"lightgreen",
+	       						"border":{"width":"thick", "style":"solid", "color":"steelblue"}}
+
+  				 ]
    	 },
 
 
 
 
 		{">":"div",
-      "display":"inline-block",
-	  "margin":0,
-  		"color":[0.5,0.8,0.8],
-      "padding":5,
-      "width":443,
-      "border":{"radius":7, "width":[1,3,6,9], "style":"solid", "color":[0.0,0.3,0.6]},
-      "nodes":[
+        "display":"inline-block",
+	  	"vertical-align":"bottom",
+	  	"margin":0,
+  	    "color":[0.5,0.8,0.8],
+        "padding":5,
+      	"width":443,
+      	"border":{"radius":7, "width":[1,3,6,9], "style":"solid", "color":[0.0,0.3,0.6]},
+      	"nodes":[
 		  {">":"div",
                "display":"inline-block",
                "color":[0.7,0.5,0.5],
@@ -302,9 +312,10 @@
 								 }
 							 ]
 		},
-		{">":"div", "style": "Button", "margin":2,
+		{">":"div", "style": "Button", "margin":2, "mousedown":{"color":"lavender"},
 			"nodes":[
-				{">":"p",   "font":{ "color":"steelblue", "size":15, "align":"center", "lineHeight":1.4, "family":"Georgia", "vertical-align":"middle" },
+				{">":"p",   "font":{ "color":"steelblue", "size":15, "align":"center", "lineHeight":1.4, "family":"Georgia",
+					"vertical-align":"middle" },
 				"text":"Button"
 			}
 			]},
