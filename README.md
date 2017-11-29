@@ -171,7 +171,7 @@ julia> Start()
 * Plotting and plot animation utilities \(Ex. force layout functionality\). Since Naquadah is meant to be a layout engine, it may be nice to include more than just the basic browser options.
 
 
-## \* Naquadah has overhualed!
+## \* Naquadah has now been overhualed!
 
 In order to improve the general design and improve modularity I rewrote about 90% of the code. A lot of work you say? Yes, that is roughly 4250 lines of code as I am writing this. That is in spite of the fact that I have made major simplifications to the code.
 
