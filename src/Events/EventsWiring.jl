@@ -46,6 +46,7 @@ function MouseDownEvent(document, widget, event)
     down = document.eventsList.mousedown
     println("clicked: ", event.x, event.y)
     for node in down
+
         l, t = node.shape.left, node.shape.top
         println("(1) Left: $(l), Top: $(t)")
         if onArea( node.shape, event.x, event.y)
@@ -68,6 +69,7 @@ function MouseDownEvent(document, widget, event)
             show(c)
             # d.shape mousedown
             println("(5) Left: $(l), Top: $(t)")
+
         end
     end
 end

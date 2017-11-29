@@ -57,6 +57,7 @@ in the page but only parses the DOM attributes to the Layout tree.
 
 [Source](https://github.com/TravisA9/NaquadahBrowser/blob/39c41cbb1ac28fe94876fe01beaa6e046c8b63d3/src/DOM/DomToLayout.jl#L65)
 """
+
 function CreateShape(form::String, node::Element, h, w)
 
     if form == "circle"
@@ -82,6 +83,7 @@ end
 # ======================================================================================
 function AtributesToLayout(document::Page, node::Element, generative::Bool=true)
 
+
     DOM = node.DOM
     PageStyles = document.styles
     h, w = document.height ,document.width
@@ -95,6 +97,7 @@ function AtributesToLayout(document::Page, node::Element, generative::Bool=true)
       end
 
       # if !isdefined(node, :shape)
+
     if generative == true
         #CreateShape(E, node, h, w)
 
@@ -120,6 +123,7 @@ function AtributesToLayout(document::Page, node::Element, generative::Bool=true)
         if isAny(E, boxes) !== nothing
             node.shape = NBox()
         end
+
     end
 
 
@@ -137,6 +141,8 @@ function AtributesToLayout(document::Page, node::Element, generative::Bool=true)
 
       CopyDict(DOM, Tags_Default[E]) # (1) default tag values
       # CopyDict(DOM, Tags_Default[E]) # (3)
+
+
 
 
 

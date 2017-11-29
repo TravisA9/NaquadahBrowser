@@ -14,7 +14,9 @@ export setUpWindow, MoveAll, VmoveAllChildren,
 """
 # ======================================================================================
 function setUpWindow(document::Page, w::Float64,h::Float64)
+
     println("W: $(w), H: $(h)")
+
 
     n = document.children[1]
     n.shape = NBox()
