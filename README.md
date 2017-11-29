@@ -8,7 +8,6 @@
 
 > Naquadah currently uses **Cairo** for graphics and **GTK** for the GUI.
 
-Take a look at at an example page in the new version of Naquadah!  
 ![window](doc/figures/Naquadah_Nov_2017.png) 
 **Long answer**: Although, Naquadah looks and functions like a browser, there are a few differences. Naquadah principally consists of a **layout engine** and a **rendering engine** built from the ground up. For convenience, it includes a basic GUI as well. It is written in the awesome **Julia language** and serves as a test of julia's value as a general purpose language. It is being developed for fun and for the purpose of displaying my work but if it proves to be useful, that would be great too.
 
