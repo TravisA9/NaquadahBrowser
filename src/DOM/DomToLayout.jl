@@ -57,11 +57,32 @@ in the page but only parses the DOM attributes to the Layout tree.
 
 [Source](https://github.com/TravisA9/NaquadahBrowser/blob/39c41cbb1ac28fe94876fe01beaa6e046c8b63d3/src/DOM/DomToLayout.jl#L65)
 """
-function CreateShape(DOM, node::Element)
 
+function CreateShape(form::String, node::Element, h, w)
+
+    if form == "circle"
+        node.shape = Circle()
+    end
+    if  isAny(form, text) !== nothing # Any from the list
+        node.shape = NText()
+    end
+    if form == "arc"
+        node.shape = Arc()
+    end
+    if form == "page" # alternatively I could use the familiar "body" tag for this!
+        node.shape = NBox()
+          node.shape.color = [1,1,1]
+          node.shape.border = Border(0,0, 0,0, 0,0, "solid",[.8,.8,.8,1],[0,0,0,0])
+          node.shape.width   = w
+          node.shape.height  =  h
+          node.shape.flags[IsVScroll] = true # IsHScroll, IsVScroll
+          node.shape.flags[FixedHeight] = true # Because it's the window!
+          node.shape.flags[Clip] = true
+    end
 end
 # ======================================================================================
-function AtributesToLayout(document::Page, node::Element)
+function AtributesToLayout(document::Page, node::Element, generative::Bool=true)
+
 
     DOM = node.DOM
     PageStyles = document.styles
@@ -76,8 +97,33 @@ function AtributesToLayout(document::Page, node::Element)
       end
 
       # if !isdefined(node, :shape)
-    if node.shape == nothing
-        #CreateShape(document::Page, E, node::Element)
+
+    if generative == true
+        #CreateShape(E, node, h, w)
+
+        if E == "circle"
+            node.shape = Circle()
+        end
+        if  isAny(E, text) !== nothing # Any from the list
+            node.shape = NText()
+        end
+        if E == "arc"
+            node.shape = Arc()
+        end
+        if E == "page" # alternatively I could use the familiar "body" tag for this!
+            node.shape = NBox()
+              node.shape.color = [1,1,1]
+              node.shape.border = Border(0,0, 0,0, 0,0, "solid",[.8,.8,.8,1],[0,0,0,0])
+              node.shape.width   = w
+              node.shape.height  =  h
+              node.shape.flags[IsVScroll] = true # IsHScroll, IsVScroll
+              node.shape.flags[FixedHeight] = true # Because it's the window!
+              node.shape.flags[Clip] = true
+        end
+        if isAny(E, boxes) !== nothing
+            node.shape = NBox()
+        end
+
     end
 
 
@@ -96,29 +142,11 @@ function AtributesToLayout(document::Page, node::Element)
       CopyDict(DOM, Tags_Default[E]) # (1) default tag values
       # CopyDict(DOM, Tags_Default[E]) # (3)
 
-      if isAny(E, boxes) !== nothing
-          node.shape = NBox()
-      end
 
-      if E == "circle"
-          node.shape = Circle()
-      end
-      if  isAny(E, text) !== nothing
-          node.shape = NText()
-      end
-      if E == "arc"
-          node.shape = Arc()
-      end
-      if E == "page" # alternatively I could use the familiar "body" tag for this!
-          node.shape = NBox()
-            node.shape.color = [1,1,1]
-            node.shape.border = Border(0,0, 0,0, 0,0, "solid",[.8,.8,.8,1],[0,0,0,0])
-            node.shape.width   = w
-            node.shape.height  =  h
-            node.shape.flags[IsVScroll] = true # IsHScroll, IsVScroll
-            node.shape.flags[FixedHeight] = true # Because it's the window!
-            node.shape.flags[Clip] = true
-      end
+
+
+
+
       #.........................................................................""
       # if isa(node.shape, TextLine)
       #     shape = item.reference.shape

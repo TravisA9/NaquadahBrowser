@@ -46,18 +46,30 @@ function MouseDownEvent(document, widget, event)
     down = document.eventsList.mousedown
     println("clicked: ", event.x, event.y)
     for node in down
+
+        l, t = node.shape.left, node.shape.top
+        println("(1) Left: $(l), Top: $(t)")
         if onArea( node.shape, event.x, event.y)
             c = getgc(document.canvas)
             page = document.children[1].children[3]
+            node.shape.top += abs(page.scroll.y)
+            println("page.scroll.y: ....... $(abs(page.scroll.y))")
+            #contentHeight
+
             #d = Dict("color" => "red")
+
             setAttribute(node, "color", "red")
-                    AtributesToLayout(document, node)
+            println("(2) Left: $(l), Top: $(t)")
+                    AtributesToLayout(document, node, false)
             # VmoveAllChildren(page, page.scroll.y, false)
+            println("(3) Left: $(l), Top: $(t)")
             CreateLayoutTree(document, node)
+            println("(4) Left: $(l), Top: $(t)")
             DrawContent(c, document, node)
             show(c)
             # d.shape mousedown
-            println("You clicked on me!")
+            println("(5) Left: $(l), Top: $(t)")
+
         end
     end
 end

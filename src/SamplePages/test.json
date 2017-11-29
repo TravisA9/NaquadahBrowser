@@ -124,7 +124,7 @@
 			"border":{"radius":7, "width":"thick", "style":"longdashed", "color":"brown"},
    				 "nodes":[
 
-			{">":"div", "display":"inline-block", "width":200, "padding":2,
+			{">":"div", "display":"inline-block", "width":200, "padding":2, "color":"white",
 			 	"border":{ "width":"thin", "style":"solid", "color":"black"},
 			    "nodes":[
    					 {">":"p",
@@ -144,8 +144,13 @@
    								"radius":100,
    								"image":"Mountains.png",
    								"color":"lightgreen",
-   								"border":{"width":"thick", "style":"solid", "color":"steelblue"}}
-   				 ]
+   								"border":{"width":"thick", "style":"solid", "color":"steelblue"}},
+					{">":"div", "width":20, "height":20,
+	       						"image":"Search.png",
+	       						"color":"lightgreen",
+	       						"border":{"width":"thick", "style":"solid", "color":"steelblue"}}
+
+  				 ]
    	 },
 
 

@@ -71,10 +71,12 @@ This is where drawing starts after a page is fetched.
 # ======================================================================================
 function DrawANode(document::Page)
     c = document.canvas
-    node = document.children[1] #.children[2]
-    page = node.children[3]
+
 
            @guarded draw(c) do widget
+               node = document.children[1] #.children[2]
+               page = node.children[3]
+
                 ScrollY = 0.0
                 ctx = getgc(c)
                 document.height::Float64   = height(c)
@@ -82,7 +84,9 @@ function DrawANode(document::Page)
 
                 if page.scroll.y < 0 # Don't scroll above zero/top
                     ScrollY = page.scroll.y
-                    page.scroll.y = 0
+
+                    page.scroll.y = 0.0
+
                     VmoveAllChildren(page, abs(ScrollY), false) # FROM: LayoutBuild.jl
                 end
 
