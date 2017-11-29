@@ -8,17 +8,8 @@
 
 > Naquadah currently uses **Cairo** for graphics and **GTK** for the GUI.
 
-![window](doc/figures/Naquadah_Nov_2017.png) 
+![window](doc/figures/Naquadah_Nov_2017.png)
 **Long answer**: Although, Naquadah looks and functions like a browser, there are a few differences. Naquadah principally consists of a **layout engine** and a **rendering engine** built from the ground up. For convenience, it includes a basic GUI as well. It is written in the awesome **Julia language** and serves as a test of julia's value as a general purpose language. It is being developed for fun and for the purpose of displaying my work but if it proves to be useful, that would be great too.
-
-## \* Warning this project is being overhualed!
-
-In order to improve the general design and improve modularity I am making some breaking changes.
-
-### ...Update:
-
-I have now moved the old version of NaquadahBrowser to a folder. The current version of Naquadah is the updated version although some functionality is still missing.
-
 
 Progress Report
 
@@ -64,11 +55,6 @@ A few things that are missing from the current version that worked in the previo
 * Controls' functionality
 * Text selection
 * Compilation of styles section
-
-### Take a look at the old version
-
-![window](doc/figures/browser-1.gif)
-
 
 
 ---
@@ -185,7 +171,12 @@ julia> Start()
 * Plotting and plot animation utilities \(Ex. force layout functionality\). Since Naquadah is meant to be a layout engine, it may be nice to include more than just the basic browser options.
 
 
+## \* Naquadah has overhualed!
 
+In order to improve the general design and improve modularity I rewrote about 90% of the code. A lot of work you say? Yes, that is roughly 4250 lines of code as I am writing this. That is in spite of the fact that I have made major simplifications to the code.
 
+### Take a look at the old version
+
+![window](doc/figures/browser-1.gif)
 
 travisashworth2007@gmail.com
