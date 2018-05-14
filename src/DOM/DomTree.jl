@@ -72,7 +72,7 @@ function FetchPage(win, URL::String, canvas::Gtk.GtkCanvas)
             document.styles = pageContent["style"]
         end
         if haskey(pageContent, "body")
-            
+
             node.DOM = Dict( ">" => "window", "display" => "block", "padding" => [0,0,0,0], "nodes" => []	)
 
                   # node.DOM[1] / tabControls / windowControls / tab

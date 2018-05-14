@@ -5,9 +5,11 @@ export Page, Scroller, Row, Element, Event, Page
 begin
 
     type EventType
-        pressed::Point
-        released::Point
-        EventType() = new(Point(0,0),Point(0,0))
+        pressed::Vector{Point}
+        #released::Point
+        EventType() = new([])
+        EventType(x,y) = new([Point(x,y)])
+        EventType(a) = new(a)
     end
 #-==============================================================================
 mutable struct Scroller
@@ -20,7 +22,7 @@ end
 #-==============================================================================
 mutable struct Row
     flags::BitArray{1} #Any
-    nodes::Array{Any,1} # cant't say Element because it's not yet defined
+    nodes::Vector{Any} # cant't say Element because it's not yet defined
     height::Float64
     width::Float64 # because elements could be wider than the parent
     space::Float64 # Space remaining 'til full
@@ -29,13 +31,13 @@ mutable struct Row
     # Row() = new(falses(32),[],0,0,0,0,0)
     # Row(x, wide) = new(falses(32),[],0,0,wide,x,0)
     Row(x, y, wide) = new(falses(32),[],0,0,wide,x,y)
-    function Row(rows::Array{Row,1}, x::Float64, y::Float64, w::Float64)
+    function Row(rows::Vector{Row}, x::Float64, y::Float64, w::Float64)
         r = Row(x, y, w)
         push!(rows,r)
         return r
     end
 end
-function LastRow(rows::Array{Row,1}, l, t, w)
+function LastRow(rows::Vector{Row}, l, t, w)
     if length(rows) < 1
         Row(rows, l, t, w)
     end
@@ -45,32 +47,33 @@ end
 mutable struct Element
     DOM::Dict       # Reference to dictionary counterpart of this node
     parent::Any               # This node's parent
-    children::Array{Element,1} # Children in order they appear in DOM
-    rows::Array{Row,1} # A layout property
+    children::Vector{Element} # Children in order they appear in DOM
+    rows::Vector{Row} # A layout property
     shape::Any # link to layout representation of node
+    temp::Any # Temporary copy of node to preserve data for when visual changes take place
     scroll::Scroller # Since shape get's destroyed we need the scroll-offsets here (prabably should be Nullable).
         function Element(DOM=Dict())
             parent = nothing
-            children::Array{Element,1} = []
-            new(DOM, parent, children, [], nothing, Scroller())
+            children::Vector{Element} = []
+            new(DOM, parent, children, [], nothing, nothing, Scroller())
         end
 end
 #-==============================================================================
 mutable struct AttachedEvents
-    click::Array{Element,1}
-    mousedown::Array{Element,1}
-    mousemove::Array{Element,1}
-    mouseover::Array{Element,1}
-    mouseup::Array{Element,1}
-    mouseout::Array{Element,1}
+    click::Vector{Element}
+    mousedown::Vector{Element}
+    mousemove::Vector{Element}
+    mouseover::Vector{Element}
+    mouseup::Vector{Element}
+    mouseout::Vector{Element}
 
-    drag::Array{Element,1}
-    drop::Array{Element,1}
+    drag::Vector{Element}
+    drop::Vector{Element}
 
-    keydown::Array{Element,1}
-    keypress::Array{Element,1}
-    keyup::Array{Element,1}
-    AttachedEvents() = new()
+    keydown::Vector{Element}
+    keypress::Vector{Element}
+    keyup::Vector{Element}
+    AttachedEvents() = new([], [], [], [], [], [], [], [], [], [], [])
     # onload::Array
 end
 # document.event
@@ -83,7 +86,7 @@ end
 #-==============================================================================
 mutable struct Page
          parent::Any  # First node needs a Psudo-parent too ..maybe!
-         children::Array{Element,1} # First node in a tree-like data structure representing all elements on page
+         children::Vector{Element} # First node in a tree-like data structure representing all elements on page
          fixed::Element # First node in a tree-like data structure representing all elements on page
          styles::Dict
          head::Dict
@@ -93,20 +96,16 @@ mutable struct Page
          win::Any
          url::Any         # URL of page
          flags::BitArray{1}        #  buttonPressed
-         mousedown::Point       # These may be better than trying to copy the nodes
-         mouseup::Point
          focusNode::Any
-         hoverNode::Any
          canvas::Any
          event::EventType
          eventsList::AttachedEvents
-         # ui::PageUI   # Window
              function Page(url::String)
-                     children::Array{Element,1} = [Element()]
+                     children::Vector{Element} = [Element()]
                      parent = children[1]
                      children[1].parent = parent
                  new(parent, children, Element(), Dict(), Dict(), 0,0, nothing, url, falses(8),
-                    Point(0, 0), Point(0, 0), 0, 0, 0, EventType(), AttachedEvents())
+                    nothing, 0, EventType(), AttachedEvents())
              end
 end
 

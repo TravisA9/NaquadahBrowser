@@ -1,11 +1,11 @@
-global PATH = pwd() * "/src/SamplePages/BrowserImages/"
+global PATH = pwd() * "/.julia/v0.6/NaquadahBrowser/src/SamplePages/BrowserImages/"
 
 using Cairo, Gtk, Gtk.ShortNames
 
 
 export
           DrawViewport, DrawContent, DrawClippedContent, DrawBox, DrawShape,
-          DrawRoundedBox, DrawText, setcolor
+          DrawRoundedBox, DrawText, setcolor, drawNode
 
 """
 ## Graphics: exported functions
@@ -52,6 +52,10 @@ This takes a node and draws it along with all its children.
 [Source](https://github.com/TravisA9/NaquadahBrowser/blob/39c41cbb1ac28fe94876fe01beaa6e046c8b63d3/src/Graphics/GraphDraw.jl#L54)
 """
 # ======================================================================================
+# PROBLEM: This draws the children of a given node and not nesesarily the node itself.
+#          At times, though, we don't want to draw all the children of a node but
+#          specifically one node.
+# ======================================================================================
 function DrawContent(ctx::Cairo.CairoContext, document::Page, node::Element, clipPath=nothing)
       rows = node.rows
       border = get(node.shape.border,  Border(0,0,0,0,0,0, 0,[],[0,0,0,0]))
@@ -75,14 +79,8 @@ function DrawContent(ctx::Cairo.CairoContext, document::Page, node::Element, cli
           shape = getShape(child)
           # Only draw if visible! node.shape.flags[FixedHeight] == true &&
           if row.y < (node.shape.top + node.shape.height) && node.shape.flags[DisplayNone] == false
-                   if isa(shape, TextLine)
-                       DrawText(ctx, row, shape, clipPath)
-                   else
-                       DrawShape(ctx, child, shape, clipPath)
-                   end
-                # Now draw children
-                !isa(child, TextLine) && DrawContent(ctx, document, child, clipPath)
-         end
+              drawNode(ctx, document, row, shape, child, clipPath)
+          end
       end
   end
 
@@ -95,6 +93,48 @@ function DrawContent(ctx::Cairo.CairoContext, document::Page, node::Element, cli
          reset_clip(ctx)
          clipPath = nothing
       end
+end
+# ======================================================================================
+# ======================================================================================
+function drawNode(ctx, document, row, shape, child, clipPath)
+             if isa(shape, TextLine)
+                 DrawText(ctx, row, shape, clipPath)
+             else
+                 DrawShape(ctx, child, shape, clipPath)
+                 DrawContent(ctx, document, child, clipPath)     # Now draw children
+             end
+end
+#...............................................................................
+function lastClipParent(node)
+    while node.parent !== node
+        if node.shape.flags[Clip] == true
+            return node
+        end
+        node = node.parent
+    end
+    return node
+end
+
+function drawNode(ctx, document, node)
+
+    #println(lastClipParent(node))
+    box = lastClipParent(node) #document.children[1].children[3];
+
+    shape = getShape(node)
+    WinShape = getShape(box)
+    border = get(WinShape.border,  Border(0,0,0,0,0,0, 0,[],[0,0,0,0]))
+    padding = get(WinShape.padding, BoxOutline(0,0,0,0,0,0))
+    clipPath = getBorderBox(WinShape, border, padding)
+
+    rectangle(ctx, clipPath... )
+    clip(ctx)
+             if isa(shape, TextLine)
+                 # DrawText(ctx, row, shape)
+             else
+                 DrawShape(ctx, node, shape, clipPath)
+                 DrawContent(ctx, document, node, clipPath)     # Now draw children
+             end
+    reset_clip(ctx)
 end
 # ======================================================================================
 # http://www.nongnu.org/guile-cairo/docs/html/Patterns.html

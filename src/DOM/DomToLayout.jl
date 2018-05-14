@@ -92,10 +92,13 @@ function AtributesToLayout(document::Page, node::Element, generative::Bool=true)
       E = DOM[">"]
 
       if haskey(DOM, "mousedown")
-          document.eventsList.mousedown = []
           push!(document.eventsList.mousedown, node)
       end
 
+      if haskey(DOM, "hover")
+          push!(document.eventsList.mouseover, node)
+          push!(document.eventsList.mouseout, node)
+      end
       # if !isdefined(node, :shape)
 
     if generative == true

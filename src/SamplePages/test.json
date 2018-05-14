@@ -18,7 +18,7 @@
 	{">":"div",
   		"display":"block",
 		"color":"steelblue",
-		"hover":{"color":"yellow"},
+		"hover":{"color":[0.996094, 0.5, 0.5]},
   		"padding":5,
 		"margin": [0, 0, 0, 20],
  		"data": [107, 133, 221, 66, 102, 213],
@@ -212,7 +212,7 @@
             "lineHeight":1.4,
             "weight":"bold",
             "family":"Georgia" },
-      			 "text":"This is some sample text for testing the text printing capabilities of cairo. Strangely, this text is perfectly centered when rendered on windows and on linux it is a hare off. This is some sample text for testing the text printing capabilities of cairo. This is some sample text for testing the text printing capabilities of cairo. This is some sample text for testing the text printing capabilities of cairo.. ."
+      			 "text":"This is some sample text for testing the text drawing capabilities of cairo. Strangely, this text is perfectly centered when rendered on windows and on linux it is a hare off. This is some sample text for testing the text drawing capabilities of cairo. This is some sample text for testing the text printing capabilities of cairo. This is some sample text for testing the text printing capabilities of cairo.. ."
            },
 
 		   {">":"div", "display":"block", "color":[0.5,0.7,0.5],
@@ -312,7 +312,7 @@
 								 }
 							 ]
 		},
-		{">":"div", "style": "Button", "margin":2, "mousedown":{"color":"lavender"},
+		{">":"div", "style": "Button","color":"white", "margin":2, "mousedown":{"color":"green"},
 			"nodes":[
 				{">":"p",   "font":{ "color":"steelblue", "size":15, "align":"center", "lineHeight":1.4, "family":"Georgia",
 					"vertical-align":"middle" },

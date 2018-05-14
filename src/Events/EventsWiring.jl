@@ -20,7 +20,17 @@ export  splotch, ScrollEvent, # not sure all this needs exported (?)
 #
 # ======================================================================================
 function DragEvent(document, widget, event)
-    println("drag from X $(event.pressed.x), Y $(event.pressed.y) to X $(event.released.x), Y $(event.released.y)")
+    pressed, released = document.event.pressed[1], document.event.pressed[end]
+    splotch(widget, pressed,1.0,0.0,0.0)
+
+    ctx = getgc(widget)
+    move_to(ctx,pressed.x, pressed.y)
+    line_to(ctx,released.x, released.y)
+    stroke(ctx)
+
+    splotch(widget, released,1.0,0.0,0.0)
+    println("drag from X $(pressed.x), Y $(pressed.y) to X $(released.x), Y $(released.y)")
+    document.event.pressed = []
 end
 # ======================================================================================
 #
@@ -44,35 +54,27 @@ end
 # ======================================================================================
 function MouseDownEvent(document, widget, event)
     down = document.eventsList.mousedown
-    println("clicked: ", event.x, event.y)
+    #println("clicked: ", event.x, event.y)
     for node in down
 
-        l, t = node.shape.left, node.shape.top
-        println("(1) Left: $(l), Top: $(t)")
         if onArea( node.shape, event.x, event.y)
-            c = getgc(document.canvas)
+            ctx = getgc(widget)
             page = document.children[1].children[3]
-            node.shape.top += abs(page.scroll.y)
-            println("page.scroll.y: ....... $(abs(page.scroll.y))")
-            #contentHeight
 
-            #d = Dict("color" => "red")
-
-            setAttribute(node, "color", "red")
-            println("(2) Left: $(l), Top: $(t)")
-                    AtributesToLayout(document, node, false)
-            # VmoveAllChildren(page, page.scroll.y, false)
-            println("(3) Left: $(l), Top: $(t)")
-            CreateLayoutTree(document, node)
-            println("(4) Left: $(l), Top: $(t)")
-            DrawContent(c, document, node)
-            show(c)
-            # d.shape mousedown
-            println("(5) Left: $(l), Top: $(t)")
-
+            if node.shape.color[2] > 0.9
+                node.temp = deepcopy(node.shape)
+                node.shape.color = [0.996094, 0.5, 0.5]
+            else
+                node.shape = deepcopy(node.temp)
+            end
+            drawNode(ctx, document, node)
+            reveal(widget)
         end
     end
 end
+#setAttribute(node, "color", "red")
+#AtributesToLayout(document, node, false)
+
 # ======================================================================================
 
 # ======================================================================================
@@ -85,6 +87,7 @@ end
 # ======================================================================================
 function ClickEvent(document, widget, event)
     splotch(widget, event,1.0,0.0,0.0)
+    document.event.pressed = []
 end
 # ======================================================================================
 #

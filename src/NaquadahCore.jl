@@ -16,31 +16,25 @@ end
 
 
 
-
-
-
-
-
 using NaquadahCore
-defaultPage = "file:///src/SamplePages/test.json"
-global PATH = pwd() * "/src/SamplePages/"
+# LOAD_PATH , Base.LOAD_CACHE_PATH
+defaultPage = "file:///.julia/v0.6/NaquadahBrowser/src/SamplePages/test.json"
+global PATH = pwd() * "/.julia/v0.6/NaquadahBrowser/src/SamplePages/"
 # ======================================================================================
-"""
-## Win()
-
-Create a window
-
-```julia-repl
-mutable struct Win
-    window::Any #Gtk.GtkWindowLeafGtk.GtkCanvas
-    canvas::Any #Gtk.GtkCanvas
-    controls::Element # Array{Element,1}
-    documents::Array{Page,1}
-    document::Page
-end
-```
-[Source](https://github.com/TravisA9/NaquadahBrowser/blob/39c41cbb1ac28fe94876fe01beaa6e046c8b63d3/src/NaquadahCore.jl#L46)
-"""
+# """
+# ## Win()
+# Create a window
+# ```julia-repl
+# mutable struct Win
+#     window::Any #Gtk.GtkWindowLeafGtk.GtkCanvas
+#     canvas::Any #Gtk.GtkCanvas
+#     controls::Element # Array{Element,1}
+#     documents::Array{Page,1}
+#     document::Page
+# end
+# ```
+# [Source](https://github.com/TravisA9/NaquadahBrowser/blob/39c41cbb1ac28fe94876fe01beaa6e046c8b63d3/src/NaquadahCore.jl#L46)
+# """
 # ======================================================================================
 mutable struct Win
     window::Any #Gtk.GtkWindowLeafGtk.GtkCanvas
@@ -50,7 +44,7 @@ mutable struct Win
     document::Page
     function Win()
         c = @Canvas()
-        win = Window("Naquadah", 1000, 600) # later we can make it save last page size
+        win = Window("Naquadah: An experimental web browser", 1000, 600) # later we can make it save last page size
         push!(win, c)
             # STRUCTURE:
             #            node.DOM[1] / tabControls / windowControls / tab
@@ -61,13 +55,13 @@ mutable struct Win
     end
 end
 # ======================================================================================
-"""
-## DrawANode(document::Page)
-
-This is where drawing starts after a page is fetched.
-
-[Source](https://github.com/TravisA9/NaquadahBrowser/blob/39c41cbb1ac28fe94876fe01beaa6e046c8b63d3/src/NaquadahCore.jl#L73)
-"""
+# """
+# ## DrawANode(document::Page)
+#
+# This is where drawing starts after a page is fetched.
+#
+# [Source](https://github.com/TravisA9/NaquadahBrowser/blob/39c41cbb1ac28fe94876fe01beaa6e046c8b63d3/src/NaquadahCore.jl#L73)
+# """
 # ======================================================================================
 function DrawANode(document::Page)
     c = document.canvas
@@ -76,6 +70,8 @@ function DrawANode(document::Page)
            @guarded draw(c) do widget
                node = document.children[1] #.children[2]
                page = node.children[3]
+               println(document.children[1] === document.parent)
+
 
                 ScrollY = 0.0
                 ctx = getgc(c)

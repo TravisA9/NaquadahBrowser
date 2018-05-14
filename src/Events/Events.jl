@@ -9,8 +9,8 @@ export AttatchEvents
 
 
 function MouseSetBoth(document, px, py, rx, ry)
-      document.event.pressed = Point(px, py)
-      document.event.released = Point(rx, ry)
+  document.event.pressed = Point(px, py)
+      #document.event.released = Point(rx, ry)
 end
 
 function AttatchEvents(document, canvas)
@@ -38,20 +38,92 @@ Gtk.GdkEventKey(
     end
     #.............................................................
     canvas.mouse.button1motion = @guarded (widget, event) -> begin
-        MouseSetBoth(document, event.x, event.y, -1, -1)
-        DrawEvent(document, widget, event)
+        #MouseSetBoth(document, event.x, event.y, -1, -1)
+        #DrawEvent(document, widget, event)
+        push!(document.event.pressed, Point(event.x, event.y) )
+        #println("move x$(event.x) y$(event.y)")
+        #println.(document.event.pressed)
+        #DragEvent(document, widget, event)
+    end
+    #.............................................................
+    canvas.mouse.motion = @guarded (widget, event) -> begin
+        # mouseover #####################################
+        hovers = document.eventsList.mouseover
+        for node in hovers
+            if onArea(node.shape, event.x, event.y) && node !== document.focusNode
+                ctx = getgc(widget)
+                page = document.children[1].children[3]
+                node.temp = deepcopy(node.shape)
+
+                #"hover":{"color":"yellow"},
+                if haskey(node.DOM, "hover")
+                        hover = node.DOM["hover"]
+                        if haskey(hover, "color")
+                            node.shape.color = hover["color"]
+                                #node.shape.color = [0.996094, 0.5, 0.5]
+                        end
+                end
+
+                drawNode(ctx, document, node)
+                reveal(widget)
+                # (1) register hovered object
+                document.focusNode = node
+            end
+        end
+        # mousemove #####################################
+        # hovers = document.eventsList.mousemove
+        # for node in hovers
+        #     if onArea(node.shape, event.x, event.y)
+        #         println("X: $(event.x), Y: $(event.y), ")
+        #     end
+        # end
+        # mouseout #####################################
+        # (1) get registered hover object
+         #drawNode(ctx, document, document.focusNode)
+         #reveal(widget)
+        # # () unregister un-hovered object
+        node = document.focusNode
+        if node != nothing
+                if !onArea(node.shape, event.x, event.y)
+                        if haskey(node.DOM, "hover")
+                                hover = node.DOM["hover"]
+                                if haskey(hover, "color")
+                                    if haskey(node.DOM, "color")
+                                            node.shape.color = GetTheColor(node, node.DOM["color"])
+                                    end
+                                end
+                        end
+                        ctx = getgc(widget)
+                        drawNode(ctx, document, node)
+                        reveal(widget)
+                        document.focusNode = document.parent
+                end
+        end
+
+
+        #  unhovers = document.eventsList.mouseout
+        #  found = false
+        #  for n in unhovers
+        #          if node !== n
+        #          end
+        #
+        # #     if onArea(node.shape, event.x, event.y)
+        # #         println("X: $(event.x), Y: $(event.y), ")
+        # #     end
     end
     # Record to later test for click event
     #.............................................................
     canvas.mouse.button1press = @guarded (widget, event) -> begin
-        MouseSetBoth(document, event.x, event.y, -1, -1)
+        push!(document.event.pressed, Point(event.x, event.y) )
+        #MouseSetBoth(document, event.x, event.y, -1, -1)
         MouseDownEvent(document, widget, event)
     end
 
     #.............................................................
     canvas.mouse.button1release = @guarded (widget, event) -> begin
-      document.event.released = Point(event.x, event.y)
-      pressed, released = document.event.pressed, document.event.released
+      push!(document.event.pressed, Point(event.x, event.y) )
+      #document.event.released = Point(event.x, event.y)
+      pressed, released = document.event.pressed[1], document.event.pressed[end]
     # Click Event fired!
            if -5 < (pressed.x - released.x) < 5 && -5 < (pressed.y - released.y) < 5
              ClickEvent(document, widget, event)

@@ -13,14 +13,25 @@ tabControls, navigation, navBar, newPage
 icons = Dict(     ">"       => "div", "display" => "inline-block", "height"  => 27, "width"=>145,
                   "nodes"   => [
 
-                  Dict(">"=>"circle", "margin"=>[5,3,4,4], "radius"=>12, "image"=>"Back.png",
-                  "border"  => Dict( "width"=>"thin", "style"=>"solid", "color"=>[0.4,0.4,0.4] )),
-                  Dict(">"=>"circle", "margin"=>[5,3,4,4], "radius"=>12, "image"=>"Reload.png"),
-                  Dict(">"=>"circle", "margin"=>[5,3,4,4], "radius"=>12, "image"=>"Forward.png"),
-                  Dict(">"=>"circle", "margin"=>[5,3,4,4], "radius"=>12, "image"=>"Start.png")
+                  Dict(">"=>"circle", "margin"=>[5,3,4,4], "radius"=>12, "color"=>[0.6,0.6,0.6],
+                     "hover"  => Dict( "color"=>[0.8,0.8,0.8] ),
+                     "nodes"   => [Dict(">"=>"circle", "radius"=>12, "image"=>"Back.png")] ),
+                  Dict(">"=>"circle", "margin"=>[5,3,4,4], "radius"=>12, "color"=>[0.6,0.6,0.6],
+                     "hover"  => Dict( "color"=>[0.8,0.8,0.8] ),
+                     "nodes"   => [Dict(">"=>"circle", "radius"=>12, "image"=>"Reload.png")] ),
+                  Dict(">"=>"circle", "margin"=>[5,3,4,4], "radius"=>12, "color"=>[0.6,0.6,0.6],
+                     "hover"  => Dict( "color"=>[0.8,0.8,0.8] ),
+                     "nodes"   => [Dict(">"=>"circle", "radius"=>12, "image"=>"Forward.png")] ),
+                  Dict(">"=>"circle", "margin"=>[5,3,4,4], "radius"=>12, "color"=>[0.6,0.6,0.6],
+                     "hover"  => Dict( "color"=>[0.8,0.8,0.8] ),
+                     "nodes"   => [Dict(">"=>"circle", "radius"=>12, "image"=>"Start.png")] )
+
+                  # Dict(">"=>"circle", "margin"=>[5,3,4,4], "radius"=>12, "color"=>[0.3,0.3,0.9], "image"=>"Reload.png"),
+                  # Dict(">"=>"circle", "margin"=>[5,3,4,4], "radius"=>12, "image"=>"Forward.png"),
+                  # Dict(">"=>"circle", "margin"=>[5,3,4,4], "radius"=>12, "image"=>"Start.png")
                   ]
 )
-
+# "hover"  => Dict( "color"=>[0.3,0.3,0.3] ),
 # Dict(">"=>"div", "display" => "inline-block", "width"=>20, "height"=>20, "image"=>"Search.png", "color"=>"lightgreen"),
 downloadIcon = Dict(">"=>"circle","display" => "inline-block", "float"=>"right", "margin"=>[5,5,4,4], "radius"=>10, "image"=>"Download.png")
 NewPageIcon = Dict(">"=>"circle","display" => "inline-block", "margin"=>[5,2,4,4], "radius"=>12, "image"=>"NewPage.png")
