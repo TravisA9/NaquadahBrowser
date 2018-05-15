@@ -31,8 +31,8 @@
 | Events :soon: | Mostly working:  |
 |  :white_check_mark: Clipping |  Mostly set up and working. |
 | Text selection and highlighting :soon: |  Not yet started |
-|  :white_check_mark: Gradients :white_check_mark: |  Mostly working |
-|  :white_check_mark: Border Radius :white_check_mark: |  Working fine |
+|  :white_check_mark: Gradients |  Mostly working |
+|  :white_check_mark: Border Radius |  Working fine |
 | Overflow :interrobang: |  Don't remember |
 | Links :heavy_exclamation_mark: |  Not yet finished |
 | Shadow DOM :soon: |  Scrollbars, window controls |
@@ -137,21 +137,30 @@ As you can see there are three major sections to a Json page and these may be on
 
 # How To Get Started
 
-* First install [Julia](http://julialang.org/downloads/).
+* First, install [Julia](http://julialang.org/downloads/) if you haven't already done so.
 
 * To start julia up go to your terminal and type: `julia`
 
 * Clone NaquadahBrowser thusly:
 
-  ```julia
+```julia
   julia> Pkg.clone("https://github.com/TravisA9/NaquadahBrowser.git")
 ```
 
 * Finally, one way you can start the application is with a command similar to this:
 
-  ```julia
+```julia
    julia> include("path_to/.julia/v0.6/NaquadahBrowser/src/NaquadahCore.jl")
-  ```
+```
+# Code overview
+
+* [NaquadahCore](https://github.com/TravisA9/NaquadahBrowser/blob/master/src/Naquadah.md)
+    - [DOM](https://github.com/TravisA9/NaquadahBrowser/blob/master/src/DOM/Readme.md)
+    - [Events](https://github.com/TravisA9/NaquadahBrowser/blob/master/src/Events/Readme.md)
+    - [Graphics](https://github.com/TravisA9/NaquadahBrowser/blob/master/src/Graphics/Readme.md)
+    - [Layout](https://github.com/TravisA9/NaquadahBrowser/blob/master/src/Layout/Readme.md)
+
+
 
 # General Goals
 
@@ -173,7 +182,7 @@ As you can see there are three major sections to a Json page and these may be on
 
 ## \* Naquadah has now been overhualed!
 
-In order to improve the general design and improve modularity I rewrote about 90% of the code. A lot of work you say? Yes, that is roughly 4250 lines of code as I am writing this. That is in spite of the fact that I have made major simplifications to the code.
+In order to improve the general design and improve modularity I rewrote about 90% of the code. A lot of work you say? Yes, that is roughly 4,250 lines of code as I am writing this. That is in spite of the fact that I have made major simplifications to the code.
 
 ### Take a look at the old version
 

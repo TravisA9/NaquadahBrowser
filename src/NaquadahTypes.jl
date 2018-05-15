@@ -1,6 +1,5 @@
 
-export LastRow
-export Page, Scroller, Row, Element, Event, Page
+export LastRow, Page, Scroller, Row, Element, Event, Page
 
 begin
 
