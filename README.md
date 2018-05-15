@@ -6,56 +6,52 @@
 
 **Short answer**: A browser and _layout engine_ that consumes **Json** instead of HTML
 
-> Naquadah currently uses **Cairo** for graphics and **GTK** for the GUI.
+* Naquadah currently uses **Cairo** for graphics and **GTK** for the GUI.
 
+* Written in **julia** language as a test of its usability as a general purpose programming language.
+
+![window](doc/figures/NaquadahMay2018.gif)
 ![window](doc/figures/Naquadah_Nov_2017.png)
-**Long answer**: Although, Naquadah looks and functions like a browser, there are a few differences. Naquadah principally consists of a **layout engine** and a **rendering engine** built from the ground up. For convenience, it includes a basic GUI as well. It is written in the awesome **Julia language** and serves as a test of julia's value as a general purpose language. It is being developed for fun and for the purpose of displaying my work but if it proves to be useful, that would be great too.
+**Long answer**: Although, Naquadah looks and functions like a browser, there are a few differences. Naquadah principally consists of a **layout engine** and a **rendering engine** built from the ground up. For convenience, it includes a basic GUI as well.
 
-Progress Report
+ It is being developed for fun and for the purpose of displaying my work but if it proves to be useful, that would be great too.
 
-| Feature |  :construction_worker:|  State of development |
-| :--- | :--- |  :--- |
-| Tags |   :white_check_mark: |  div, p, circle, page |
-| Styles |  :white_check_mark: |  color, opacity, gradients, size, display, position, border, radius, padding, margin, font, alignment and more! |
-| Classes |  :white_check_mark: |  Not yet finished |
-| Floats | :soon: |  Left is working but I need to finish Right \(I think\) |
-| Display |  :white_check_mark: |  inline, inline-block, block, none |
-| Position |  :white_check_mark: |  fixed, absolute, relative |
-| Box-Modal |  :white_check_mark: |  content, padding, border, margin |
-| Colors |  :white_check_mark: |  Any color with or without opacity |
-| Events | :soon: |  mousedown, mouseup, click, drag, scroll and hover fire but do not yet trigger meaningfull actions. |
-| Clipping |  :white_check_mark: |  Mostly set up and working. |
-| Text selection and highlighting | :soon: |  Not yet started |
-| Gradients |  :white_check_mark: |  Mostly working |
-| Border Radius |  :white_check_mark: |  Working fine |
-| Overflow |  :interrobang: |  Don't remember |
-| Links |  :heavy_exclamation_mark: |  Not yet finished |
-| Shadow DOM | :soon: |  Scrollbars, window controls |
-| Transforms/Transitions/Animations |  :heavy_exclamation_mark: |  Not yet started |
-| Shadows | :soon: |  Temporary hack for text/basically not yet begun |
-| Backgrounds |  :white_check_mark: |  color, radial-gradient, linear-gradient, image \(most all with optional opacity\) |
-| Columns |  :heavy_exclamation_mark: |  Not yet started |
-| Media queries |  :heavy_exclamation_mark: |  Not yet started |
-| Selectors \(.\),   \#,   \[\],   $=,   \*=,   &gt; |  :heavy_exclamation_mark: |  Not yet started |
-| Max/min |  :heavy_exclamation_mark: |  Not yet available |
-| Tables |  :heavy_exclamation_mark: |  Not yet |
-| Lists |   :heavy_exclamation_mark: |  Not yet |
+#### State of the project
+
+| Feature :construction_worker:|  State of development |
+| :--- |  :--- |
+|  :white_check_mark: Tags |  div, p, circle, page |
+|  :white_check_mark: Styles |  color, opacity, gradients, size, display, position, border, radius, padding, margin, font, alignment and more! |
+|  :white_check_mark: Classes |  Not yet finished |
+| Floats :soon: |  Left is working but I need to finish Right \(I think\) |
+|  :white_check_mark: Display |  inline, inline-block, block, none |
+|  :white_check_mark: Position |  fixed, absolute, relative |
+|  :white_check_mark: Box-Modal |  content, padding, border, margin |
+|  :white_check_mark: Colors |  Any color with or without opacity |
+| Events :soon: | Mostly working:  |
+|  :white_check_mark: Clipping |  Mostly set up and working. |
+| Text selection and highlighting :soon: |  Not yet started |
+|  :white_check_mark: Gradients :white_check_mark: |  Mostly working |
+|  :white_check_mark: Border Radius :white_check_mark: |  Working fine |
+| Overflow :interrobang: |  Don't remember |
+| Links :heavy_exclamation_mark: |  Not yet finished |
+| Shadow DOM :soon: |  Scrollbars, window controls |
+| Transforms/Transitions/Animations :heavy_exclamation_mark: |  Not yet started |
+| Shadows :soon: |  Temporary hack for text/basically not yet begun |
+|  :white_check_mark: Backgrounds |  color, radial-gradient, linear-gradient, image \(most all with optional opacity\) |
+| Columns :heavy_exclamation_mark: |  Not yet started |
+| Media queries :heavy_exclamation_mark: |  Not yet started |
+| Selectors \(.\),   \#,   \[\],   $=,   \*=,   &gt;  :heavy_exclamation_mark: |  Not yet started |
+| Max/min :heavy_exclamation_mark: |  Not yet available |
+| Tables :heavy_exclamation_mark: |  Not yet |
+| Lists :heavy_exclamation_mark: |  Not yet |
 
 
 
-| Special Features |  :construction_worker:|   |
-| :--- |  :---|  :--- |
-| Geometry as Nodes |  :sparkles: |  So far circles are set up to work as normal page elements but other common geometries will soon be added. |
-| Tabs and Search bar are Shadow DOM |  :sparkles: |  This makes it possible to move or redesign them. This should help ensure that the browser works with any graphics engine changes and even change the appearance and functionality where needed \(Ex. mobile devices\). |
-|  |  |
-
-A few things that are missing from the current version that worked in the previous:
-
-* Most events
-* Controls' functionality
-* Text selection
-* Compilation of styles section
-
+| Special Features | :construction_worker:   |
+| :--- |  :--- |
+| Geometry as Nodes   :sparkles: |  So far circles are set up to work as normal page elements but other common geometries will soon be added. |
+| Tabs and Search bar are Shadow DOM   :sparkles: |  This makes it possible to move or redesign them. This should help ensure that the browser works with any graphics engine changes and even change the appearance and functionality where needed \(Ex. mobile devices\). |
 
 ---
 
@@ -65,9 +61,9 @@ Example of Json as a Web Page
 
 ```JSON
 {
-    "head":{...},
-    "styles":{...},
-    "body":[...]
+    "head":{ ... },
+    "styles":{ ... },
+    "body":[ ... ]
 }
 ```
 
@@ -78,18 +74,39 @@ The **head** may look something like this.
             "title":"MyPageTitle",
             "favicon":"http://myapp/favicon.ico",
             "charset":"utf-8",
-            "keywords":"web tech,browser concept,Json Pages",
+            "keywords":"web tech, browser concept, Json Pages",
             "author":"Travis Deane Ashworth",
-            "links":[{"url":"http://myapp/somescript.js"}]
+            "links":[
+                {"url":"http://myapp/somescript.js"}
+            ]
         }
 ```
 
-The **styles** section stores frequently used styles \(similar to CSS\). Styles can also be used as color swatches or as templates adding structure or other default aspects to a node.
+The **styles** section stores frequently used styles \(similar to CSS\). However, since JSON can describe structure (_unlike CSS_), you can also use this section to define color swatches, templates and more, which automatically get applied :sparkles: to your page.
 
 ```JSON
     "styles":{
-            "Button":{styles...},
-            "ColoredBox":{styles...}
+
+            "Button":{
+                "onhover":{
+                    "color":"steelblue"
+                    },
+                "color":"lightblue",
+                "padding":5,
+                "border":{
+                    "radius":3,
+                    "width":"thick",
+                    "style":"solid",
+                    "color":"blue"
+                    },
+                "font":{
+                    "color":"white"
+                    }
+            },
+
+            "ColoredBox":{
+                style_data...
+            }
         }
 ```
 
@@ -116,42 +133,25 @@ The **body** describes general structure \(similar to HTML and SVG\) and may als
     ]
 ```
 
-As you can see there are three major sections to a Json page and these may be one file or spread across several files. It may be modified by script as well.
+As you can see there are three major sections to a Json page and these may be one file or spread across several files. It may be modified (in the future) by script as well.
 
 # How To Get Started
 
-* First install [Julia](http://julialang.org/downloads/). To start julia up go to your terminal and type:
+* First install [Julia](http://julialang.org/downloads/).
 
-  ```
-  $  julia
-  ```
+* To start julia up go to your terminal and type: `julia`
 
 * Clone NaquadahBrowser thusly:
 
   ```julia
   julia> Pkg.clone("https://github.com/TravisA9/NaquadahBrowser.git")
-  ```
+```
 
-* You may also have to add package **dependencies** for this project. You can paste the following into the Julia Console and press enter.
+* Finally, one way you can start the application is with a command similar to this:
 
   ```julia
-  Pkg.add("Gtk")
-  Pkg.add("JSON")
-  Pkg.add("Cairo")
-  Pkg.add("Requests")
+   julia> include("path_to/.julia/v0.6/NaquadahBrowser/src/NaquadahCore.jl")
   ```
-
-* Finally, one way you can start the application is with the following command:
-
-```julia
-julia> using NaquadahBrowser
-```
-
-If you close the window you can restart it like this:
-
-```julia
-julia> Start()
-```
 
 # General Goals
 
@@ -180,3 +180,6 @@ In order to improve the general design and improve modularity I rewrote about 90
 ![window](doc/figures/browser-1.gif)
 
 travisashworth2007@gmail.com
+
+ffmpeg -i /home/travis/Pictures/NaquadaMay2018.mp4 -r 10 -f image2pipe -vcodec ppm - | \
+  convert -delay 5 -loop 0 - /home/travis/Pictures/NaquadaMay2018.gif

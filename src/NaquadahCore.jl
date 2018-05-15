@@ -17,7 +17,7 @@ end
 
 
 using NaquadahCore
-# LOAD_PATH , Base.LOAD_CACHE_PATH
+# LOAD_PATH, Base.LOAD_CACHE_PATH, @__FILE__, @__DIR__
 defaultPage = "file:///.julia/v0.6/NaquadahBrowser/src/SamplePages/test.json"
 global PATH = pwd() * "/.julia/v0.6/NaquadahBrowser/src/SamplePages/"
 # ======================================================================================
