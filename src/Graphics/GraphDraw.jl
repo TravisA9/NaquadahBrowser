@@ -5,7 +5,7 @@ using Cairo, Gtk, Gtk.ShortNames
 
 export
           DrawViewport, DrawContent, DrawClippedContent, DrawBox, DrawShape,
-          DrawRoundedBox, DrawText, setcolor, drawNode
+          DrawRoundedBox, DrawText, DrawSelectedText, setcolor, drawNode, lastClipParent
 
 """
 ## Graphics: exported functions
@@ -78,7 +78,7 @@ function DrawContent(ctx::Cairo.CairoContext, document::Page, node::Element, cli
           child = row.nodes[j]
           shape = getShape(child)
           # Only draw if visible! node.shape.flags[FixedHeight] == true &&
-          if row.y < (node.shape.top + node.shape.height) && node.shape.flags[DisplayNone] == false
+          if row.top < (node.shape.top + node.shape.height) && node.shape.flags[DisplayNone] == false
               drawNode(ctx, document, row, shape, child, clipPath)
           end
       end
@@ -98,7 +98,7 @@ end
 # ======================================================================================
 function drawNode(ctx, document, row, shape, child, clipPath)
              if isa(shape, TextLine)
-                 DrawText(ctx, row, shape, clipPath)
+                 DrawText(ctx, shape, clipPath)
              else
                  DrawShape(ctx, child, shape, clipPath)
                  DrawContent(ctx, document, child, clipPath)     # Now draw children
@@ -533,13 +533,79 @@ function setborderPath(ctx::CairoContext, shape::NQCircle)
 end
 
 
+# ======================================================================================
+#  This is to tell text_extents() how to measure text
+# ======================================================================================
+function setTextContext(ctx::CairoContext, s)
+    text = s.reference.shape
+    slant  = fontSlant(text)
+    weight = fontWeight(text)
+    select_font_face(ctx, text.family, slant, weight);
+    set_font_size(ctx, text.size);
+end
+# ======================================================================================
+#
+# ======================================================================================
+function DrawSelectedText(ctx::CairoContext, nodeList, l,r,t,b, clipPath)
+color = rand(3)
+last = length(nodeList)
+width,left = 0,0
+allSelectedText = ""
+offset = 0
+    for n in 1:last
 
+        s = getShape(nodeList[n]) #n.shape
+        setTextContext(ctx, s) # this is to tell text_extents() how to measure text
 
-
+        # TODO: make this work when start and end are on the same line!
+        if n == 1
+            newLeft = 0
+            start = l-s.left
+            for i in 1:length(s.text)
+                extents = text_extents(ctx, s.text[1:i] )[3];
+                if extents < start
+                    offset = i
+                    newLeft = extents
+                else
+                    break
+                end
+            end
+            allSelectedText *= s.text[offset+1:end] * "\n"
+            #notch = newLeft-s.left
+            left, width = s.left+newLeft,  s.width-newLeft
+        elseif  n == last
+            newRight = 0
+            ending = r-s.left # actual selected width.
+            for i in length(s.text):-1:1
+                extents = text_extents(ctx, s.text[1:i] )[3];
+                if extents > ending
+                    offset = i
+                    newRight = extents
+                else
+                    break
+                end
+            end
+            allSelectedText *= s.text[1:offset] * "\n"
+            left, width = s.left,  newRight
+        else
+            allSelectedText *= s.text * "\n"
+            left, width = s.left,  s.width+1
+        end
+clipboard(allSelectedText)
+        rectangle(ctx,  clipPath... )
+        clip(ctx)
+        setcolor( ctx, color...)
+        rectangle(ctx,  left,  s.top, width,  s.height+1 )
+        set_line_width(ctx, 2.56)
+        set_antialias(ctx,4)
+        fill(ctx)
+        DrawText(ctx, nodeList[n], clipPath) #reset_clip(ctx)
+    end
+end
 # ======================================================================================
 # Draw text.
 """
-## DrawText(ctx, row, node, clipPath)
+## DrawText(ctx, node, clipPath)
 
 Draw text.
 
@@ -548,7 +614,7 @@ Draw text.
 # ======================================================================================
 # -extents[4] is the top of the text
 # ======================================================================================
-function DrawText(ctx::CairoContext, row::Row, node::TextLine, clipPath)
+function DrawText(ctx::CairoContext, node::TextLine, clipPath)
     MyText = node.reference.shape
     left = node.left
     set_antialias(ctx,6)

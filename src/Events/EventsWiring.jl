@@ -32,6 +32,104 @@ function DragEvent(document, widget, event)
     println("drag from X $(pressed.x), Y $(pressed.y) to X $(released.x), Y $(released.y)")
     document.event.pressed = []
 end
+
+# ======================================================================================
+#
+# ======================================================================================
+onArea(x, y,  shape ) = onArea(x, y,  getContentBox(shape)... )
+
+function onArea(x, y,    l, t, w, h)
+        return x > l && x < l+w && y > t && y < t+h ? true : false
+end
+# ======================================================================================
+function insideParentClip(x, y, node)
+    return onArea( x, y,  lastClipParent(node).shape )
+end
+# ======================================================================================
+function order(a,b)
+    a<b ? (a,b) : (b,a)
+end
+# ======================================================================================
+function order2(l,r,t,b)
+    l, r = order(l,r)
+    t, b = order(t,b)
+    return (l,r,t,b)
+end
+# ======================================================================================
+function boxesOverlap(shape, l,r,t,b)
+    return onArea(l, t, shape) || onArea(l, b, shape) || onArea(r, t, shape) || onArea(r, b, shape)
+end
+# ======================================================================================
+# Also create: function findNodesAtPoint(node, x, y)
+# ======================================================================================
+function findNodesInBox(node, left, top, right, bottom)
+    items = []
+    shape = getShape(node)
+    #box = (shape.left, shape.top, shape.width, shape.height)
+    box = getContentBox(shape)
+    started = false
+
+    # TODO: also include some test to exclude "unselectable" nodes.
+    function looper(rows)
+        for r in rows
+            for n in r.nodes
+                        if isdefined(n, :rows)
+                            looper(n.rows)
+                        else
+                                s = getShape(n)
+                                if onArea(left, top, s)         # ¡Selection Start
+                                    push!(items, n)
+                                    started = true
+                                elseif onArea(right, bottom, s) # Selection End!
+                                    push!(items, n)
+                                    started = false
+                                    return items
+                                elseif started
+                                    push!(items, n)
+                                end
+
+                        end
+            end
+        end
+        return items
+    end
+
+looper(node.rows)
+
+    # Yup, it's in the designated area so we will push this to our vector
+    # if onArea(left, top, shape) #boxesOverlap(shape, left,right,top,bottom)
+    #     if onArea(right, bottom, shape)
+    #         if isdefined(node, :rows) #&& length(node.rows) > 0
+    #             eat(node)
+    #         else
+    #                 println("end")
+    #                 push!(items, node)
+    #         end
+    #     end
+    #
+    # end
+    return items
+end
+# ======================================================================================
+#
+# ======================================================================================
+function selectText(ctx, document, pressed, released)
+
+    println("Select all text from X $(pressed.x), Y $(pressed.y) to X $(released.x), Y $(released.y)")
+    left, right, top, bottom = order2(pressed.x,released.x, pressed.y,released.y)
+
+    selected = findNodesInBox(document.children[1].children[3], left, top, right, bottom)
+    println(length(selected), " items selected!")
+
+    clipPath = getContentBox(document.children[1].children[3].shape)
+    if pressed.y < released.y # just in case the selection is made from bottom to top
+        DrawSelectedText(ctx, selected, pressed.x, released.x, pressed.y, released.y, clipPath)
+    else
+        DrawSelectedText(ctx, selected, released.x, pressed.x, released.y, pressed.y, clipPath)
+    end
+
+
+end
 # ======================================================================================
 #
 # ======================================================================================
@@ -41,23 +139,12 @@ end
 # ======================================================================================
 #
 # ======================================================================================
-function onArea( shape , x, y)
-    l, t, r, b = getBorderBox(shape::Draw)
-    #println("$l, $t, $r, $b")
-    if x > l && x < l+r && y > t && y < t+b
-        return true
-    end
-    return false
-end
-# ======================================================================================
-#
-# ======================================================================================
 function MouseDownEvent(document, widget, event)
     down = document.eventsList.mousedown
     #println("clicked: ", event.x, event.y)
     for node in down
 
-        if onArea( node.shape, event.x, event.y)
+        if onArea(event.x, event.y, node.shape ) && insideParentClip( event.x, event.y, node)
             ctx = getgc(widget)
             page = document.children[1].children[3]
 

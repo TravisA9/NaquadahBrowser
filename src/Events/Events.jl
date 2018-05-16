@@ -50,7 +50,7 @@ Gtk.GdkEventKey(
         # mouseover #####################################
         hovers = document.eventsList.mouseover
         for node in hovers
-            if onArea(node.shape, event.x, event.y) && node !== document.focusNode
+            if onArea( event.x, event.y, node.shape) && insideParentClip(event.x, event.y, node) && node !== document.focusNode
                 ctx = getgc(widget)
                 page = document.children[1].children[3]
                 node.temp = deepcopy(node.shape)
@@ -84,7 +84,7 @@ Gtk.GdkEventKey(
         # # () unregister un-hovered object
         node = document.focusNode
         if node != nothing
-                if !onArea(node.shape, event.x, event.y)
+                if !onArea( event.x, event.y, node.shape) # && insideParentClip( node , event.x, event.y)
                         if haskey(node.DOM, "hover")
                                 hover = node.DOM["hover"]
                                 if haskey(hover, "color")
@@ -107,13 +107,14 @@ Gtk.GdkEventKey(
         #          if node !== n
         #          end
         #
-        # #     if onArea(node.shape, event.x, event.y)
+        # #     if onArea( event.x, event.y,node.shape)
         # #         println("X: $(event.x), Y: $(event.y), ")
         # #     end
     end
     # Record to later test for click event
     #.............................................................
     canvas.mouse.button1press = @guarded (widget, event) -> begin
+        #document.event.pressed[Point(event.x, event.y)]
         push!(document.event.pressed, Point(event.x, event.y) )
         #MouseSetBoth(document, event.x, event.y, -1, -1)
         MouseDownEvent(document, widget, event)
@@ -129,7 +130,13 @@ Gtk.GdkEventKey(
              ClickEvent(document, widget, event)
     # Drag Event fired!
            else
-             DragEvent(document, widget, document.event)
+             # test if drag event
+             # DragEvent(document, widget, document.event)
+             # otherwize select text
+             ctx = getgc(widget)
+             selectText(ctx, document, pressed, released)
+             reveal(widget)
+             document.event.pressed = []
            end
     end
     #.............................................................

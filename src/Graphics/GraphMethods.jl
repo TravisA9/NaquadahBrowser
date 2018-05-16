@@ -83,10 +83,11 @@ end
 ```
 [Source](https://github.com/TravisA9/NaquadahBrowser/blob/39c41cbb1ac28fe94876fe01beaa6e046c8b63d3/src/DOM/DomTree.jl#L54)
 """
-function getContentBox(box::Draw, padding::BoxOutline, border::Border, margin::BoxOutline)
+# WAS: function getContentBox(box::Draw, padding::BoxOutline, border::Border, margin::BoxOutline)
+
+function getContentBox(box)
     return ( box.left, box.top, box.width, box.height )
 end
-
 
 """
 ##

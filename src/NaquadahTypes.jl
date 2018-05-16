@@ -1,5 +1,5 @@
 
-export LastRow, Page, Scroller, Row, Element, Event, Page
+export LastRow, Page, Scroller, Row, Element, Page #Event,
 
 begin
 
@@ -25,13 +25,13 @@ mutable struct Row
     height::Float64
     width::Float64 # because elements could be wider than the parent
     space::Float64 # Space remaining 'til full
-    x::Float64
-    y::Float64
+    left::Float64  # TODO: change these to left/top for cmpatability
+    top::Float64
     # Row() = new(falses(32),[],0,0,0,0,0)
     # Row(x, wide) = new(falses(32),[],0,0,wide,x,0)
-    Row(x, y, wide) = new(falses(32),[],0,0,wide,x,y)
-    function Row(rows::Vector{Row}, x::Float64, y::Float64, w::Float64)
-        r = Row(x, y, w)
+    Row(left, top, wide) = new(falses(32),[],0,0,wide,left,top)
+    function Row(rows::Vector{Row}, left::Float64, top::Float64, w::Float64)
+        r = Row(left, top, w)
         push!(rows,r)
         return r
     end
@@ -76,12 +76,12 @@ mutable struct AttachedEvents
     # onload::Array
 end
 # document.event
-mutable struct Event
-    node::Element
-    copy::Element # save a copy of the origional node when overwritten by new data
-    action::AbstractString # an event should generally result in an action!
-    Event(node, action) = new(node, nothing, action)
-end
+# mutable struct Event
+#     node::Element
+#     copy::Element # save a copy of the origional node when overwritten by new data
+#     action::AbstractString # an event should generally result in an action!
+#     Event(node, action) = new(node, nothing, action)
+# end
 #-==============================================================================
 mutable struct Page
          parent::Any  # First node needs a Psudo-parent too ..maybe!

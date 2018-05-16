@@ -15,7 +15,8 @@ function CreateLayoutTree(document::Page, parent::Element)
     isa(parent.shape, NText) && return # TODO: may be able to make this part of multiple dispatch later
 
     parent.rows  = []  # Clean out old data (?)
-    l,t,w,h = getContentBox(parent.shape, getReal(parent.shape)...)
+    #l,t,w,h = getContentBox(parent.shape, getReal(parent.shape)...)
+    l,t,w,h = getContentBox(parent.shape)
 
     children = parent.children
 
@@ -33,8 +34,8 @@ function CreateLayoutTree(document::Page, parent::Element)
         lastRow = parent.rows[end]
         FinalizeRow(lastRow)
         # Set content height and width for scroller
-        parent.scroll.contentHeight = lastRow.y + lastRow.height - parent.shape.top
-        parent.scroll.contentWidth  = lastRow.x + lastRow.width  - parent.shape.left
+        parent.scroll.contentHeight = lastRow.top + lastRow.height - parent.shape.top
+        parent.scroll.contentWidth  = lastRow.left + lastRow.width  - parent.shape.left
 
         if parent.shape.flags[FixedHeight] == false
             parent.shape.height = parent.scroll.contentHeight
@@ -42,7 +43,7 @@ function CreateLayoutTree(document::Page, parent::Element)
         # This is to be done after the parent node's size is finalised!
         if parent.shape.flags[HasAbsolute] == true
           # get node metrics again since the height etc. might have changed.
-          l,t,w,h = getContentBox(parent.shape, getReal(parent.shape)...)
+          l,t,w,h = getContentBox(parent.shape)
           for child in children
             if !isa(child.shape, NText)
                 shape = child.shape

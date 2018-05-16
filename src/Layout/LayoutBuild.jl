@@ -1,5 +1,5 @@
 export setUpWindow, MoveAll, VmoveAllChildren,
-        PushToRow, FinalizeRow
+        PushToRow, FinalizeRow, fontSlant, fontWeight
 # ======================================================================================
 #
 """
@@ -176,7 +176,7 @@ function FinalizeRow(row::Row)
     # Mark row as finalized!
     row.flags[RowFinalized] = true
 
-    return row.y + row.height
+    return row.top + row.height
 end
 
 
@@ -255,7 +255,7 @@ function PushToRow(document::Page, node::Element, thing, shape, l::Float64,t::Fl
              width = shape.width + (border.width + padding.width + margin.width)
              # row.height < height && (row.height = height)
              # row.y == 0 && (row.y = t)
-             setNodePosition(shape, row, row.x, width, height)
+             setNodePosition(shape, row, row.left, width, height)
              push!(row.nodes, thing)
              return
      end
@@ -265,7 +265,7 @@ function PushToRow(document::Page, node::Element, thing, shape, l::Float64,t::Fl
               # scroll.contentWidth
                shape.width = w
                push!(row.nodes, thing)
-               setNodePosition(shape, row, row.x, w)
+               setNodePosition(shape, row, row.left, w)
                return
         # else not enough space
     end
@@ -281,9 +281,9 @@ function PushToRow(document::Page, node::Element, thing, shape, l::Float64,t::Fl
             end
 
                 #row.height < height && (row.height = height)
-                row.y == 0 && (row.y = t)
+                row.top == 0 && (row.top = t)
                 b = get(shape.border,  Border(0,0,0,0,0,0, 0,[],[0,0,0,0]))
-                setNodePosition(shape, row, row.x, width, height)
+                setNodePosition(shape, row, row.left, width, height)
                 row.space = 0
                 push!(row.nodes, thing)
                 return
@@ -294,8 +294,8 @@ function PushToRow(document::Page, node::Element, thing, shape, l::Float64,t::Fl
         end
 
     #row.height < height && (row.height = height)
-    row.y == 0 && (row.y = t)
-    setNodePosition(shape, row, row.x, width, height)
+    row.top == 0 && (row.top = t)
+    setNodePosition(shape, row, row.left, width, height)
     push!(row.nodes, thing)
 
 end
@@ -329,14 +329,14 @@ function setNodePosition(shape::Draw, row::Row, x::Float64, width::Float64, heig
 
             # OffsetX, OffsetY = contentOffset( getReal(shape)... )
             OffsetX, OffsetY = contentOffset( c, b, m )
-            shape.top = row.y + OffsetY
+            shape.top = row.top + OffsetY
             shape.left = x + OffsetX
         else
-            shape.top = row.y
+            shape.top = row.top
             shape.left = x
         end
         row.space -= width
-        row.x += width
+        row.left += width
         row.height < height && (row.height = height)
 end
 #======================================================================================#
@@ -392,7 +392,7 @@ function VmoveAllChildren(node, y::Float64, moveNode::Bool)
     if isdefined(node, :rows) # ..it has rows of children so let's move them!
       for i in 1:length(node.rows)
         row = node.rows[i]
-        row.y += y
+        row.top += y
         for j in 1:length(row.nodes)
             VmoveAllChildren(row.nodes[j],y, true) # do the same for each child
         end
@@ -424,8 +424,8 @@ function MoveAll(node, x::Float64, y::Float64)
     if isdefined(node, :rows) # ..it has rows of children so let's move them!
       for i in 1:length(node.rows)
         row = node.rows[i]
-        row.x += x # ...don't forget to move the actual row
-        row.y += y
+        row.left += x # ...don't forget to move the actual row
+        row.top += y
         for j in 1:length(row.nodes)
             MoveAll(row.nodes[j],x,y) # do the same for each child
         end
@@ -511,7 +511,7 @@ function PushToRow(document::Page, node::Element, MyText::Element, shape::NText,
       row = rows[end]
       if length(row.nodes) > 0 # Already has nodes!
           lineWidth = row.space
-          lineLeft = row.x
+          lineLeft = row.left
           isPartRow = true
       else
           lineWidth = wide
@@ -593,9 +593,9 @@ function pushText(document::Page, node::Element, thing::TextLine, l::Float64,t::
       end
 
     #row.height < height && (row.height = height)
-    row.y == 0 && (row.y = t)
+    row.top == 0 && (row.top = t)
 
-    setNodePosition(shape, row, row.x, width, height)
+    setNodePosition(shape, row, row.left, width, height)
     push!(row.nodes, thing)
 
 end
