@@ -1,13 +1,14 @@
 
-export LastRow, Page, Scroller, Row, Element, Page #Event,
+export LastRow, Page, Scroller, Row, Element, Text, Page #Event,
 
 begin
 
+# if this structure doesn't grow it should be elimenated. Pointless to have a structure for one member...
     type EventType
         pressed::Vector{Point}
-        #released::Point
-        EventType() = new([])
-        EventType(x,y) = new([Point(x,y)])
+        selectedNodes::Any
+        EventType() = new([],[])
+        EventType(x,y) = new([Point(x,y)],[])
         EventType(a) = new(a)
     end
 #-==============================================================================
@@ -36,6 +37,7 @@ mutable struct Row
         return r
     end
 end
+# maybe rename: GetNewRow or something similar.
 function LastRow(rows::Vector{Row}, l, t, w)
     if length(rows) < 1
         Row(rows, l, t, w)
@@ -46,32 +48,39 @@ end
 mutable struct Element
     DOM::Dict       # Reference to dictionary counterpart of this node
     parent::Any               # This node's parent
-    children::Vector{Element} # Children in order they appear in DOM
+    children::Vector{Any} # Children in order they appear in DOM
     rows::Vector{Row} # A layout property
+    font::Any  # Font definition to be applied to all rows and children unless overriden.
     shape::Any # link to layout representation of node
-    temp::Any # Temporary copy of node to preserve data for when visual changes take place
+    temp::Any  # Temporary copy of node to preserve data for when visual changes take place
     scroll::Scroller # Since shape get's destroyed we need the scroll-offsets here (prabably should be Nullable).
-        function Element(DOM=Dict())
-            parent = nothing
-            children::Vector{Element} = []
-            new(DOM, parent, children, [], nothing, nothing, Scroller())
-        end
+    Element(DOM) = new(DOM, nothing, [], [], nothing, nothing, nothing, Scroller())
+    Element() = new(Dict(), nothing, [], [], nothing, nothing, nothing, Scroller())
+end
+#-==============================================================================
+mutable struct Text
+    DOM::Dict       # Reference to dictionary counterpart of this node
+    parent::Any               # This node's parent
+    shape::Any # link to layout representation of node
+    Text(parent, shape) = new(Dict(), parent, shape)
+    Text(shape) = new(Dict(), nothing, shape)
+    Text() = new(Dict(), nothing, nothing)
 end
 #-==============================================================================
 mutable struct AttachedEvents
     click::Vector{Element}
-    mousedown::Vector{Element}
-    mousemove::Vector{Element}
-    mouseover::Vector{Element}
-    mouseup::Vector{Element}
-    mouseout::Vector{Element}
+    mousedown::Vector{Any}
+    mousemove::Vector{Any}
+    mouseover::Vector{Any}
+    mouseup::Vector{Any}
+    mouseout::Vector{Any}
 
-    drag::Vector{Element}
-    drop::Vector{Element}
+    drag::Vector{Any}
+    drop::Vector{Any}
 
-    keydown::Vector{Element}
-    keypress::Vector{Element}
-    keyup::Vector{Element}
+    keydown::Vector{Any}
+    keypress::Vector{Any}
+    keyup::Vector{Any}
     AttachedEvents() = new([], [], [], [], [], [], [], [], [], [], [])
     # onload::Array
 end
@@ -85,7 +94,7 @@ end
 #-==============================================================================
 mutable struct Page
          parent::Any  # First node needs a Psudo-parent too ..maybe!
-         children::Vector{Element} # First node in a tree-like data structure representing all elements on page
+         children::Vector{Any} # First node in a tree-like data structure representing all elements on page
          fixed::Element # First node in a tree-like data structure representing all elements on page
          styles::Dict
          head::Dict

@@ -1,30 +1,38 @@
 
 export CreateLayoutTree
 # ======================================================================================
-"""
 ## CreateLayoutTree(document::Page, node::Element)
-
-Generate a layout tree starting at `node` in `document`. This should be callable
-starting at any point in the document tree.
-
-[Source](https://github.com/TravisA9/NaquadahBrowser/blob/39c41cbb1ac28fe94876fe01beaa6e046c8b63d3/src/NaquadahCore.jl#L70)
-"""
+# Generate a layout tree starting at `node` in `document`. This should be callable
+# starting at any point in the document tree.
 # ======================================================================================, shape::Draw
-function CreateLayoutTree(document::Page, parent::Element)
+function CreateLayoutTree(document::Page, parent)
 
-    isa(parent.shape, NText) && return # TODO: may be able to make this part of multiple dispatch later
+    isa(parent.shape, TextLine) && return # TODO: may be able to make this part of multiple dispatch later
 
     parent.rows  = []  # Clean out old data (?)
-    #l,t,w,h = getContentBox(parent.shape, getReal(parent.shape)...)
     l,t,w,h = getContentBox(parent.shape)
+
+    if parent.shape.width < 1
+        p = parent
+        while p.shape.width < 1
+            if p == p.parent
+                w = document.width
+                println("page width: ", w)
+                break
+            end
+            p = p.parent
+        end
+        w = p.shape.width
+    end
+
 
     children = parent.children
 
     for child in children
                 child.parent = parent # attach to parent
-                AtributesToLayout(document, child) # Create Child's DOM
-            if child.shape.flags[DisplayNone] == false # only draw if not "display: none"
-                PushToRow(document, parent, child, child.shape, l,t,w) # Put child into row
+                AtributesToLayout(document, child) # Create Child's DOM (DomToLayout.jl)
+            if !child.shape.flags[DisplayNone] # only draw if not "display: none"
+                PushToRow(document, child, l,t,w) # Put child into row
                 CreateLayoutTree(document, child) # Create child's children
             end
     end
@@ -37,26 +45,26 @@ function CreateLayoutTree(document::Page, parent::Element)
         parent.scroll.contentHeight = lastRow.top + lastRow.height - parent.shape.top
         parent.scroll.contentWidth  = lastRow.left + lastRow.width  - parent.shape.left
 
-        if parent.shape.flags[FixedHeight] == false
+        if !parent.shape.flags[FixedHeight]
             parent.shape.height = parent.scroll.contentHeight
         end
         # This is to be done after the parent node's size is finalised!
-        if parent.shape.flags[HasAbsolute] == true
+        if parent.shape.flags[HasAbsolute]
           # get node metrics again since the height etc. might have changed.
           l,t,w,h = getContentBox(parent.shape)
           for child in children
-            if !isa(child.shape, NText)
+            #if !isa(child, Text)
                 shape = child.shape
                 width, height = getSize(shape)
                 # padding, border, margin = getReal(shape)
-                if shape.flags[Absolute] == true
+                if shape.flags[Absolute]
                   top,left = shape.top, shape.left
-                  if shape.flags[Bottom] == true
+                  if shape.flags[Bottom]
                         shape.top =  t + h - (height + shape.top)
                   else
                         shape.top =  t + shape.top
                   end
-                  if shape.flags[Right] == true
+                  if shape.flags[Right]
                         shape.left =  l + w - (width + shape.left)
                   else
                         shape.left =  l +  shape.left
@@ -70,7 +78,7 @@ function CreateLayoutTree(document::Page, parent::Element)
                     end
                   end
               end
-            end
+            #end
           end
         end
 

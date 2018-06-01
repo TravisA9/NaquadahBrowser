@@ -4,18 +4,11 @@ using Cairo, Gtk, Gtk.ShortNames
 
 
 export
-          DrawViewport, DrawContent, DrawClippedContent, DrawBox, DrawShape,
-          DrawRoundedBox, DrawText, DrawSelectedText, setcolor, drawNode, lastClipParent
+          DrawViewport, DrawContent, DrawShape,
+          DrawText, DrawSelectedText, setcolor, drawNode, lastClipParent,
+          GetlastColor, setTextContext
 
-"""
-## Graphics: exported functions
 
-```julia-repl
-DrawViewport, DrawContent, DrawClippedContent, DrawBox, DrawShape,
-DrawRoundedBox, DrawText, setcolor
-```
-[Source](https://github.com/TravisA9/NaquadahBrowser/blob/39c41cbb1ac28fe94876fe01beaa6e046c8b63d3/src/Graphics/GraphDraw.jl#L6)
-"""
 #          include("Events.jl")
 #          include("GraphFlags.jl")
 #          include("LayoutBuild.jl")
@@ -31,8 +24,12 @@ DrawRoundedBox, DrawText, setcolor
 # ======================================================================================
 # Accept color values with or without alpha
 # ======================================================================================
-setcolor( ctx::Cairo.CairoContext, r, g, b, a) = set_source_rgba(ctx, r, g, b, a);
 setcolor( ctx::Cairo.CairoContext, r, g, b) = set_source_rgb(ctx, r, g, b);
+setcolor( ctx::Cairo.CairoContext, r, g, b, a) = set_source_rgba(ctx, r, g, b, a);
+# setcolor( ctx::Cairo.CairoContext, color) = set_source_rgba(ctx, color...);
+# setcolor( ctx::Cairo.CairoContext, node::Element) = set_source_rgba(ctx, node.shape.color...);
+# setcolor( ctx::Cairo.CairoContext, shape::Draw) = set_source_rgba(ctx, shape.color...);
+
 # ======================================================================================
 # First draw all page elements (not controls) that flow and then draw "fixed" elements
 # ======================================================================================
@@ -60,54 +57,54 @@ function DrawContent(ctx::Cairo.CairoContext, document::Page, node::Element, cli
       rows = node.rows
       border = get(node.shape.border,  Border(0,0,0,0,0,0, 0,[],[0,0,0,0]))
       padding = get(node.shape.padding, BoxOutline(0,0,0,0,0,0))
-      Shape = getShape(node)
+      Shape = node.shape
 
-      if Shape.flags[Clip] == true
+      if Shape.flags[Clip]
           clipPath = getBorderBox(Shape, border, padding)
       end
-
 
       if clipPath !== nothing
           rectangle(ctx, clipPath... )
           clip(ctx)
       end
 
-  for i in 1:length(rows)
-      row = rows[i]
-      for j in 1:length(row.nodes)
-          child = row.nodes[j]
-          shape = getShape(child)
-          # Only draw if visible! node.shape.flags[FixedHeight] == true &&
-          if row.top < (node.shape.top + node.shape.height) && node.shape.flags[DisplayNone] == false
-              drawNode(ctx, document, row, shape, child, clipPath)
+  for row in rows
+      for child in row.nodes
+          if row.top < (Shape.top + Shape.height) # && !node.shape.flags[DisplayNone]
+              drawNode(ctx, document, row, child.shape, child, clipPath)
           end
       end
   end
 
       # Scroll bars.......... TODO: fix
-        if node.shape.flags[IsVScroll] == true
-                    Shape = getShape(node)
+      if Shape.flags[IsVScroll]
           VScroller(ctx, document, node, Shape, clipPath)
       end
-      if Shape.flags[Clip] == true #|| clipPath === nothing
+      if Shape.flags[Clip] #|| clipPath === nothing
          reset_clip(ctx)
          clipPath = nothing
       end
 end
 # ======================================================================================
 # ======================================================================================
-function drawNode(ctx, document, row, shape, child, clipPath)
+function drawNode(ctx, document, row, shape, node, clipPath)
              if isa(shape, TextLine)
-                 DrawText(ctx, shape, clipPath)
+                 DrawText(ctx, node, clipPath)
              else
-                 DrawShape(ctx, child, shape, clipPath)
-                 DrawContent(ctx, document, child, clipPath)     # Now draw children
+                 DrawShape(ctx, node, shape, clipPath)
+                 DrawContent(ctx, document, node, clipPath)     # Now draw children
              end
+             # if isa(node, Text)
+             #     s = node.parent.shape
+             #     setcolor(ctx, .3,.3,.3)
+             #     rectangle(ctx, s.left,s.top,s.width+3,s.height+3 )
+             #     stroke(ctx);
+             # end
 end
 #...............................................................................
 function lastClipParent(node)
     while node.parent !== node
-        if node.shape.flags[Clip] == true
+        if node.shape.flags[Clip]
             return node
         end
         node = node.parent
@@ -117,24 +114,24 @@ end
 
 function drawNode(ctx, document, node)
 
-    #println(lastClipParent(node))
     box = lastClipParent(node) #document.children[1].children[3];
 
-    shape = getShape(node)
-    WinShape = getShape(box)
+    shape = node.shape
+    WinShape = box.shape
     border = get(WinShape.border,  Border(0,0,0,0,0,0, 0,[],[0,0,0,0]))
     padding = get(WinShape.padding, BoxOutline(0,0,0,0,0,0))
     clipPath = getBorderBox(WinShape, border, padding)
 
     rectangle(ctx, clipPath... )
     clip(ctx)
-             if isa(shape, TextLine)
                  # DrawText(ctx, row, shape)
-             else
+             #else
                  DrawShape(ctx, node, shape, clipPath)
+            if !isa(node, Text)
                  DrawContent(ctx, document, node, clipPath)     # Now draw children
-             end
+            end
     reset_clip(ctx)
+
 end
 # ======================================================================================
 # http://www.nongnu.org/guile-cairo/docs/html/Patterns.html
@@ -155,16 +152,16 @@ function DrawShape(ctx::CairoContext, node::Element, shape::Draw, clipPath)
     # set_antialias(ctx,4)
     setPath(ctx::CairoContext, path)
     clip(ctx);
-  if shape.flags[HasImage] == true
+  if shape.flags[HasImage]
         DOM =  node.DOM
             if haskey(DOM, "image")
                 imagePath = PATH * DOM["image"] # "Mountains.png"
             end
             BackgroundImage(ctx, path.wide, path.tall, shape.left, shape.top, imagePath)
 
-  elseif  shape.flags[LinearGrad] == true
+  elseif  shape.flags[LinearGrad]
         linearGrad(ctx, path, shape.gradient)
-  elseif  shape.flags[RadialGrad] == true
+  elseif  shape.flags[RadialGrad]
         radialGrad(ctx, path, shape.gradient)
   else
           # set_antialias(ctx,6)
@@ -532,33 +529,47 @@ function setborderPath(ctx::CairoContext, shape::NQCircle)
         arc(ctx, shape.left, shape.top, shape.radius, 0, 2*pi);
 end
 
-
 # ======================================================================================
 #  This is to tell text_extents() how to measure text
 # ======================================================================================
-function setTextContext(ctx::CairoContext, s)
-    text = s.reference.shape
-    slant  = fontSlant(text)
-    weight = fontWeight(text)
-    select_font_face(ctx, text.family, slant, weight);
-    set_font_size(ctx, text.size);
+function setTextContext(ctx::CairoContext, node::Text)
+    font = node.parent.font
+    slant  = fontSlant(font)
+    weight = fontWeight(font)
+    select_font_face(ctx, font.family, slant, weight);
+    set_font_size(ctx, font.size);
+end
+# ======================================================================================
+function GetlastColor(node)
+    while !isdefined(node.shape, :color) || length(node.shape.color) < 3
+            node = node.parent
+    end
+    return node.shape.color
 end
 # ======================================================================================
 #
 # ======================================================================================
 function DrawSelectedText(ctx::CairoContext, nodeList, l,r,t,b, clipPath)
-color = rand(3)
 last = length(nodeList)
 width,left = 0,0
 allSelectedText = ""
+
+
+    function PaintBox(ctx, color, l,t,r,b)
+        setcolor( ctx, color...)
+        rectangle(ctx,  l,t,r,b )
+        fill(ctx)
+    end
+
 offset = 0
     for n in 1:last
-
-        s = getShape(nodeList[n]) #n.shape
-        setTextContext(ctx, s) # this is to tell text_extents() how to measure text
+        chunkStart, chunkEnd = 0,0
+        s = nodeList[n].shape #n.shape
+        setTextContext(ctx, nodeList[n]) # this is to tell text_extents() how to measure text
 
         # TODO: make this work when start and end are on the same line!
-        if n == 1
+        if n == 1 # First selected line!
+            offset = 0
             newLeft = 0
             start = l-s.left
             for i in 1:length(s.text)
@@ -571,10 +582,17 @@ offset = 0
                 end
             end
             allSelectedText *= s.text[offset+1:end] * "\n"
-            #notch = newLeft-s.left
             left, width = s.left+newLeft,  s.width-newLeft
-        elseif  n == last
+            if newLeft > 0 # how much to redraw before selection start
+                color = GetlastColor(nodeList[n].parent) #nodeList[n].parent.shape.color
+                if length(color) == 0
+                    color = [0,0,0]
+                end
+                PaintBox(ctx, color, s.left,  s.top, newLeft,  s.height)
+            end
+        elseif  n == last # Last selected line!
             newRight = 0
+            offset = 0
             ending = r-s.left # actual selected width.
             for i in length(s.text):-1:1
                 extents = text_extents(ctx, s.text[1:i] )[3];
@@ -585,74 +603,78 @@ offset = 0
                     break
                 end
             end
+
             allSelectedText *= s.text[1:offset] * "\n"
             left, width = s.left,  newRight
+            if newRight > 0 # how much to redraw after selection end
+                #chunkStart, chunkEnd = left+width, s.left+s.width
+                color = GetlastColor(nodeList[n].parent) #nodeList[n].parent.shape.color
+                PaintBox(ctx, color, left+width,  s.top, s.width-width,  s.height+1)
+            end
         else
             allSelectedText *= s.text * "\n"
             left, width = s.left,  s.width+1
         end
 clipboard(allSelectedText)
+
         rectangle(ctx,  clipPath... )
         clip(ctx)
-        setcolor( ctx, color...)
-        rectangle(ctx,  left,  s.top, width,  s.height+1 )
-        set_line_width(ctx, 2.56)
-        set_antialias(ctx,4)
-        fill(ctx)
-        DrawText(ctx, nodeList[n], clipPath) #reset_clip(ctx)
+        # if chunkStart == 0 # how much to redraw before/after selection
+        #     # this does not take into considderation the posibility that the parent could have an image, gradiant or transparency.
+        #     # It may be best to redraw the parent and use this rectangle as a clipping area to reduce the time consumed.
+        #     color = nodeList[n].parent.shape.color
+        #     println(color)
+        #
+        #     PaintBox(ctx, color, chunkStart,  s.top, chunkEnd,  s.height+1)
+        # end
+        PaintBox(ctx, [0.956357, 0.95884, 0.188998], left,  s.top, width,  s.height+1)
+        DrawText(ctx, nodeList[n], clipPath)
     end
 end
 # ======================================================================================
 # Draw text.
-"""
-## DrawText(ctx, node, clipPath)
-
-Draw text.
-
-[Source](https://github.com/TravisA9/NaquadahBrowser/blob/39c41cbb1ac28fe94876fe01beaa6e046c8b63d3/src/Graphics/GraphDraw.jl#L54)
-"""
 # ======================================================================================
 # -extents[4] is the top of the text
 # ======================================================================================
-function DrawText(ctx::CairoContext, node::TextLine, clipPath)
-    MyText = node.reference.shape
-    left = node.left
+function DrawText(ctx::CairoContext, node, clipPath)
+    font = node.parent.font
+    shape = node.shape
+    #println(font.color)
+    left = node.shape.left
     set_antialias(ctx,6)
-    slant  = fontSlant(MyText)
-    weight = fontWeight(MyText)
-    select_font_face(ctx, MyText.family, slant, weight);
-    set_font_size(ctx, MyText.size);
+    slant  = fontSlant(font)
+    weight = fontWeight(font)
+    select_font_face(ctx, font.family, slant, weight);
+    set_font_size(ctx, font.size);
 
-    if MyText.flags[TextPath] == false
-          move_to(ctx, node.left, node.top + (MyText.size*1.14)); #  + MyText.size
-          setcolor(ctx, MyText.color...)
-          show_text(ctx, node.text);
+    if !font.flags[TextPath]
+        move_to(ctx, shape.left, shape.top + font.size);
+        setcolor(ctx, font.color...)
+        show_text(ctx, shape.text);
 
     else  # shaddow
-          move_to(ctx, node.left+4, node.top + MyText.size+4);
-          text_path(ctx, node.text);
+          move_to(ctx, shape.left+4, shape.top + font.size+4);
+          text_path(ctx, shape.text);
           setcolor(ctx,  0,0,0,0.4) # fill color
           fill_preserve(ctx);
           setcolor(ctx,  0,0,0,0.1) # outline color
           set_line_width(ctx,  4 ); # 2.56 MyText.lineWidth
           stroke(ctx);
 
-          move_to(ctx, node.left+4, node.top + MyText.size+4);
-          text_path(ctx, node.text);
+          move_to(ctx, shape.left+4, shape.top + font.size+4);
+          text_path(ctx, shape.text);
           setcolor(ctx,  0,0,0,0.2) # fill color
           fill_preserve(ctx);
           setcolor(ctx,  0,0,0,0.1) # outline color
           set_line_width(ctx,  2 ); # 2.56 MyText.lineWidth
           stroke(ctx);
 
-          move_to(ctx, node.left, node.top + MyText.size);
-          text_path(ctx, node.text);
-          setcolor(ctx, MyText.fill...) # fill color
+          move_to(ctx, shape.left, shape.top + font.size);
+          text_path(ctx, shape.text);
+          setcolor(ctx, font.fill...) # fill color
           fill_preserve(ctx);
-          setcolor(ctx, MyText.color...) # outline color
-          set_line_width(ctx, MyText.lineWidth ); # 2.56 MyText.lineWidth
+          setcolor(ctx, font.color...) # outline color
+          set_line_width(ctx, font.lineWidth ); # 2.56 MyText.lineWidth
           stroke(ctx);
     end
-
-
 end

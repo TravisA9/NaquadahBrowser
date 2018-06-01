@@ -64,8 +64,7 @@ end
 # ======================================================================================
 function findNodesInBox(node, left, top, right, bottom)
     items = []
-    shape = getShape(node)
-    #box = (shape.left, shape.top, shape.width, shape.height)
+    shape = node.shape
     box = getContentBox(shape)
     started = false
 
@@ -76,10 +75,14 @@ function findNodesInBox(node, left, top, right, bottom)
                         if isdefined(n, :rows)
                             looper(n.rows)
                         else
-                                s = getShape(n)
+                                s = n.shape
                                 if onArea(left, top, s)         # ¡Selection Start
                                     push!(items, n)
                                     started = true
+                                    if onArea(right, bottom, s)
+                                        started = false
+                                        return items
+                                    end
                                 elseif onArea(right, bottom, s) # Selection End!
                                     push!(items, n)
                                     started = false
@@ -94,40 +97,63 @@ function findNodesInBox(node, left, top, right, bottom)
         return items
     end
 
-looper(node.rows)
+    looper(node.rows)
 
-    # Yup, it's in the designated area so we will push this to our vector
-    # if onArea(left, top, shape) #boxesOverlap(shape, left,right,top,bottom)
-    #     if onArea(right, bottom, shape)
-    #         if isdefined(node, :rows) #&& length(node.rows) > 0
-    #             eat(node)
-    #         else
-    #                 println("end")
-    #                 push!(items, node)
-    #         end
-    #     end
-    #
-    # end
     return items
 end
 # ======================================================================================
 #
+# a,b,c,d = [1],[2],[3],[4]
+# l = [a b b c d a a]
+# same(list, object) = list .=== object
 # ======================================================================================
 function selectText(ctx, document, pressed, released)
 
-    println("Select all text from X $(pressed.x), Y $(pressed.y) to X $(released.x), Y $(released.y)")
     left, right, top, bottom = order2(pressed.x,released.x, pressed.y,released.y)
-
     selected = findNodesInBox(document.children[1].children[3], left, top, right, bottom)
-    println(length(selected), " items selected!")
 
     clipPath = getContentBox(document.children[1].children[3].shape)
+    # Objective here is to remove duplicates and also repaint tainted rows
+    selectedNodes = document.event.selectedNodes
+
+    found = false
+for oldnode in selectedNodes
+    for node in selected
+        found = false
+         if node ===  oldnode
+             found = true
+         end
+    end
+    if !found
+        c = GetlastColor(oldnode.parent)
+
+        setcolor( ctx, c...)
+        rectangle(ctx,  oldnode.shape.left-1, oldnode.shape.top-1, oldnode.shape.width+2, oldnode.shape.height+2 )
+        fill(ctx)
+        DrawText(ctx, oldnode, clipPath)
+    end
+end
+
+
+    # buffer = []
+    # for shape in selected
+    #     if shape.top > bottom || (shape.top+shape.height) < top # outside range and needs removed
+    #         setcolor( ctx, shape.parent.shape.color...)
+    #         rectangle(ctx,  shape.left, shape.top, shape.width, shape.height )
+    #         fill(ctx)
+    #         DrawText(ctx, shape, clipPath)
+    #     else
+    #         push!(buffer,shape)
+    #     end
+    # end
+    # selected = buffer
+
     if pressed.y < released.y # just in case the selection is made from bottom to top
         DrawSelectedText(ctx, selected, pressed.x, released.x, pressed.y, released.y, clipPath)
     else
         DrawSelectedText(ctx, selected, released.x, pressed.x, released.y, pressed.y, clipPath)
     end
-
+    document.event.selectedNodes = selected
 
 end
 # ======================================================================================
@@ -219,7 +245,6 @@ elseif event.direction == 1 && (node.scroll.contentHeight + node.scroll.y + node
   rectangle(ctx,  node.shape.left,  node.shape.top, node.shape.width,  node.shape.height )
   fill(ctx);
 
-  #Shape = getShape(node)
   DrawViewport(ctx, document, node)
   reveal(widget)
 

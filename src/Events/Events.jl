@@ -44,6 +44,10 @@ Gtk.GdkEventKey(
         #println("move x$(event.x) y$(event.y)")
         #println.(document.event.pressed)
         #DragEvent(document, widget, event)
+        pressed, released = document.event.pressed[1], document.event.pressed[end]
+        ctx = getgc(widget)
+        selectText(ctx, document, pressed, released)
+        reveal(widget)
     end
     #.............................................................
     canvas.mouse.motion = @guarded (widget, event) -> begin
@@ -89,7 +93,7 @@ Gtk.GdkEventKey(
                                 hover = node.DOM["hover"]
                                 if haskey(hover, "color")
                                     if haskey(node.DOM, "color")
-                                            node.shape.color = GetTheColor(node, node.DOM["color"])
+                                            node.shape.color = GetTheColor(node.shape, node.DOM["color"])
                                     end
                                 end
                         end
@@ -114,30 +118,20 @@ Gtk.GdkEventKey(
     # Record to later test for click event
     #.............................................................
     canvas.mouse.button1press = @guarded (widget, event) -> begin
-        #document.event.pressed[Point(event.x, event.y)]
-        push!(document.event.pressed, Point(event.x, event.y) )
-        #MouseSetBoth(document, event.x, event.y, -1, -1)
+        document.event.pressed = [Point(event.x, event.y)]
+        #push!(document.event.pressed, Point(event.x, event.y) )
         MouseDownEvent(document, widget, event)
     end
 
     #.............................................................
     canvas.mouse.button1release = @guarded (widget, event) -> begin
-      push!(document.event.pressed, Point(event.x, event.y) )
-      #document.event.released = Point(event.x, event.y)
-      pressed, released = document.event.pressed[1], document.event.pressed[end]
-    # Click Event fired!
+        push!(document.event.pressed, Point(event.x, event.y) )
+        pressed, released = document.event.pressed[1], document.event.pressed[end]
+        # Click Event fired!
            if -5 < (pressed.x - released.x) < 5 && -5 < (pressed.y - released.y) < 5
              ClickEvent(document, widget, event)
-    # Drag Event fired!
-           else
-             # test if drag event
-             # DragEvent(document, widget, document.event)
-             # otherwize select text
-             ctx = getgc(widget)
-             selectText(ctx, document, pressed, released)
-             reveal(widget)
-             document.event.pressed = []
            end
+           document.event.pressed = []
     end
     #.............................................................
     canvas.mouse.scroll = @guarded (widget, event) -> begin
@@ -160,8 +154,8 @@ end
 """
 #======================================================================================#
 function VmoveAll(node,y)
-  shape = getShape(node)
-  if shape.flags[Fixed] == true
+  shape = node.shape
+  if shape.flags[Fixed]
     return
   end
   shape.top  += y

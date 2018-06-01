@@ -8,21 +8,18 @@
 	},
 
 "style":{
-			"Button":{ "padding":10, "display":"inline", "margin":2, "height":20,
-					   "border":{"radius":3, "color":"steelblue", "style":"solid", "width":"medium"}
+			"Button":{  "padding":10, "display":"inline-block", "margin":2, "height":20,
+				"font":{ "color":"steelblue", "size":15, "align":"center", "lineHeight":1.4, 	"family":"Georgia", "vertical-align":"middle"},
+				"hover":{"color":[0.996094, 0.5, 0.5]},
+				"border":{"radius":3, "color":"steelblue", "style":"solid", "width":"medium"}
 					}
 		},
 
 "body":[
 
-	{">":"div",
-  		"display":"block",
-		"color":"steelblue",
+	{">":"div","color":"steelblue", "padding":5,"margin": [0, 0, 0, 20], "data": [107, 133, 221, 66, 102, 213],
 		"hover":{"color":[0.996094, 0.5, 0.5]},
-  		"padding":5,
-		"margin": [0, 0, 0, 20],
- 		"data": [107, 133, 221, 66, 102, 213],
-  	"nodes":[
+  		"nodes":[
 		{">":"div",	"display":"inline-block", "width":94, "height":90, "margin": 10, "color":"lightgrey",
 			"border":{"width":"thin", "style":"longdashed", "color":"forestgreen", "radius":7},
 					"nodes":[
@@ -40,42 +37,36 @@
 					}	]
 			},
 
-
-			{">":"p",   "font":{ "color":"white", "size":32, "align":"center", "lineHeight":1.4, "family":"Georgia", "vertical-align":"middle" },
-						"text":"Presenting Naquadah: As a test of "
-			},
-
-	{">":"div",	"display":"inline-block", "width":140, "height":80,
+{">":"div",	"display":"inline-block",
+			"nodes":[
+			{">":"p",	"display":"inline-block",
+				"font":{ "color":"white", "size":32, "align":"center", "lineHeight":1.4, "family":"Georgia", "vertical-align":"middle" },
+				"text":"Presenting Naquadah: As a test of " },
+			{">":"div",	"display":"inline-block", "width":140, "height":80,
 				"margin": 10,
 				"nodes":[
 								{">":"p", "display":"inline-block",  "font":{ "color":"black", "size":64, "align":"center", "lineHeight":1.4, "family":"Georgia",
 									"vertical-align":"middle" },
 											"text":"julia ",
 											"nodes":[
-
 												{">":"circle", "radius":5,"color":[0.55,0.4,0.8],
 													"position":"absolute", "top":15, "left":8, "width":3, "height":3 },
-													{">":"circle", "radius":5, "color":[0.39,0.23,0.22],
+												{">":"circle", "radius":5, "color":[0.39,0.23,0.22],
 														"position":"absolute", "top":15, "left":82, "width":3, "height":3},
-														{">":"circle", "radius":5,"color":[0.57,0.35,0.68],
+												{">":"circle", "radius":5,"color":[0.57,0.35,0.68],
 															"position":"absolute", "top":15, "left":95, "width":3, "height":3},
-															{">":"circle", "radius":5, "color":[0.23,0.58,0.17],
+												{">":"circle", "radius":5, "color":[0.23,0.58,0.17],
 																"position":"absolute", "top":4, "left":89, "width":3, "height":3}
 											]
 								}
 							]
-				},
-
-
-
-
-
-
-			{">":"p",   "font":{ "color":"white", "size":32, "align":"center", "lineHeight":1.4, "family":"Georgia",
-				"vertical-align":"middle" },
-						"text":"in Technical and General Computing!"
+			},
+			{">":"p", "text":"in Technical and General Computing!",
+				"font":{ "color":"white", "size":32, "align":"center", "lineHeight":1.4, "family":"Georgia",
+				"vertical-align":"middle" }
 			}]
-	},
+	}]
+},
 
 
 
@@ -85,39 +76,29 @@
 
 
 
-	{">":"div", "display":"none", "width":125, "margin": 10, "padding":5, "color": "lemonchiffon", "height":200,
+{">":"div", "display":"none", "width":125, "margin": 10, "padding":5, "color": "lemonchiffon", "height":200,
 		"border":{"width":"thin", "style":"dashed", "color":"goldenrod"}},
 
-
-
-		{">":"div", "display":"inline-block", "width":125, "margin": 10, "padding":5, "color": "lemonchiffon",
-			"border":{"radius":[67,10,67,10], "width":"thin", "style":"dashed", "color":"goldenrod"},
-		      				 "nodes":[
-								 {">":"circle", "display":"inline-block", "radius":50, "color":"pink", "image":"coffee.png",
+{">":"div", "float":"left", "display":"inline-block", "width":200, "margin": 10, "padding":5, "color": "lemonchiffon",
+			"border":{"radius":[110,10,110,10], "width":"thin", "style":"dashed", "color":"goldenrod"},
+		      		 "nodes":[
+								 {">":"circle", "display":"inline-block", "radius":88, "color":"pink", "image":"coffee.png",
 									 "border":{"width":12, "style":"solid", "color":"goldenrod"}},
 
-								{">":"div", "display":"inline-block", "width":110, "margin": 5, "padding":2,
-																	"border":{ "width":[5,0,0,0], "style":"solid", "color":"goldenrod"},
-						 			 "nodes":[
-										 {">":"p", "font":{ "color":"red", "size":12, "align":"left", "lineHeight":1.4, "family":"Georgia" },
-		      						 		"text":"Left-justified in a p element set in an inline block."}
-							 	 ]},
-								 {">":"div", "display":"inline-block", "width":104, "margin": 5, "padding":2,
- 																	"border":{ "width":[5,0,5,0], "style":"solid", "color":"goldenrod"},
-									 									  "nodes":[
-
-		      					 		{">":"p", "font":{ "color":"black", "size":12, "align":"center", "lineHeight":1.4, "family":"Georgia" },
-		      						 		"text":"Centered in a p element set in an inline block." }
-							 	 ]},
-								 {">":"div", "display":"inline-block", "width":109, "margin": 5, "padding":2,
- 																	"border":{ "width":[0,0,5,0], "style":"solid", "color":"goldenrod"},
-									 									  "nodes":[
-
-		      					 		{">":"p", "font":{ "color":"green", "size":12, "align":"right", "lineHeight":1.4, "family":"Georgia" },
+								 {">":"p", "width":170, "margin": 5, "padding":5,
+											"border":{ "width":[5,0,0,0], "style":"solid", "color":"goldenrod"},
+											"font":{ "color":"red", "size":18, "align":"left", "lineHeight":1.4, "family":"Arial" },
+		      						 		"text":"Left-justified in a p element set in an inline block."},
+	 							 {">":"p",  "width":166, "margin": 5, "padding":5,
+											"border":{ "width":[5,0,5,0], "style":"solid", "color":"goldenrod"},
+											"font":{ "color":"black", "size":18, "align":"center", "lineHeight":1.4, "family":"Helvetica" },
+		      						 		"text":"Centered in a p element set in an inline block." },
+		      				 {">":"p", "width":170, "margin": 5, "padding":5,
+											"border":{ "width":[0,0,5,0], "style":"solid", "color":"goldenrod"},
+											"font":{ "color":"green", "size":18, "align":"right", "lineHeight":1.4, "family":"Comic Sans MS" },
 		      						 		"text":"Right-justified in a p element set in an inline block." }
-						 	 ]}
 		      				 ]
-		  },
+},
 
 
 		{">":"div", "display":"inline-block", "width":206, "margin": 10, "padding":8,
@@ -128,28 +109,22 @@
 			 	"border":{ "width":"thin", "style":"solid", "color":"black"},
 			    "nodes":[
    					 {">":"p",
-   						 "font":{ "color":"red", "size":12, "align":"left", "lineHeight":1.4, "family":"Georgia" },
+   						 "font":{ "color":"red", "size":16, "align":"left", "lineHeight":1.4, "family":"Times New Roman" },
    						 "text":"This is an example of text that is left-justified in a p element set as an inline-block."
    					 },
    					 {">":"p",
-   						 "font":{ "color":"black", "size":12, "align":"center", "lineHeight":1.4, "family":"Georgia" },
+   						 "font":{ "color":"black", "size":16, "align":"center", "lineHeight":1.4, "family":"Courier New" },
    						 "text":"This is an example of text that is centered in a p element set as an inline-block."
    					 },
    					 {">":"p",
-   						 "font":{ "color":"green", "size":12, "align":"right", "lineHeight":1.4, "family":"Georgia" },
+   						 "font":{ "color":"green", "size":16, "align":"right", "lineHeight":1.4, "family":"Lucida Console" },
    						 "text":"This is an example of text that is right-justified in a p element set as an inline-block."
    					 }
 			] },
-   					 {">":"circle",
-   								"radius":100,
-   								"image":"Mountains.png",
-   								"color":"lightgreen",
+   					 {">":"circle", "radius":100, "image":"Mountains.png", "color":"lightgreen",
    								"border":{"width":"thick", "style":"solid", "color":"steelblue"}},
-					{">":"div", "width":20, "height":20,
-	       						"image":"Search.png",
-	       						"color":"lightgreen",
+					{">":"div", "width":20, "height":20, "image":"Search.png", "color":"lightgreen",
 	       						"border":{"width":"thick", "style":"solid", "color":"steelblue"}}
-
   				 ]
    	 },
 
@@ -187,33 +162,27 @@
 		{">":"div", "display":"inline-block", "color":[0.7,0.5,0.5],
 			"float":"left", "margin":5, "width":75,
 			"border":{"radius":7, "width":"thin", "style":"solid", "color":"black"},
-			"nodes":[ {">":"p",
+			"nodes":[ {">":"p", "marked":true,
+							"border":{"radius":7, "width":"thin", "style":"solid", "color":"black"},
 							"font":{ "color":"black", "size":12, "align":"center", "lineHeight":1.4, "family":"Georgia" },
 							"text":"Forth element float left! ..height not explicitly set."
 									}
 					]
 		},
 
-		{">":"div", "display":"inline-block", "color":[0.7,0.5,0.5],
-			"float":"left", "margin":5, "width":100, "height":40,
-			"border":{"radius":7, "width":"thin", "style":"solid", "color":"black"},
-			"nodes":[ {">":"p",
-							"font":{ "color":"black", "size":12, "align":"center", "lineHeight":1.4, "family":"Georgia" },
-							"text":"Fifth element float left!"
-									}
-					]
-		},
+				{">":"p", "width":100, "height":40, "display":"inline-block",
+					"color":[0.7,0.5,0.5], "float":"left", "margin":5, "padding":3,
+					"border":{"radius":7, "width":"thin", "style":"solid", "color":"black"},
+					"font":{ "color":"black", "size":12, "align":"center", "lineHeight":1.4, "family":"Georgia" },
+					"text":"Fifth element float left!" },
 
-        {">":"p",
-          "font":{
-            "color":"black",
-            "size":15,
-            "align":"center",
-            "lineHeight":1.4,
-            "weight":"bold",
-            "family":"Georgia" },
-      			 "text":"This is some sample text for testing the text drawing capabilities of cairo. Strangely, this text is perfectly centered when rendered on windows and on linux it is a hare off. This is some sample text for testing the text drawing capabilities of cairo. This is some sample text for testing the text printing capabilities of cairo. This is some sample text for testing the text printing capabilities of cairo.. ."
-           },
+        {">":"h1", "font":{ "align":"center"},
+      	  "text":"Why reinvent the wheel?"},
+		{">":"p", "display":"block",
+            "font":{ "color":"black", "size":15, "align":"center",
+            "lineHeight":1.4, "weight":"normal", "family":"Georgia" },
+         	"text":"Although it is often best to just use the tools that others have worked so hard to build and perfect, there are actually times when it is fitting to start again... but when? Well, one obvious answer is when your specific needs are very different from the norm. However, there are other reasons. For instance, maybe you really want to get a good understanding of the motives behind a standard design. Trying out a few changes to see why they succeed or fail can help you to get a feel of just that. In the case of this browser design, there is a different reason. As a technology develops new features get added and removed. Some technologies are repurposed. In the end it is not uncommon to get a patchwork of parts which generally funtion as one but each part has its overhead. The overhead is often tolerated because refining, consolidation and re-education is a huge task. Browsers use and comunicate with so many separate languages (ex: HTML, XML, SVG, css, JS, JSON...) and tech that learning them all and integrating them seemlessly into one app or site is getting quite complex. There is also a lot of overlap in all of that. What if we could step back and consolidate all the benefits of the various tools and languages, thereby simplifying it all and eliminating needless complexity and overhead? This experement is to test just that."
+        },
 
 		   {">":"div", "display":"block", "color":[0.5,0.7,0.5],
    			"float":"left", "margin":15, "width":100, "height":40,
@@ -223,7 +192,7 @@
    							"text":"This is a block Element"
    									}
    					]
-   		},
+   			},
 
 
 
@@ -242,8 +211,8 @@
 					 		 "bottom":10, "right":10, "width":150, "height": 60,
 					 		 "border":{"width":"thin", "style":"solid", "color":"black"},
 							"nodes":[ {">":"p",
-													 "font":{ "color":"white", "size":15, "align":"center", "lineHeight":1.4, "weight":"bold", "family":"Georgia" },
-													 "text":"Position Absolute with opacity 0.6 !"
+								"font":{ "color":"white", "size":15, "align":"center", "lineHeight":1.4, "weight":"bold", "family":"Purisa" },
+										"text":"Position Absolute with opacity 0.6 !"
 															 }
 											 ]
 						}
@@ -301,28 +270,25 @@
 	{">":"circle", "radius":5, "color":"pink",
 	       		   "border":{"width":"thin", "style":"solid", "color":"blue"}},
 
-		{">":"div", "position":"fixed", "color":[0.5,0.5,0.7],
-			"bottom":10, "right":10, "height": 75,  "width":150,
-								 "margin":3, "opacity":0.3,
-								 "border":{"radius":7, "width":"thin", "style":"solid", "color":"black"},
-								 "nodes":[
-									 {">":"p",
-								 	 		"text":"This element has a \"FIXED\" position.",
-								 			"font":{ "color":"black", "size":18, "align":"center", "lineHeight":1.4, "family":"Georgia" }
-								 }
-							 ]
-		},
-		{">":"div", "style": "Button","color":"white", "margin":2, "mousedown":{"color":"green"},
-			"nodes":[
-				{">":"p",   "font":{ "color":"steelblue", "size":15, "align":"center", "lineHeight":1.4, "family":"Georgia",
-					"vertical-align":"middle" },
-				"text":"Button"
-			}
-			]},
+	{">":"p", "position":"fixed", "color":[0.0,0.0,0.0], "opacity":0.6,
+		"bottom":10, "right":10, "height": 50, "width":150, "margin":3,
+		"linear-gradient":{ "start":"top", "colors":["white","blue","white"] },
+		"border":{"radius":7, "width":"thin", "style":"solid", "color":"black"},
+		"text":"This element has a \"FIXED\" position.",
+		"font":{ "color":"black", "size":18, "align":"center", "lineHeight":1.4, "family":"Georgia" }
+	},
+	{">":"p", "position":"fixed", "color":[0.0,0.0,0.0], "opacity":0.8,
+		"bottom":60, "right":10, "height": 50, "width":150, "margin":3,
+		"linear-gradient":{ "start":"left", "colors":["red","green","blue"] },
+		"border":{"radius":7, "width":"thin", "style":"solid", "color":"black"},
+		"text":"This element has a \"FIXED\" position.",
+		"font":{ "color":"black", "size":18, "align":"center", "lineHeight":1.4, "family":"Georgia" }
+	},
+	{">":"p", "style": "Button", "text":"Button", "marked":true,
+			"mousedown":{"color":"green"} }
 
-						 	{">":"circle", "position":"relative", "radius":15, "color":"lightgreen",
-						 		"bottom":10, "right":20, "width":15, "height": 15,
-						 				   "border":{"width":"thin", "style":"solid", "color":"blue"}}
+
+
 
 
 ]}

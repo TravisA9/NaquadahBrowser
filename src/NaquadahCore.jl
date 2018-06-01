@@ -43,14 +43,15 @@ mutable struct Win
     documents::Array{Page,1}
     document::Page
     function Win()
-        c = @Canvas()
-        win = Window("Naquadah: An experimental web browser", 1000, 600) # later we can make it save last page size
-        push!(win, c)
+        c = Canvas();
+        win = Window("Naquadah: An experimental web browser", 1000, 600); # later we can make it save last page size
+        push!(win, c);
+
             # STRUCTURE:
             #            node.DOM[1] / tabControls / windowControls / tab
             #            node.DOM[2] / navigation
             #            node.DOM[3] / newPage
-        document, controls = FetchPage(win, defaultPage, c) # Let's start out with a default page
+        document, controls = FetchPage(win, defaultPage, c, 1000) # Let's start out with a default page
         return new(win, c, controls, [document], document)
     end
 end
@@ -70,8 +71,6 @@ function DrawANode(document::Page)
            @guarded draw(c) do widget
                node = document.children[1] #.children[2]
                page = node.children[3]
-               println(document.children[1] === document.parent)
-
 
                 ScrollY = 0.0
                 ctx = getgc(c)
@@ -94,12 +93,12 @@ function DrawANode(document::Page)
                 VmoveAllChildren(page, ScrollY, false)
                 DrawViewport(ctx, document, node)     # FROM: GraphDraw.jl
            end
-    show(c)
+    show(c);
 end
 # ======================================================================================
 
 function main()
-    win = Win() # Win(controls)
+    win = Win(); # Win(controls)
     DrawANode(win.document)
 end
 

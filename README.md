@@ -4,11 +4,11 @@
 
 #### What is Naquadah?
 
-**Short answer**: A browser and _layout engine_ that consumes **Json** instead of HTML
+**Short answer**: A browser and _layout engine_ that consumes **Json** instead of **HTML/css**
 
 * Naquadah currently uses **Cairo** for graphics and **GTK** for the GUI.
 
-* Written in **julia** language as a test of its usability as a general purpose programming language.
+* Written in **julia** language as a test of its usability as a general purpose programming language. Currently tested in julia v0.6
 
 ![window](doc/figures/NaquadahMay2018.gif)
 ![window](doc/figures/Naquadah_Nov_2017.png)

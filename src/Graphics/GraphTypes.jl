@@ -2,7 +2,7 @@
 
 export
           # Structural:
-          NText,
+          Font,
           # General utility:
           Point, Square,
           # Drawable Shapes:
@@ -27,7 +27,7 @@ end
 # Examples
 ```julia-repl
 # Structural:
-Element, Row, LastRow, NText,
+Element, Row, LastRow, Font,
 # General utility:
 Point, Square,
 # Drawable Shapes:
@@ -81,7 +81,7 @@ mutable struct Border <: Geo
     height::Float64
 
     style::Any # maybe AbstractString
-    color::Array{Float32,1} # this may be an array of arrays in the case that each side has a different color
+    color::Vector{Float32} # this may be an array of arrays in the case that each side has a different color
     radius::Nullable{Array}
     Border(left,top, right,bottom, width,height, style,color,radius) = new(left,top, right,bottom, width,height, style,color,radius)
 end
@@ -89,9 +89,9 @@ end
 
 mutable struct BasicShape <: Draw
     flags::BitArray{1}
-    color::Array{Float32,1}
-    gradient::Array{Any,1}
-    opacity::Float32
+    color::Vector{Any}
+    gradient::Vector{Any}
+    opacity::Any
     padding::Nullable{BoxOutline}
     border::Nullable{Border}
     margin::Nullable{BoxOutline}
@@ -111,9 +111,9 @@ end
 # ============================================================================== TextLine, Circle, NBox
 mutable struct NBox <: Draw
     flags::BitArray{1}
-    color::Array{Float32,1}
-    gradient::Array{Any,1}
-    opacity::Float32
+    color::Vector{Any}
+    gradient::Vector{Any}
+    opacity::Any
     padding::Nullable{BoxOutline}
     border::Nullable{Border}
     margin::Nullable{BoxOutline}
@@ -127,9 +127,9 @@ end
 
 mutable struct Circle <: Draw
     flags::BitArray{1}
-    color::Array{Float32,1}
-    gradient::Array{Any,1}
-    opacity::Float32
+    color::Vector{Any}
+    gradient::Vector{Any}
+    opacity::Any
     padding::Nullable{BoxOutline}
     border::Nullable{Border}
     margin::Nullable{BoxOutline}
@@ -145,9 +145,9 @@ end
 # Polygon, Polyline, Path
 mutable struct Arc <: Draw
     flags::BitArray{1}
-    color::Array{Float32,1}
-    gradient::Array{Any,1}
-    opacity::Float32
+    color::Vector{Any}
+    gradient::Vector{Any}
+    opacity::Any
     padding::Nullable{BoxOutline}
     border::Nullable{Border}
     margin::Nullable{BoxOutline}
@@ -164,39 +164,37 @@ mutable struct Arc <: Draw
 end
 
 #=---------------------------------=#
-mutable struct NText <: Draw
+mutable struct Font #<: Draw
     flags::BitArray{1}
-    color::Array{Float32,1}
-    gradient::Array{Any,1}
-    opacity::Float32
+    color::Vector{Any}
+    gradient::Vector{Any}
+    opacity::Any
     padding::Nullable{BoxOutline}
     border::Nullable{Border}
     margin::Nullable{BoxOutline}
     offset::Nullable{Point}
-    left::Float64
-    top::Float64
-    width::Float64
-    height::Float64
-    text::String
     size::Float64
     lineHeight::Float16
     family::String
-    fill::Array{Float32,1}
+    fill::Vector{Float32}
     lineWidth::Float64
-    NText() = new(falses(64), [], [], 1, Nullable{BoxOutline}(), Nullable{Border}(), Nullable{BoxOutline}(), Nullable{Point}(),0,0,0,0,
-                   "", 12, 1.4,  "Sans", [], 1 )
+    Font() = new( falses(64),
+        [], [], 1, Nullable{BoxOutline}(), Nullable{Border}(), Nullable{BoxOutline}(), Nullable{Point}(),
+        12, 1.4,  "Sans", [], 1 )
 end
 #=---------------------------------=#
+# This is inserted as if a normal Element node and yet is also treated as a shape.
 mutable struct TextLine <: Draw
     flags::BitArray{1}
-    reference::Any
-    text::String
+    parent::Any # Because Element()s have parents
+    text::String #
     left::Float64
     top::Float64
     width::Float64
     height::Float64
-    TextLine(MyText,   text, left, top, width, height) = new(falses(64),   MyText, text, left, top, width, height)
-    TextLine(MyText, text, left, top) = new(falses(64), MyText, text, left, top,0,0)
+    TextLine(parent, text) = new(falses(64), parent, text, 0, 0, 0, 0)
+    TextLine(parent, text, left, top, width, height) = new(falses(64), parent, text, left, top, width, height)
+    TextLine(parent, text, left, top) = new(falses(64), parent, text, left, top,0,0)
 end
 
 #==============================================================================#

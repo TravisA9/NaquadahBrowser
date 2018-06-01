@@ -15,7 +15,9 @@ export
         TextCenter,  TextRight,    TextJustify,
         TextItalic,  TextOblique,  TextBold,
         IsHScroll, IsVScroll,
-        Percent
+        Percent,
+        Marked
+        
 
 const FloatLeft, FloatRight, RowFinalized = 1, 2, 3
 const Absolute, HasAbsolute, Relative, Fixed = 4, 5, 6, 7
@@ -41,6 +43,7 @@ const LinearGrad, RadialGrad = 35, 36
 const LineBreakBefore, LineBreakAfter = 37, 38
 
 const Percent      = 39
+const Marked      = 39
 
 
 #.==============================================================================

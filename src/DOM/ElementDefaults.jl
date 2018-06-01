@@ -89,7 +89,7 @@ Tags_Default = Dict(
 # <dialog>	    Defines a dialog box or window
 "dialog" => Dict( "font" =>  Dict( "size" => 13, "family" => "Sans", "color" => "black" )),
 # <div>	        Defines a section in a document
-"div" => Dict(  "display" => "inline-block", "margin" => [0,0,0,0] ),
+"div" => Dict(  "display" => "block", "margin" => [0,0,0,0] ),
 # <dl>	        Defines a description list
 "dl" => Dict( "font" =>  Dict( "size" => 13, "family" => "Sans", "color" => "black" )),
 # <dt>	        Defines a term/name in a description list
@@ -192,7 +192,7 @@ Tags_Default = Dict(
 # <output>	    Defines the result of a calculation
 #"output" => Dict( "font" =>  Dict( "size" => 13, "family" => "Sans", "color" => "black" )),
 # <p>	        Defines a paragraph
-"p" => Dict( "font" =>  Dict( "size" => 13, "family" => "Sans", "color" => "black" )),
+"p" => Dict( "display" => "block", "margin" => [0,0, 16, 16], "font" =>  Dict( "size" => 13, "family" => "Sans", "color" => "black" )),
 # <param>	    Defines a parameter for an object
 #"param" => Dict( "font" =>  Dict( "size" => 13, "family" => "Sans", "color" => "black" )),
 # <pre>	        Defines preformatted text
