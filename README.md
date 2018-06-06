@@ -160,7 +160,7 @@ As you can see there are three major sections to a Json page and these may be on
     - [Graphics](https://github.com/TravisA9/NaquadahBrowser/blob/master/src/Graphics/Readme.md)
     - [Layout](https://github.com/TravisA9/NaquadahBrowser/blob/master/src/Layout/Readme.md)
 
-
+![window](doc/figures/projectMap.png)
 
 # General Goals
 
