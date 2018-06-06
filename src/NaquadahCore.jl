@@ -3,8 +3,8 @@ using Gtk, Gtk.ShortNames, Cairo   # Colors
 module NaquadahCore
                         include("Graphics/GraphTypes.jl")
                         include("NaquadahTypes.jl")
-                        include("Events/Events.jl")
                         include("Graphics/Graphics.jl")
+                        include("Events/Events.jl")
                         include("DOM/Dom.jl")
                         include("Layout/Layout.jl")
 end

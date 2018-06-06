@@ -1,4 +1,4 @@
-export setUpWindow, PushToRow, FinalizeRow, fontSlant, fontWeight
+export setUpWindow, PushToRow, FinalizeRow
 # ======================================================================================
 ### Types exported from Graphics
 # ======================================================================================
@@ -135,9 +135,12 @@ function PushToRow(document::Page, node, l::Float64,t::Float64,w::Float64) # hei
     shape = node.shape
     width, height = getSize(shape)
     rows = parent.rows
-    row = LastRow(rows, l, t, w) # return the last row (creatig one if nesesary).
+    row = getCreateLastRow(rows, l, t, w) # return the last row (creatig one if nesesary).
     flags = node.shape.flags
 
+    if row.space < 0
+        println("ALERT: row.space < 0! ", row.space)
+    end
     # Fixed /////////////////////////////////////////////////////
     # push to document instead of current parent! Fixed nodes' positions are
     # measured relative to the viewport, not any specific node.
@@ -145,7 +148,7 @@ function PushToRow(document::Page, node, l::Float64,t::Float64,w::Float64) # hei
     #       the document width and height should be fixed first (...not being updated).
     if flags[Fixed]
         rows = document.fixed.rows
-        row = LastRow(rows, l, t, w)
+        row = getCreateLastRow(rows, l, t, w)
                   canvas = document.canvas
                   if flags[Bottom]
                           h = document.height # height(canvas)
@@ -171,17 +174,23 @@ function PushToRow(document::Page, node, l::Float64,t::Float64,w::Float64) # hei
     end
      # Inline /////////////////////////////////////////////////////
     if flags[DisplayInline]
+        println("LayoutBuild 174 row.space: ", row.space)
          shape.width = row.space
-     end
+    end
     # InlineBlock /////////////////////////////////////////////////////
     if flags[DisplayInlineBlock] && shape.width < 1
                w = parent.rows[end].width
                shape.width = w
+               
+               if parent.shape.width < 1 && flags[DisplayInlineBlock]
+                   wide = parent.parent.rows[end].space #- getPackingWidth(parent.shape)
+                   #parent.shape.width = wide
+               end
     end
     # Block /////////////////////////////////////////////////////
     if flags[DisplayBlock]
             length(row.nodes) > 0    &&    (row = Row(rows, l, FinalizeRow(row), w))
-            shape.width < 1    &&    (shape.width = w) #- getWidth(shape) #(border.width + padding.width + margin.width)
+            shape.width < 1    &&    (shape.width = w - getPackingWidth(shape)) #- getWidth(shape) #(border.width + padding.width + margin.width)
             row.space = 0 # Make sure nothing else gets put on this row.
     else # not enough space.. new row!
         row.space < width    &&    (row = Row(rows, l, FinalizeRow(row), w))
@@ -217,150 +226,4 @@ function LineBreak(node::Element) # .rows, parentArea
     box = getContentBox(node.shape, getReal(node.shape)... )
     l, t, w, h = box
     return row = Row(rows, l, FinalizeRow(row), w)
-end
-#======================================================================================#
-#
-#======================================================================================#
-function fontSlant(shape)
-    if shape.flags[TextItalic]
-        return Cairo.FONT_SLANT_ITALIC
-    elseif shape.flags[TextOblique]
-        return Cairo.FONT_SLANT_OBLIQUE
-    else
-        return Cairo.FONT_SLANT_NORMAL
-    end
-end
-#======================================================================================#
-function fontWeight(shape)
-    if shape.flags[TextBold]
-        return Cairo.FONT_WEIGHT_BOLD
-    else
-        return Cairo.FONT_WEIGHT_NORMAL
-    end
-end
-#======================================================================================#
-# TODO: simplify / clean up
-# Called from: LayoutBegin.jl ~30
-# PushToRow(document, node, l,t,w)
-##======================================================================================#
-function PushToRow(document::Page, node::Text, l::Float64, t::Float64, wide::Float64)
-    parent = node.parent # This would be like say a 'p' element
-    font = parent.font
-    text = node.shape.text # Entire unbroken string
-    flags = parent.shape.flags
-    ctx = CairoContext( CairoRGBSurface(0,0) )
-    setTextContext(ctx, node)
-    totalWidth = text_extents(ctx, text )[3]
-
-if flags[Marked]
-    println("width: ", parent.shape.width)
-    println(" flags[DisplayInlineBlock]: ", flags[DisplayInlineBlock])
-    println(" flags[DisplayBlock]: ", flags[DisplayBlock])
-    println(" flags[DisplayInline]: ", flags[DisplayInline])
-end
-
-    # if wide == 0
-    #     if parent.shape.width == 0
-    #         row = parent.parent.rows[end]
-    #         if row.space == 0
-    #             top = FinalizeRow(row)
-    #             pLeft, pTop = contentOffset(parent.shape)
-    #             ppLeft, ppTop = contentOffset(parent.parent.shape)
-    #             row = Row(parent.parent.rows, parent.parent.shape.left, top, parent.parent.shape.width)
-    #             parent.shape.width = row.space
-    #         else
-    #             parent.shape.width = row.space # get container width f not set
-    #             row.space = 0
-    #         end
-    #     end
-    #     wide = parent.shape.width # get container width f not set
-    #     if flags[DisplayInlineBlock] || flags[DisplayBlock]
-    #         if totalWidth < wide
-    #             parent.shape.width = totalWidth
-    #             wide = totalWidth
-    #         end
-    #     end
-    # end
-
-
-      # force/empty this for now to avoid reinserting text copies.
-      # Later this will have to be changed.
-      parent.rows = []
-      # when we want to add text to a row that already has content
-      rows = parent.rows
-      if length(rows) == 0 # no row!
-          Row(rows, l, t, wide)
-      end
-      row = rows[end]
-      if length(row.nodes) > 0 # Already has nodes!
-          lineWidth = row.space
-          lineLeft = row.left
-          isPartRow = true
-      else
-          lineWidth = wide
-          lineLeft = l
-          isPartRow = false
-      end
-
-     # set up some variables to get started
-     lines = []
-     lastLine = "" #lineTop = t + shape.size # Because text is drawn above the line!
-     words = split(text, r"(?<=.)(?=[\s])") # split(shape.text) # TODO: this needs improved!
-     line = words[1]
-     firstWordWidth = text_extents(ctx, line )[3] #
-     fontheight = text_extents(ctx, line )[4]
-     if firstWordWidth > lineWidth
-         Row(rows,  l,  FinalizeRow(row),  wide)
-     end
-
-    for w in 2:length(words)
-        lastLine = line
-        line = lastLine * words[w]
-        extetents = text_extents(ctx,line )
-        # long enough ...cut!
-        if extetents[3] >= lineWidth
-            lastLine = split(lastLine, r"^[\s]+")[end]
-
-            textWidth = text_extents(ctx, lastLine )[3]
-            # font = re ference ...which should eventually/soon be removed!
-            textLine = TextLine(parent, lastLine, lineLeft, 0, textWidth, font.lineHeight*fontheight)
-            textNode = Text(parent, textLine)
-            pushText(document, parent, textNode, l, t, wide)
-            line = words[w]
-            # reset default values
-            if isPartRow
-                lineWidth = wide
-                lineLeft = l
-                isPartRow = false
-            end
-        end
-
-    end
-    # Make sure we flush out the last row!
-    line = split(line, r"^[\s]+")[end]
-
-    textWidth = text_extents(ctx,line )[3]
-    textLine = TextLine(parent, line, lineLeft, 0, textWidth, font.lineHeight*fontheight)
-    textNode = Text(parent, textLine)
-    pushText(document, parent, textNode, l, t, wide) #    pushText(document, parent, Text(textLine), l, t, wide)
-end
-#======================================================================================#
-# TODO: simplify / clean up
-##
-#======================================================================================#
-function pushText(document::Page, node::Element, text::Text, l::Float64,t::Float64,w::Float64) # height not needed
-
-    shape = text.shape
-    width, height = getSize(shape)
-    rows = node.rows
-    row = LastRow(rows, l, t, w)
-
-    if row.space < width
-        row = Row(rows, l, FinalizeRow(row), w)
-    end
-
-    row.top == 0 && (row.top = t)
-    setNodePosition(shape, row, row.left, width, height)
-    push!(row.nodes, text)
-
 end

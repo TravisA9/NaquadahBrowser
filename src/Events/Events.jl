@@ -93,7 +93,9 @@ Gtk.GdkEventKey(
                                 hover = node.DOM["hover"]
                                 if haskey(hover, "color")
                                     if haskey(node.DOM, "color")
-                                            node.shape.color = GetTheColor(node.shape, node.DOM["color"])
+                                           node.shape.color = GetTheColor(node.shape, node.DOM["color"])
+                                    else
+                                           node.shape.color = inheritColor(node.parent)
                                     end
                                 end
                         end

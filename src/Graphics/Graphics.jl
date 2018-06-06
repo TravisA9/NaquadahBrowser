@@ -1,5 +1,5 @@
  export getBorderBox, getContentBox, getMarginBox, getSize,
-        TotalShapeWidth, TotalShapeHeight,
+        TotalShapeWidth, getPackingWidth, TotalShapeHeight,
         DrawANode, InitializeRow, getReal
  #= The border is drawn on line X but since it has a thickness this must be taken into account!
  ┌──────────────────────────
@@ -65,7 +65,7 @@ end
 
 getSize(text::TextLine) = ( text.width, text.height )
 
-function getWidth(box) # should be getOutersWidth
+function getPackingWidth(box) # should be getOutersWidth
      border  = get(box.border,  Border(0,0,0,0,0,0, 0,[],[0,0,0,0]))
      margin  = get(box.margin,  BoxOutline(0,0,0,0,0,0))
      padding = get(box.padding,  BoxOutline(0,0,0,0,0,0))
@@ -105,4 +105,5 @@ end
 using Colors
 color_names = Colors.color_names
 include("GraphDraw.jl")
+include("GraphText.jl")
 include("GraphFlags.jl")

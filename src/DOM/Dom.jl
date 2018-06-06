@@ -21,8 +21,8 @@ function GetTheColor(shape, DOMColor)
                 if shape.flags[HasOpacity] && length(color) == 3
                     color = [color... , shape.opacity]
                     #push!(color, shape.opacity)
-                    println("opacity: ", typeof(color))
-                    println("opacity: ", color)
+                    # println("opacity: ", typeof(color))
+                    # println("opacity: ", color)
                 end
 
     return color

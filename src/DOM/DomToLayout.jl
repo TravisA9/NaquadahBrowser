@@ -1,5 +1,5 @@
 
-export AtributesToLayout, CopyDict
+export AtributesToLayout, CopyDict, DomToLayout
 # ordering these from most to least common should speed up testing!
 boxes = [ "div", "aside", "audio", "button", "canvas", "form", "header", "img",
           "input", "ul", "ol", "li", "menu", "menuitem", "progress", "textarea",
@@ -92,41 +92,13 @@ function CreateShape(form::String, node::Element, h, w)
     # end
 end
 # ======================================================================================
-function AtributesToLayout(document::Page, node, generative::Bool=true)
+#
+# ======================================================================================
+function DomToLayout(document::Page, node)
 
-    DOM = node.DOM
-    PageStyles = document.styles
-    h, w = document.height ,document.width
-
-    if haskey(DOM, ">")
-        tag = DOM[">"]
-
-        # Attach events:
-        # TODO: expound and move to separate function.
-        if haskey(DOM, "mousedown")
-            push!(document.eventsList.mousedown, node)
-        end
-
-        if haskey(DOM, "hover")
-            push!(document.eventsList.mouseover, node)
-            push!(document.eventsList.mouseout, node)
-        end
-        # Create actual node.
-        if generative
-            CreateShape(tag, node, h, w)
-        end
-
-        # Add user defined styles to node's DOM.
-        if haskey(DOM, "style")
-            style = DOM["style"]
-            CopyDict(DOM, PageStyles[style])
-        end
-
-        # Add default values generally associated with this tag
-        CopyDict(DOM, Tags_Default[tag])
-
-      #.........................................................................
-
+          DOM = node.DOM
+          PageStyles = document.styles
+          h, w = document.height ,document.width
 
       if haskey(DOM, "float")
           if DOM["float"] == "right"
@@ -189,7 +161,6 @@ function AtributesToLayout(document::Page, node, generative::Bool=true)
                 node.shape.flags[LinearGrad] = true
       end
       if haskey(DOM, "radial-gradient")
-                # node.shape. = GetTheColor(node, DOM["gradient"])
                 node.shape.flags[RadialGrad] = true
       end
       # This is for testing purposes!
@@ -414,9 +385,49 @@ if haskey(DOM, "border")
             #  = DOM["hover"]
 
      end
-end
-
-
 
 end # function
+
+# ======================================================================================
+#
+# ======================================================================================
+function AtributesToLayout(document::Page, node, generative::Bool=true)
+
+    DOM = node.DOM
+    PageStyles = document.styles
+    h, w = document.height ,document.width
+
+    if haskey(DOM, ">")
+        tag = DOM[">"]
+
+        # Attach events:
+        # TODO: expound and move to separate function.
+        if haskey(DOM, "mousedown")
+            push!(document.eventsList.mousedown, node)
+        end
+
+        if haskey(DOM, "hover")
+            push!(document.eventsList.mouseover, node)
+            push!(document.eventsList.mouseout, node)
+        end
+        # Create actual node.
+        if generative
+            CreateShape(tag, node, h, w)
+        end
+
+        # Add user defined styles to node's DOM.
+        if haskey(DOM, "style")
+            style = DOM["style"]
+            CopyDict(DOM, PageStyles[style])
+        end
+
+        # Add default values generally associated with this tag
+        CopyDict(DOM, Tags_Default[tag])
+        DomToLayout(document, node)
+    end
+end
+# ======================================================================================
+#
+# ======================================================================================
+
 # ======================================================================================

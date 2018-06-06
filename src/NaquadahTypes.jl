@@ -1,5 +1,5 @@
 
-export LastRow, Page, Scroller, Row, Element, Text, Page #Event,
+export getCreateLastRow, Page, Scroller, Row, Element, Text, Page #Event,
 
 begin
 
@@ -38,7 +38,7 @@ mutable struct Row
     end
 end
 # maybe rename: GetNewRow or something similar.
-function LastRow(rows::Vector{Row}, l, t, w)
+function getCreateLastRow(rows::Vector{Row}, l, t, w)
     if length(rows) < 1
         Row(rows, l, t, w)
     end

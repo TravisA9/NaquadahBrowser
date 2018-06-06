@@ -125,7 +125,7 @@ for oldnode in selectedNodes
          end
     end
     if !found
-        c = GetlastColor(oldnode.parent)
+        c = inheritColor(oldnode.parent)
 
         setcolor( ctx, c...)
         rectangle(ctx,  oldnode.shape.left-1, oldnode.shape.top-1, oldnode.shape.width+2, oldnode.shape.height+2 )
