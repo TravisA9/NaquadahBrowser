@@ -51,6 +51,9 @@ function FetchPage(win, URL::String, canvas::Gtk.GtkCanvas, wide)
         if haskey(pageContent, "body")
                 CreateControls(node,wide)
                 tab["nodes"][2]["text"] = document.head["title"]
+                plus = pop!(tabControls["nodes"][1]["nodes"]) # Take button off end.
+                push!(tabControls["nodes"][1]["nodes"], tab)  # Add new tab.
+                push!(tabControls["nodes"][1]["nodes"], plus) # put button back on.
                 # Page content
                 newPage["nodes"] = pageContent["body"] # add this way because it is an array!
                 push!(node.DOM["nodes"], newPage)
@@ -64,7 +67,7 @@ function FetchPage(win, URL::String, canvas::Gtk.GtkCanvas, wide)
         return document, node
 end
 # ======================================================================================
-function CreateControls(node,wide)
+function CreateControls(node, wide)
         # node.DOM[1] / tabControls / windowControls / tab
         # node.DOM[2] / navigation
         # node.DOM[3] / newPage
@@ -72,17 +75,17 @@ function CreateControls(node,wide)
         # Tabs
         node.DOM = Dict( ">" => "window", "width" => wide, "display" => "block", "padding" => [0,0,0,0], "nodes" => []	)
 
-            push!( button["nodes"], JuliaIcon)
-            push!( tabControls["nodes"], button)
+            #push!( button["nodes"], JuliaIcon)
+            #push!( tabControls["nodes"], button)
 
-            push!( tabControls["nodes"], tab)
-            push!( tabControls["nodes"], NewPageIcon)
+            #push!( tabControls["nodes"], tab)
+            #push!( tabControls["nodes"], NewPageIcon)
         push!(node.DOM["nodes"], tabControls)
 
         # Navagation
-            push!( navigation["nodes"], icons)
-            push!( navigation["nodes"], downloadIcon)
-            push!( navigation["nodes"], navBar)
+            #push!( navigation["nodes"], icons)
+            #push!( navigation["nodes"], downloadIcon)
+            #push!( navigation["nodes"], navBar)
         push!(node.DOM["nodes"], navigation)
 
 end

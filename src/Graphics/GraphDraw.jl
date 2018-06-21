@@ -1,4 +1,9 @@
-global PATH = pwd() * "/.julia/v0.6/NaquadahBrowser/src/SamplePages/BrowserImages/"
+if is_linux()
+    global PATH = pwd() * "/.julia/v0.6/NaquadahBrowser/src/SamplePages/BrowserImages/"
+elseif is_windows() # Do something windows-y here
+    global PATH = pwd() * "\\.julia\\v0.6\\NaquadahBrowser\\src\\SamplePages\\BrowserImages\\"
+end
+
 
 using Cairo, Gtk, Gtk.ShortNames
 
@@ -37,16 +42,7 @@ function DrawViewport(ctx::Cairo.CairoContext, document::Page, node::Element)
     DrawContent(ctx, document, document.fixed)
 end
 # ======================================================================================
-"""
-## DrawContent(ctx, document, node, clipPath=nothing)
-
-This takes a node and draws it along with all its children.
-
-# Examples
-```julia-repl
-```
-[Source](https://github.com/TravisA9/NaquadahBrowser/blob/39c41cbb1ac28fe94876fe01beaa6e046c8b63d3/src/Graphics/GraphDraw.jl#L54)
-"""
+# This takes a node and draws it along with all its children.
 # ======================================================================================
 # PROBLEM: This draws the children of a given node and not nesesarily the node itself.
 #          At times, though, we don't want to draw all the children of a node but

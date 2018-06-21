@@ -1,4 +1,13 @@
 using Gtk, Gtk.ShortNames, Cairo   # Colors
+
+if is_linux()
+    defaultPage = "file:///.julia/v0.6/NaquadahBrowser/src/SamplePages/test.json"
+    global PATH = pwd() * "/.julia/v0.6/NaquadahBrowser/src/SamplePages/"
+elseif is_windows() # Do something windows-y here...
+    defaultPage = "file:///.julia\\v0.6\\NaquadahBrowser\\src\\SamplePages\\test.json"
+    global PATH = pwd() * "\\.julia\\v0.6\\NaquadahBrowser\\src\\SamplePages\\"
+end
+
 # ==============================================================================
 module NaquadahCore
                         include("Graphics/GraphTypes.jl")
@@ -17,30 +26,14 @@ end
 
 
 using NaquadahCore
-# LOAD_PATH, Base.LOAD_CACHE_PATH, @__FILE__, @__DIR__
-defaultPage = "file:///.julia/v0.6/NaquadahBrowser/src/SamplePages/test.json"
-global PATH = pwd() * "/.julia/v0.6/NaquadahBrowser/src/SamplePages/"
 # ======================================================================================
-# """
-# ## Win()
-# Create a window
-# ```julia-repl
-# mutable struct Win
-#     window::Any #Gtk.GtkWindowLeafGtk.GtkCanvas
-#     canvas::Any #Gtk.GtkCanvas
-#     controls::Element # Array{Element,1}
-#     documents::Array{Page,1}
-#     document::Page
-# end
-# ```
-# [Source](https://github.com/TravisA9/NaquadahBrowser/blob/39c41cbb1ac28fe94876fe01beaa6e046c8b63d3/src/NaquadahCore.jl#L46)
-# """
+# Win()  Create a window
 # ======================================================================================
-mutable struct Win
+struct Win
     window::Any #Gtk.GtkWindowLeafGtk.GtkCanvas
     canvas::Any #Gtk.GtkCanvas
     controls::Element # Array{Element,1}
-    documents::Array{Page,1}
+    documents::Vector{Page}
     document::Page
     function Win()
         c = Canvas();
@@ -56,13 +49,7 @@ mutable struct Win
     end
 end
 # ======================================================================================
-# """
-# ## DrawANode(document::Page)
-#
 # This is where drawing starts after a page is fetched.
-#
-# [Source](https://github.com/TravisA9/NaquadahBrowser/blob/39c41cbb1ac28fe94876fe01beaa6e046c8b63d3/src/NaquadahCore.jl#L73)
-# """
 # ======================================================================================
 function DrawANode(document::Page)
     c = document.canvas
@@ -94,6 +81,9 @@ function DrawANode(document::Page)
     show(c);
 end
 # ======================================================================================
+function kill()
+    win = nothing;
+end
 
 function main()
     win = Win(); # Win(controls)
