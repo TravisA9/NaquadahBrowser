@@ -66,27 +66,25 @@ end
 # ======================================================================================
 function DrawANode(document::Page)
     c = document.canvas
+    node = document.children[1] #.children[2]
+    page = node.children[3]
 
-
+        #  This is efectively the resize event.
            @guarded draw(c) do widget
-               node = document.children[1] #.children[2]
-               page = node.children[3]
 
                 ScrollY = 0.0
                 ctx = getgc(c)
                 document.height::Float64   = height(c)
-                document.width::Float64   = width(c)
+                document.width::Float64    = width(c)
 
                 if page.scroll.y < 0 # Don't scroll above zero/top
                     ScrollY = page.scroll.y
-
                     page.scroll.y = 0.0
-
                     VmoveAllChildren(page, abs(ScrollY), false) # FROM: LayoutBuild.jl
                 end
 
                 setUpWindow(document, document.width, document.height)    # FROM: LayoutBuild.jl
-                AtributesToLayout(document, node)     # FROM: DomToLayout.jl
+                allAtributesToLayout(document, node)
                 AttatchEvents(document, c)            # FROM: Events.jl
                 CreateLayoutTree(document, node)      # FROM: LayoutBegin.jl
                 page.scroll.y = ScrollY

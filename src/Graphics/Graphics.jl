@@ -1,14 +1,14 @@
- export getBorderBox, getContentBox, getMarginBox, getSize,
-        TotalShapeWidth, getPackingWidth, TotalShapeHeight,
-        DrawANode, InitializeRow, getReal
+
  #= The border is drawn on line X but since it has a thickness this must be taken into account!
  ┌──────────────────────────
- │  border------------------ <──────────────────────────┐
- │  ;  ┌─────────────────────                           │
- │  ;  │  padding             }──────────────┐          │
- │  ;  │    ┌───────────┐ <──────── top - padding - (border *.5)
- │  ;  │    │  content  │
- │  ;  │    └───────────┘
+ |  margin
+ |    ┌──────────────────────────
+ |    │  border------------------ <──────────────────────────┐
+ |    │  :  ┌─────────────────────                           │
+ |    │  :  │  padding             }──────────────┐          │
+ |    │  :  │    ┌───────────┐ <──────── top - padding - (border * 0.5)
+ |    │  :  │    │  content  │
+ |    │  :  │    └───────────┘
 
  left, top, right, bottom = content-area
  ...padding, border and margin are added to that!
@@ -25,6 +25,15 @@
  └───────────────────────────────┘
 
                                                                               =#
+
+export setDistanceFromBounds, getBorderBox, getContentBox, getMarginBox, getSize,
+       TotalShapeWidth, getPackingWidth, TotalShapeHeight,
+       DrawANode, InitializeRow, getReal
+# ==============================================================================
+function setDistanceFromBounds(l,t,w,h,  shape )
+    shape.flags[Bottom] ? (shape.top = t+h - (shape.height+shape.top)) : (shape.top = t+shape.top)
+    shape.flags[Right] ? (shape.left = l+w - (shape.width+shape.left)) : (shape.left = l+shape.left)
+end
 # ==============================================================================
 function getReal(box::Draw)
      return (  get(box.padding, BoxOutline(0,0,0,0,0,0)),
@@ -48,7 +57,9 @@ getContentBox(box) = ( box.left, box.top, box.width, box.height )
 contentOffset(padding::BoxOutline, border::Border, margin::BoxOutline) =
    (padding.left + border.left + margin.left) , (padding.top + border.top + margin.top)
 
-function contentOffset(shape)
+contentOffset(shape::TextLine) = (0,0)
+
+function contentOffset(shape::Draw)
     padding = get(shape.padding, BoxOutline(0,0,0,0,0,0))
     border = get(shape.border,  Border(0,0,0,0,0,0, 0,[],[0,0,0,0]))
     margin = get(shape.margin,  BoxOutline(0,0,0,0,0,0))

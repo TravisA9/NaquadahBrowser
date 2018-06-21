@@ -5,17 +5,6 @@
 export  splotch, ScrollEvent, # not sure all this needs exported (?)
         DragEvent, MouseDownEvent, ClickEvent #, Event,
 
-
-"""
-##
-
-...
-
-# Examples
-```julia-repl
-```
-[Source](https://github.com/TravisA9/NaquadahBrowser/blob/39c41cbb1ac28fe94876fe01beaa6e046c8b63d3/src/DOM/DomTree.jl#L54)
-"""
 # ======================================================================================
 #
 # ======================================================================================
@@ -187,7 +176,6 @@ function MouseDownEvent(document, widget, event)
 end
 #setAttribute(node, "color", "red")
 #AtributesToLayout(document, node, false)
-
 # ======================================================================================
 
 # ======================================================================================
@@ -199,8 +187,33 @@ end
 #
 # ======================================================================================
 function ClickEvent(document, widget, event)
-    splotch(widget, event,1.0,0.0,0.0)
+    clicked = document.eventsList.click
+    splotch(widget, event, 1.0,0.0,0.0)
     document.event.pressed = []
+    for node in clicked
+        if onArea(event.x, event.y, node.shape ) && insideParentClip( event.x, event.y, node)
+            if haskey(node.DOM, "click")
+                click = node.DOM["click"]
+                if haskey(click, "code")
+
+                     # variable = "Hello dude!"
+                     # # ex = :(:($variable), :(parse(click["code"])))
+                     # ex = :(f($variable) = begin  # none, line 1:
+                     #        :(parse(click["code"]))
+                     #    end)
+
+                    # @eval begin
+                    #     $variable
+                    #     $str
+                    # end
+                    eval(parse(click["code"]))
+                end
+            end
+            #"click":{"code":"println(\"This is some code!\")", "preventDefault":true}
+
+        end
+    end
+
 end
 # ======================================================================================
 #
@@ -216,11 +229,19 @@ function ScrollEvent(document, widget, event)
   ctx = getgc(widget)
   node = document.children[1].children[3] # TODO: fix! ..test to see if mouse is over object.
 
-  Unit = 50.0
+  Unit = 70.0
 
   # I am scrolling(jumping) by 30px here but Opera scrolls by about 50px
   # Opera lacks smoothness too but it seems to transition-scroll by the 50px
   # ...so using the mouse wheel it is impossible to move less than that increment.
+  function drawTwice()
+      setcolor(ctx, node.shape.color...)
+      rectangle(ctx,  node.shape.left,  node.shape.top, node.shape.width,  node.shape.height )
+      fill(ctx);
+
+      DrawViewport(ctx, document, node)
+      reveal(widget)
+  end
 
   # SCROLL UP!
   if event.direction == 0 && node.scroll.y < node.shape.top # was: 0
@@ -228,26 +249,43 @@ function ScrollEvent(document, widget, event)
     if diff < Unit
       Unit = diff
     end
-      node.scroll.y += Unit
-      VmoveAllChildren(node, Unit, false)
+    node.scroll.y += (Unit*.5)
+    VmoveAllChildren(node, (Unit*.5), false)
+    drawTwice()
+    node.scroll.y += (Unit*.5)
+    VmoveAllChildren(node, (Unit*.5), false)
+    drawTwice()
     # SCROLL DOWN!
 elseif event.direction == 1 && (node.scroll.contentHeight + node.scroll.y + node.shape.top) > node.shape.height
       diff = (node.scroll.contentHeight + node.scroll.y + node.shape.top) - node.shape.height
       if diff < Unit
         Unit = diff
       end
-       node.scroll.y -= Unit
-          VmoveAllChildren(node, -Unit, false) # -30
+      node.scroll.y -= (Unit*.5)
+      VmoveAllChildren(node, -(Unit*.5), false) # -30
+      drawTwice()
+      node.scroll.y -= (Unit*.5)
+      VmoveAllChildren(node, -(Unit*.5), false) # -30
+      drawTwice()
   end
 
-  #set_source_rgb(ctx, 1,1,1)
-  setcolor( ctx, node.shape.color...)
-  rectangle(ctx,  node.shape.left,  node.shape.top, node.shape.width,  node.shape.height )
-  fill(ctx);
+  # #set_source_rgb(ctx, 1,1,1)
+  # setcolor( ctx, node.shape.color...)
+  # rectangle(ctx,  node.shape.left,  node.shape.top, node.shape.width,  node.shape.height )
+  # fill(ctx);
+  #
+  # DrawViewport(ctx, document, node)
+  # reveal(widget)
 
-  DrawViewport(ctx, document, node)
-  reveal(widget)
+end
 
+function drawTwice()
+    setcolor( ctx, node.shape.color...)
+    rectangle(ctx,  node.shape.left,  node.shape.top, node.shape.width,  node.shape.height )
+    fill(ctx);
+
+    DrawViewport(ctx, document, node)
+    reveal(widget)
 end
 # ======================================================================================
 # Draw a splotch

@@ -1,5 +1,5 @@
 
-export AtributesToLayout, CopyDict, DomToLayout
+export allAtributesToLayout, AtributesToLayout, CopyDict, DomToLayout
 # ordering these from most to least common should speed up testing!
 boxes = [ "div", "aside", "audio", "button", "canvas", "form", "header", "img",
           "input", "ul", "ol", "li", "menu", "menuitem", "progress", "textarea",
@@ -25,16 +25,20 @@ function isAny(key::String, strings::Array{String})
      return nothing
 end
 # ======================================================================================
-"""
-## CopyDict(primary::Dict, secondary::Dict)
+#
+# ======================================================================================
+function allAtributesToLayout(document::Page, parent)
+    isa(parent.shape, TextLine) && return # TODO: may be able to make this part of multiple dispatch later
 
-Copy an entire nested dictionary to another giving preference to values of "primary"
-
-# Examples
-```julia-repl
-```
-[Source](https://github.com/TravisA9/NaquadahBrowser/blob/39c41cbb1ac28fe94876fe01beaa6e046c8b63d3/src/DOM/DomToLayout.jl#L45)
-"""
+    parent.rows  = []  # Clean out old data (?)
+        for child in parent.children
+                child.parent = parent # attach to parent
+                AtributesToLayout(document, child) # Create Child's DOM (DomToLayout.jl)
+                allAtributesToLayout(document, child) # Create child's children
+        end
+end
+# ======================================================================================
+# Copy an entire nested dictionary to another giving preference to values of "primary"
 # ======================================================================================
 function CopyDict(primary::Dict, secondary::Dict)
    allKeys = union([key for key in keys(primary)],[key for key in keys(secondary)])
@@ -84,6 +88,11 @@ function CreateShape(form::String, node::Element, h, w)
                 textnode = Text()
                 textnode.shape = TextLine(node, node.DOM["text"])
                 push!(node.children, textnode)
+                # TODO: set text width as a default
+                # something like this:
+                    # ctx = CairoContext( CairoRGBSurface(0,0) )
+                    # setTextContext(ctx, node)
+                    # text_extents(ctx, node.shape.text )[3]
         end
     end
     # if  isAny(form, text) !== nothing # Any from the list
@@ -405,7 +414,9 @@ function AtributesToLayout(document::Page, node, generative::Bool=true)
         if haskey(DOM, "mousedown")
             push!(document.eventsList.mousedown, node)
         end
-
+        if haskey(DOM, "click")
+            push!(document.eventsList.click, node)
+        end
         if haskey(DOM, "hover")
             push!(document.eventsList.mouseover, node)
             push!(document.eventsList.mouseout, node)

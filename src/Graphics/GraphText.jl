@@ -1,4 +1,4 @@
-export    DrawText, DrawSelectedText, setTextContext, PushToRow, fontSlant, fontWeight
+export    textWidth, DrawText, DrawSelectedText, setTextContext, PushToRow, fontSlant, fontWeight
 #======================================================================================#
 #
 #======================================================================================#
@@ -28,134 +28,74 @@ function setTextContext(ctx::CairoContext, node::Text)
     select_font_face(ctx, font.family, slant, weight);
     set_font_size(ctx, font.size);
 end
-
+#======================================================================================#
+function TextWidth(node::Text)
+    ctx = CairoContext( CairoRGBSurface(0,0) )
+    setTextContext(ctx, node)
+    return text_extents(ctx, node.shape.text )[3]
+end
 #======================================================================================#
 # TODO: simplify / clean up
 # Called from: LayoutBegin.jl ~30
 # PushToRow(document, node, l,t,w)
+# l,t,w   define the content area of the parent
 ##======================================================================================#
 function PushToRow(document::Page, node::Text, l::Float64, t::Float64, wide::Float64)
-    parent = node.parent # This would be like say a 'p' element
-    font = parent.font
+    #set up all variables...
     text = node.shape.text # Entire unbroken string
-    flags = parent.shape.flags
     ctx = CairoContext( CairoRGBSurface(0,0) )
     setTextContext(ctx, node)
-    totalWidth = text_extents(ctx, text )[3]
+    fontheight = text_extents(ctx, text )[4]
+    # clean out old text.
+    node.parent.rows = []
 
-      # force/empty this for now to avoid reinserting text copies.
-      # Later this will have to be changed.
-
-      if parent.shape.width < 1 && flags[DisplayInlineBlock]
-          wide = parent.parent.rows[end].space #- getPackingWidth(parent.shape)
-          #parent.shape.width = wide
-      end
-
-
-      parent.rows = []
-
-
-      # when we want to add text to a row that already has content
-      rows = parent.rows
-      if length(rows) == 0 # no row!
-          Row(rows, l, t, wide)
-      end
-      row = rows[end]
-      if length(row.nodes) > 0 # Already has nodes!
-          lineWidth = row.space
-          lineLeft = row.left
-          isPartRow = true
-      else
-          lineWidth = wide
-          lineLeft = l
-          isPartRow = false
-      end
-      # DisplayInlineBlock, DisplayInline
-     # if parent.shape.width < 1 && (flags[DisplayInlineBlock] || flags[DisplayInline])
-     #     wide = parent.parent.rows[end].space #- getPackingWidth(parent.shape)
-     #     parent.shape.width = wide
-     #     # if flags[DisplayInline] && totalWidth < wide
-     #     #     #wide = totalWidth
-     #     #     parent.shape.width = totalWidth
-     #     #     node.shape.width = totalWidth
-     #     # end
-     #     # if flags[DisplayInline] && (totalWidth + getPackingWidth(parent.shape)) < wide
-     #     #     node.shape.width = totalWidth
-     #     # end
-     #
-     # end
-      if flags[Marked] && flags[DisplayInline]
-          println("DOM: ", parent.DOM[">"])
-          println("parent.parent.rows[end].space: ", parent.parent.rows[end].space)
-          #println("parent.rows[1].space: ", parent.rows[1].space)
-          println("parent.shape.width: ", parent.shape.width)
-          println("node.shape.width: ", node.shape.width)
-          println("totalWidth: ", totalWidth)
-          #println("parent.parent width: ", parent.parent.rows.space)
-      end
-
-     # set up some variables to get started
-     lines = []
-     lastLine = "" #lineTop = t + shape.size # Because text is drawn above the line!
-     words = split(text, r"(?<=.)(?=[\s])") # split(shape.text) # TODO: this needs improved!
-     line = words[1]
-     firstWordWidth = text_extents(ctx, line )[3] #
-     fontheight = text_extents(ctx, line )[4]
-     if firstWordWidth > lineWidth
-         Row(rows,  l,  FinalizeRow(row),  wide)
-     end
-
-    for w in 2:length(words)
-        lastLine = line
-        line = lastLine * words[w]
-        extetents = text_extents(ctx,line )
-        # long enough ...cut!
-        if extetents[3] >= lineWidth
-            lastLine = split(lastLine, r"^[\s]+")[end]
-
-            textWidth = text_extents(ctx, lastLine )[3]
-            # font = re ference ...which should eventually/soon be removed!
-            textLine = TextLine(parent, lastLine, lineLeft, 0, textWidth, font.lineHeight*fontheight)
-            textNode = Text(parent, textLine)
-            pushText(document, parent, textNode, l, t, wide)
-            line = words[w]
-            # reset default values
-            if isPartRow
-                lineWidth = wide
-                lineLeft = l
-                isPartRow = false
-            end
-        end
-
+    function textToNode(line, textWidth)
+        parent = node.parent # This would be like say a 'p' element
+        textLine = TextLine(parent, line, l, t, textWidth, parent.font.lineHeight*fontheight)
+        textNode = Text(parent, textLine)
+        flags = getFlags(parent)
+        feedRow(parent, textNode)
     end
-    # Make sure we flush out the last row!
-    line = split(line, r"^[\s]+")[end]
 
-    textWidth = text_extents(ctx,line )[3]
-    textLine = TextLine(parent, line, lineLeft, 0, textWidth, font.lineHeight*fontheight)
-    textNode = Text(parent, textLine)
-    pushText(document, parent, textNode, l, t, wide) #    pushText(document, parent, Text(textLine), l, t, wide)
+
+     # TODO: make faster.
+     breaks = vcat([ i.match.offset+1 for i in eachmatch(r" ", text)], length(text))
+     lastbreak = 1
+     lineWidth = wide
+     if length(breaks) > 1
+         for i in 2:length(breaks)
+             extetents = text_extents(ctx, text[lastbreak:breaks[i]])
+             if extetents[3] >= lineWidth # Too long ...cut!
+                 brk = breaks[i-1]
+                 line = text[lastbreak:brk]
+                 textToNode(line, text_extents(ctx, line)[3])
+                 lastbreak = brk
+                 lineWidth = wide
+             end
+         end
+     end
+     line = text[lastbreak:length(text)]
+     textToNode(line, text_extents(ctx,line )[3])
 end
 #======================================================================================#
 # TODO: simplify / clean up
 ##
 #======================================================================================#
-function pushText(document::Page, node::Element, text::Text, l::Float64,t::Float64,w::Float64) # height not needed
-
-    shape = text.shape
-    width, height = getSize(shape)
-    rows = node.rows
-    row = getCreateLastRow(rows, l, t, w)
-
-    if row.space < width
-        row = Row(rows, l, FinalizeRow(row), w)
-    end
-
-    row.top == 0 && (row.top = t)
-    setNodePosition(shape, row, row.left, width, height) # in LayoutBuild.jl
-    push!(row.nodes, text)
-
-end
+# function getTextFor(ctx, maxLength, start, text)
+#     while
+#
+#
+#     for i in 2:length(breaks)
+#         extetents = text_extents(ctx, text[lastbreak:breaks[i]])
+#         if extetents[3] >= lineWidth # Too long ...cut!
+#             brk = breaks[i-1]
+#             line = text[lastbreak:brk]
+#             textToNode(line, text_extents(ctx, line)[3])
+#             lastbreak = brk
+#             lineWidth = wide
+#         end
+#     end
+# end
 # ======================================================================================
 #
 # ======================================================================================
@@ -249,22 +189,27 @@ end
 function DrawText(ctx::CairoContext, node, clipPath)
     font = node.parent.font
     shape = node.shape
-    #println(font.color)
     left = node.shape.left
     set_antialias(ctx,6)
     slant  = fontSlant(font)
     weight = fontWeight(font)
     select_font_face(ctx, font.family, slant, weight);
     set_font_size(ctx, font.size);
+    text = shape.text
+
+# Trim leading space because it causes text to be offset.
+if text[1] == ' '
+    text = text[2:end]
+end
 
     if !font.flags[TextPath]
         move_to(ctx, shape.left, shape.top + font.size);
         setcolor(ctx, font.color...)
-        show_text(ctx, shape.text);
+        show_text(ctx, text);
 
     else  # shaddow
           move_to(ctx, shape.left+4, shape.top + font.size+4);
-          text_path(ctx, shape.text);
+          text_path(ctx, text);
           setcolor(ctx,  0,0,0,0.4) # fill color
           fill_preserve(ctx);
           setcolor(ctx,  0,0,0,0.1) # outline color
@@ -272,7 +217,7 @@ function DrawText(ctx::CairoContext, node, clipPath)
           stroke(ctx);
 
           move_to(ctx, shape.left+4, shape.top + font.size+4);
-          text_path(ctx, shape.text);
+          text_path(ctx, text);
           setcolor(ctx,  0,0,0,0.2) # fill color
           fill_preserve(ctx);
           setcolor(ctx,  0,0,0,0.1) # outline color
@@ -280,7 +225,7 @@ function DrawText(ctx::CairoContext, node, clipPath)
           stroke(ctx);
 
           move_to(ctx, shape.left, shape.top + font.size);
-          text_path(ctx, shape.text);
+          text_path(ctx, text);
           setcolor(ctx, font.fill...) # fill color
           fill_preserve(ctx);
           setcolor(ctx, font.color...) # outline color

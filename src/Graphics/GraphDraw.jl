@@ -20,19 +20,6 @@ function inheritFont(node)
     end
     return node.font
 end
-
-#          include("Events.jl")
-#          include("GraphFlags.jl")
-#          include("LayoutBuild.jl")
-
-# dashes_by_name = [  "solid", "dot", "dotdashed", "longdashed", "dash", "dotdotdashed", "dotdotdotdashed"   ]
-# ======================================================================================
-# As I aquire a better understanding of how Cairo works, no doubt, this file will change
-# drastically!
-# ======================================================================================
-
-
-
 # ======================================================================================
 # Accept color values with or without alpha
 # ======================================================================================
@@ -106,10 +93,12 @@ function drawNode(ctx, document, row, shape, node, clipPath)
                  DrawShape(ctx, node, shape, clipPath)
                  DrawContent(ctx, document, node, clipPath)     # Now draw children
              end
+             # Draw box to be able to visualize text's area
              # if isa(node, Text)
              #     s = node.parent.shape
              #     setcolor(ctx, .3,.3,.3)
-             #     rectangle(ctx, s.left,s.top,s.width+3,s.height+3 )
+             #     set_line_width(ctx, 1)
+             #     rectangle(ctx, s.left,s.top,s.width,s.height )
              #     stroke(ctx);
              # end
 end

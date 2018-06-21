@@ -42,52 +42,9 @@ function FinalizeRow(row::Row)
         return 0 # maybe this should return row.y (!?!)
     end
 
-  shiftAll = 0.0
-  #..........................................
-  # vertical/hirizintal shift
-  #..........................................
-      X = 0.0
-    for i in 1:length(row.nodes)
-        node = row.nodes[i]
-        shape = node.shape #.re ference
-        Y = 0
-
-        flags = getFlags(node) #node.parent.font.flags
 
 
-        if !flags[Absolute]
-
-            # set row height: this may need changed to take  into account
-            if !isa(shape, TextLine)
-                width, height = getSize(shape)
-                if height > row.height
-                    row.height = height
-                end
-            end
-
-
-                if flags[TextCenter]
-                    X = row.space * .5
-                elseif flags[TextRight]
-                    X = row.space
-                    row.space = 0
-                end
-
-                if flags[AlignBase]
-                    Y = (row.height - shape.height)
-                end
-                # if !parent.shape.flags[FixedHeight]
-                #     parent.shape.height = parent.scroll.contentHeight
-                # end
-
-                if flags[AlignMiddle]  &&  row.height > shape.height
-                    Y::Float64 = (row.height - shape.height) *.5
-                end
-
-              MoveAll(row.nodes[i], X,Y)
-          end
-      end
-
+    vertHorizDisplacement(row)
     #..........................................
     # float LEFT: MoveNodeToLeft(row, index)
     #..........................................
@@ -118,52 +75,82 @@ function FinalizeRow(row::Row)
             wide,high = getSize(row.nodes[end].shape)
             n.shape.left = row.nodes[end].shape.left + wide + row.space
         end
-    end
 
+end # for loop
     # Mark row as finalized!
     row.flags[RowFinalized] = true
-
     return row.top + row.height
 end
 # ======================================================================================
-# Types exported from Graphics
+#
 # ======================================================================================
-# From: CreateLayoutTree in LayoutBegin.jl
+function vertHorizDisplacement(row::Row)
+    shiftAll = 0.0
+    #..........................................
+    # vertical/hirizintal shift
+    #..........................................
+        X = 0.0
+  for i in 1:length(row.nodes)
+      node = row.nodes[i]
+      flags = getFlags(node) #node.parent.font.flags
+      if !flags[Absolute]   # flags[Absolute] && return row.top + row.height
+              shape = node.shape #.re ference
+              Y = 0
+              # set row height: this may need changed to take into account
+              if !isa(shape, TextLine)
+                  width, height = getSize(shape)
+                  if height > row.height
+                      row.height = height
+                  end
+              end
+
+              if flags[TextCenter]
+                      X = row.space * .5
+              elseif flags[TextRight]
+                      X = row.space
+                      row.space = 0
+              end
+
+              if flags[AlignBase]
+                  Y = (row.height - shape.height)
+              end
+                  # if !parent.shape.flags[FixedHeight]
+                  #     parent.shape.height = parent.scroll.contentHeight
+                  # end
+
+              if flags[AlignMiddle]  &&  row.height > shape.height
+                      Y::Float64 = (row.height - shape.height) *.5
+              end
+
+              MoveAll(row.nodes[i], X,Y)
+      end # ! Absolute
+  end
+end
 # ======================================================================================
+# function rowSpaceToWidth(row, shape, width::Float64)
+#     shape.width = width
+#     row.space -= width
+# end
+# rowSpaceToWidth(row, shape) = rowSpaceToWidth(row, shape, row.space)
+
 function PushToRow(document::Page, node, l::Float64,t::Float64,w::Float64) # height not needed
     parent = node.parent
     shape = node.shape
     width, height = getSize(shape)
-    rows = parent.rows
-    row = getCreateLastRow(rows, l, t, w) # return the last row (creatig one if nesesary).
+    #rows = parent.rows
+    row = getCreateLastRow(parent.rows, l, t, w) # return the last row (creatig one if nesesary).
     flags = node.shape.flags
 
-    if row.space < 0
-        println("ALERT: row.space < 0! ", row.space)
-    end
     # Fixed /////////////////////////////////////////////////////
     # push to document instead of current parent! Fixed nodes' positions are
     # measured relative to the viewport, not any specific node.
     # TODO: I think Fixed nodes should be left in the tree where they belong but
     #       the document width and height should be fixed first (...not being updated).
     if flags[Fixed]
-        rows = document.fixed.rows
-        row = getCreateLastRow(rows, l, t, w)
-                  canvas = document.canvas
-                  if flags[Bottom]
-                          h = document.height # height(canvas)
-                          shape.top =  h - (shape.top + height)
-                  else
-                          shape.top =  h + shape.top
-                  end
-                  if flags[Right]
-                          w = document.width # width(canvas)
-                          shape.left =  w - (shape.left + width)
-                  else
-                          shape.left =  w + shape.left
-                  end
-                    push!(row.nodes, node)
-                    return
+        row = getCreateLastRow(document.fixed.rows, l, t, w) # Not redundant: (attached to doc).
+        setDistanceFromBounds(0,0,document.width, document.height,  shape )
+        push!(row.nodes, node)
+        return
     end
     # Absolute /////////////////////////////////////////////////////
     # The only way to set an Absolute position is to wait until
@@ -174,56 +161,36 @@ function PushToRow(document::Page, node, l::Float64,t::Float64,w::Float64) # hei
     end
      # Inline /////////////////////////////////////////////////////
     if flags[DisplayInline]
-        println("LayoutBuild 174 row.space: ", row.space)
-         shape.width = row.space
+        if flags[Marked]
+            println("node.shape.width: ", node.shape.width)
+            println("typeof(node.shape): ", typeof(node.shape))
+            println("node.parent.shape.width: ", node.parent.shape.width)
+        end
+        shape.width = row.space
     end
     # InlineBlock /////////////////////////////////////////////////////
     if flags[DisplayInlineBlock] && shape.width < 1
-               w = parent.rows[end].width
-               shape.width = w
-               
-               if parent.shape.width < 1 && flags[DisplayInlineBlock]
-                   wide = parent.parent.rows[end].space #- getPackingWidth(parent.shape)
-                   #parent.shape.width = wide
-               end
+        shape.width = parent.rows[end].space # parent.rows[end].width
     end
     # Block /////////////////////////////////////////////////////
     if flags[DisplayBlock]
-            length(row.nodes) > 0    &&    (row = Row(rows, l, FinalizeRow(row), w))
-            shape.width < 1    &&    (shape.width = w - getPackingWidth(shape)) #- getWidth(shape) #(border.width + padding.width + margin.width)
-            row.space = 0 # Make sure nothing else gets put on this row.
-    else # not enough space.. new row!
-        row.space < width    &&    (row = Row(rows, l, FinalizeRow(row), w))
+        if length(row.nodes) > 0
+            row = Row(parent)  #row = Row(rows, l, FinalizeRow(row), w)
+        end
+        shape.width < 1    &&    (shape.width = w - getPackingWidth(shape)) #- getWidth(shape) #(border.width + padding.width + margin.width)
+        row.space = 0 # Make sure nothing else gets put on this row.
+    elseif row.space < shape.width  # not enough space.. new row!
+        row = Row(parent) # row = Row(rows, l, FinalizeRow(row), w)
     end
 
-    #row.height < height && (row.height = height)
-    row.top == 0 && (row.top = t)
-    push!(row.nodes, node)
-    setNodePosition(shape, row, row.left, width, height)
+    feedRow(parent, node)
+end
+#======================================================================================#
+#
+#======================================================================================#
 
-end
 #======================================================================================#
-# Types exported from Graphics
+#
 #======================================================================================#
-function setNodePosition(shape::Draw, row::Row, x::Float64, width::Float64, height::Float64=0.0)
-    if !isa(shape, TextLine)
-        OffsetX, OffsetY = contentOffset( shape )
-        shape.top = row.top + OffsetY
-        shape.left = x + OffsetX
-    else
-        shape.top = row.top
-        shape.left = x
-    end
-        row.space -= width
-        row.left += width
-        row.height < height && (row.height = height)
-end
+
 #======================================================================================#
-## Types exported from Graphics
-#======================================================================================#
-function LineBreak(node::Element) # .rows, parentArea
-    row = node.rows[end]
-    box = getContentBox(node.shape, getReal(node.shape)... )
-    l, t, w, h = box
-    return row = Row(rows, l, FinalizeRow(row), w)
-end

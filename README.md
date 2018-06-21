@@ -4,15 +4,18 @@
 
 #### What is Naquadah?
 
-**Short answer**: A browser and _layout engine_ that consumes **Json** instead of **HTML/css**
+**Short answer**: A browser and _layout engine_ that consumes **Json** instead of **HTML/CSS**
+
+Take a look:
+![window](doc/figures/NaquadahMay2018.gif)
+![window](doc/figures/Naquadah_June_2017.png)
+
+**Long[er] answer**: Although, Naquadah looks and functions much like a standard web browser, you will find that there are a few interesting differences. Like a normal browser, Naquadah principally consists of a **layout engine** and a **render engine** built from the ground up. So it is not a repackaging of some browser engine such as webkit. For convenience, it includes a basic GUI as well.
 
 * Naquadah currently uses **Cairo** for graphics and **GTK** for the GUI.
 
-* Written in **julia** language as a test of its usability as a general purpose programming language. Currently tested in julia v0.6
+* Written in **julia** language as a test of its usability as a general purpose programming language. Currently tested in julia v0.6.x
 
-![window](doc/figures/NaquadahMay2018.gif)
-![window](doc/figures/Naquadah_Nov_2017.png)
-**Long answer**: Although, Naquadah looks and functions like a browser, there are a few differences. Naquadah principally consists of a **layout engine** and a **rendering engine** built from the ground up. For convenience, it includes a basic GUI as well.
 
  It is being developed for fun and for the purpose of displaying my work but if it proves to be useful, that would be great too.
 
@@ -20,25 +23,26 @@
 
 | Feature :construction_worker:|  State of development |
 | :--- |  :--- |
-|  :white_check_mark: Tags |  div, p, circle, page |
+|  :white_check_mark: Tags |  div, p, h1-h6, hr, a, pre, circle, page (and more)|
 |  :white_check_mark: Styles |  color, opacity, gradients, size, display, position, border, radius, padding, margin, font, alignment and more! |
-|  :white_check_mark: Classes |  Not yet finished |
+|  :white_check_mark: Classes |  working (as a bonus: can be used as templates) |
 | Floats :soon: |  Left is working but I need to finish Right \(I think\) |
 |  :white_check_mark: Display |  inline, inline-block, block, none |
 |  :white_check_mark: Position |  fixed, absolute, relative |
 |  :white_check_mark: Box-Modal |  content, padding, border, margin |
-|  :white_check_mark: Colors |  Any color with or without opacity |
-| Events :soon: | Mostly working:  |
+|  :white_check_mark: Colors |  Any color (with or without opacity) |
+| Events :soon: | Working  |
+| :rocket: julia :rocket: | Web browsers usually execute JavaScript. This browser executes julia |
 |  :white_check_mark: Clipping |  Mostly set up and working. |
-| Text selection and highlighting :soon: |  Not yet started |
+| Text selection and highlighting :soon: |  Going well |
 |  :white_check_mark: Gradients |  Mostly working |
-|  :white_check_mark: Border Radius |  Working fine |
+|  :white_check_mark: Border Radius |  Working |
 | Overflow :interrobang: |  Don't remember |
-| Links :heavy_exclamation_mark: |  Not yet finished |
-| Shadow DOM :soon: |  Scrollbars, window controls |
+| Links :heavy_exclamation_mark: |  Nearly finished |
+| Shadow DOM :soon: |  Scrollbars (partially working), window controls |
 | Transforms/Transitions/Animations :heavy_exclamation_mark: |  Not yet started |
 | Shadows :soon: |  Temporary hack for text/basically not yet begun |
-|  :white_check_mark: Backgrounds |  color, radial-gradient, linear-gradient, image \(most all with optional opacity\) |
+|  :white_check_mark: Backgrounds |  color, radial-gradient, linear-gradient, image \(with optional opacity\) |
 | Columns :heavy_exclamation_mark: |  Not yet started |
 | Media queries :heavy_exclamation_mark: |  Not yet started |
 | Selectors \(.\),   \#,   \[\],   $=,   \*=,   &gt;  :heavy_exclamation_mark: |  Not yet started |
@@ -48,10 +52,12 @@
 
 
 
-| Special Features | :construction_worker:   |
+| Special Features | :mushroom: :octocat:    :pig2: :dash:|
 | :--- |  :--- |
 | Geometry as Nodes   :sparkles: |  So far circles are set up to work as normal page elements but other common geometries will soon be added. |
 | Tabs and Search bar are Shadow DOM   :sparkles: |  This makes it possible to move or redesign them. This should help ensure that the browser works with any graphics engine changes and even change the appearance and functionality where needed \(Ex. mobile devices\). |
+|  Classes/Styles as templates :sparkles: | Templates are often desirable to define structure that is repetitive within a web page/site. This can be done by declaring a class (which normally would only define styles) along with structural characteristics. That structure is now part of the class and gets added along with the associated styles. |
+| :rocket: julia :rocket: | Web browsers usually execute JavaScript. This browser executes julia |
 
 ---
 
@@ -150,7 +156,7 @@ As you can see there are three major sections to a Json page and these may be on
 * Finally, one way you can start the application is with a command similar to this:
 
 ```julia
-   julia> include("path_to/.julia/v0.6/NaquadahBrowser/src/NaquadahCore.jl")
+   julia> include("<path_to>/.julia/v0.6/NaquadahBrowser/src/NaquadahCore.jl")
 ```
 # Code overview
 
@@ -165,30 +171,27 @@ As you can see there are three major sections to a Json page and these may be on
 # General Goals
 
 * Maintain modularity in order to be adaptable. If in the future there is good reason to switch out something such as the graphics interface, it should be easy to do so without reworking all the code. Also, if someone wants to use just one module out of Naquadah it should be easy to do so.
-* Maintain a measure of compatibility with principal features of web standards. I believe that a lot of thought was put into the design and functionality of the WWW and that in general it is a good model to follow.
-* Simplify as much as possible while increasing functionality. It is pointless to build another browser if it does not offer good features.
+* ~~Maintain a measure of compatibility with~~ Learn from principal features of web standards. I believe that a lot of thought was put into the design and functionality of the WWW and that in general it is a good model to follow.
+* Simplify as much as possible while increasing functionality. It's pointless to build another browser if it doesn't offer good features.
 * Take advantage of opportunities to add select functionality that may not be feasible in an ordinary browser.
-* Make Naquadah easy to modify and re-purpose. Naquadah is made to be used. It may be modified for standalone apps, mobile devices, text editors and more. The more it is used, the more it will be developed.
-* Experiment with reactively connecting to databases for real-time page updates.
+* Make Naquadah easy to modify and re-purpose. Naquadah is made with the hopes of being useful. It may be modified for standalone apps, mobile devices, text editors and more. The more it is used, the more it will be developed.
 
 # Wish List:
 
 * Generate proper images from blobs
-* Integrated page editor \(perhaps WYSIWYG\)
+* Integrated page editor (perhaps WYSIWYG)
 * Optimize speed
-* Compile distributable binaries for major OSs
 * Plotting and plot animation utilities \(Ex. force layout functionality\). Since Naquadah is meant to be a layout engine, it may be nice to include more than just the basic browser options.
+* Experiment with reactively connecting to databases for real-time page updates.
 
-
-## \* Naquadah has now been overhualed!
+##  Naquadah has now been overhualed!
 
 In order to improve the general design and improve modularity I rewrote about 90% of the code. A lot of work you say? Yes, that is roughly 4,250 lines of code as I am writing this. That is in spite of the fact that I have made major simplifications to the code.
+
+**More progress** has been made... As the lines code increase so does the complexity but as I also continue to learn julia I see better ways of writing. I have simplified a lot of code and cleaned up quite a bit as well. As a result I have removed removed a great number of lines while still increasing functionality. I'm sure this will continue to happen and Naquadah will someday become a polished project ...I hope ;)
 
 ### Take a look at the old version
 
 ![window](doc/figures/browser-1.gif)
 
 travisashworth2007@gmail.com
-
-ffmpeg -i /home/travis/Pictures/NaquadaMay2018.mp4 -r 10 -f image2pipe -vcodec ppm - | \
-  convert -delay 5 -loop 0 - /home/travis/Pictures/NaquadaMay2018.gif

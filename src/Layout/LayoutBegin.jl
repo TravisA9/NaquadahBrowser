@@ -1,5 +1,13 @@
 
-export CreateLayoutTree
+export CreateLayoutTree, getInheritWidth
+function getInheritWidth(document::Page, p)
+        while p.shape.width < 1
+            p == p.parent && (return document.width)
+            p = p.parent
+        end
+        return p.shape.width
+end
+
 # ======================================================================================
 ## CreateLayoutTree(document::Page, node::Element)
 # Generate a layout tree starting at `node` in `document`. This should be callable
@@ -11,26 +19,15 @@ function CreateLayoutTree(document::Page, parent)
 
     parent.rows  = []  # Clean out old data (?)
     l,t,w,h = getContentBox(parent.shape)
-
-    if parent.shape.width < 1
-        p = parent
-        while p.shape.width < 1
-            if p == p.parent
-                w = document.width
-                println("page width: ", w)
-                break
-            end
-            p = p.parent
-        end
-        w = p.shape.width
-    end
-
-
+    w = getInheritWidth(document::Page, parent) # because width may not be set
     children = parent.children
 
     for child in children
                 child.parent = parent # attach to parent
-                AtributesToLayout(document, child) # Create Child's DOM (DomToLayout.jl)
+                if isdefined(child, :children) && length(child.children) > 0
+                    child.rows = []
+                end
+                #AtributesToLayout(document, child) # Create Child's DOM (DomToLayout.jl)
             if !child.shape.flags[DisplayNone] # only draw if not "display: none"
                 PushToRow(document, child, l,t,w) # Put child into row
                 CreateLayoutTree(document, child) # Create child's children
@@ -53,24 +50,11 @@ function CreateLayoutTree(document::Page, parent)
           # get node metrics again since the height etc. might have changed.
           l,t,w,h = getContentBox(parent.shape)
           for child in children
-            #if !isa(child, Text)
                 shape = child.shape
                 width, height = getSize(shape)
-                # padding, border, margin = getReal(shape)
                 if shape.flags[Absolute]
-                  top,left = shape.top, shape.left
-                  if shape.flags[Bottom]
-                        shape.top =  t + h - (height + shape.top)
-                  else
-                        shape.top =  t + shape.top
-                  end
-                  if shape.flags[Right]
-                        shape.left =  l + w - (width + shape.left)
-                  else
-                        shape.left =  l +  shape.left
-                  end
-                  # all children of "absolute" parent need moved to correct location.
-                  # contents = child.children
+                  top,left = shape.top, shape.left # temp variables
+                  setDistanceFromBounds(l,t,w,h,  shape )
                   rows = child.rows
                   for row in rows         # row.nodes[i]
                     for n in row.nodes
@@ -78,11 +62,7 @@ function CreateLayoutTree(document::Page, parent)
                     end
                   end
               end
-            #end
           end
         end
-
-
     end
 end
-# ======================================================================================

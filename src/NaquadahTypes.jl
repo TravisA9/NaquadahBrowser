@@ -1,5 +1,6 @@
 
-export getCreateLastRow, Page, Scroller, Row, Element, Text, Page #Event,
+export getCreateLastRow, Page, Scroller, Row, Element, Text, Page,
+       feedRow #Event,
 
 begin
 
@@ -23,26 +24,67 @@ end
 mutable struct Row
     flags::BitArray{1} #Any
     nodes::Vector{Any} # cant't say Element because it's not yet defined
+    space::Float64 # Space remaining 'til full
     height::Float64
     width::Float64 # because elements could be wider than the parent
-    space::Float64 # Space remaining 'til full
     left::Float64  # TODO: change these to left/top for cmpatability
     top::Float64
-    # Row() = new(falses(32),[],0,0,0,0,0)
-    # Row(x, wide) = new(falses(32),[],0,0,wide,x,0)
-    Row(left, top, wide) = new(falses(32),[],0,0,wide,left,top)
-    function Row(rows::Vector{Row}, left::Float64, top::Float64, w::Float64)
-        r = Row(left, top, w)
-        push!(rows,r)
+    Row(left, top, width) = new(falses(32),[],width,0,width,left,top)
+    function Row(node)
+        if length(node.rows) > 0
+            top = FinalizeRow(node.rows[end])
+        else
+            top = node.shape.top
+        end
+        r = Row(node.shape.left, top, node.shape.width)
+        push!(node.rows, r ) # There were no rows. Create one!
+        return r
+    end
+
+    function Row(rows::Vector{Row}, left::Float64, top::Float64, width::Float64)
+        r = Row(left, top, width)
+        push!(rows, r)
         return r
     end
 end
 # maybe rename: GetNewRow or something similar.
 function getCreateLastRow(rows::Vector{Row}, l, t, w)
     if length(rows) < 1
-        Row(rows, l, t, w)
+        r = Row(l, t, w)
+        push!(rows, r) # WAS: Row(rows, l, t, w)
     end
     return rows[end]
+end
+#-==============================================================================
+#-==============================================================================
+function feedRow(parent, node)
+    if isa(node.shape, TextLine)
+        width, height = node.shape.width, node.shape.height
+    else
+     width, height = getSize(node.shape)
+    end
+    if parent.shape.width < 1
+        parent.shape.width = width #         print("parent width $(parent.shape.width), ")
+    end
+    if length(parent.rows) < 1
+        row = Row(parent) # There were no rows. Create one!
+        row.top = parent.shape.top
+    else
+        row = parent.rows[end]   # Get a handle on it.
+    end
+    if row.space < width
+        row = Row(parent) # This automatically finalises the previous row.
+    end
+    #node.shape.top = row.top # + padding etc.
+    row.space -= width
+    row.height = max(row.height, height)
+
+    OffsetX, OffsetY = contentOffset( node.shape )
+    node.shape.left = row.left + OffsetX
+    row.left += width
+    node.shape.top = row.top + OffsetY
+
+    push!(row.nodes, node)
 end
 #-==============================================================================
 mutable struct Element

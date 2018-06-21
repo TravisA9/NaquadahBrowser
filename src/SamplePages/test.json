@@ -12,7 +12,8 @@
 				"font":{ "color":"steelblue", "size":15, "align":"center", "lineHeight":1.4, 	"family":"Georgia", "vertical-align":"middle"},
 				"hover":{"color":[0.996094, 0.5, 0.5]},
 				"border":{"radius":3, "color":"steelblue", "style":"solid", "width":"medium"}
-			}
+			},
+			"ball":{"radius":5, "color":[0.55,0.4,0.8], "position":"absolute" }
 		},
 
 "body":[
@@ -24,29 +25,29 @@
 			"border":{"width":"thin", "style":"longdashed", "color":"forestgreen", "radius":7},
 			"nodes":[
 				{">":"circle", "radius":25, "color":[0.83,0.39,0.37], "opacity":0.7,
-					"position":"absolute", "bottom":0, "left":9, "width":3, "height":3,
+					"position":"absolute", "bottom":9, "left":9,
 					"border":{ "width":"thick", "style":"solid", "color":[0.39,0.23,0.22]} },
 				{">":"circle", "radius":25,"color":[0.66,0.48,0.75], "opacity":0.7,
-					"position":"absolute", "bottom":0, "left":36, "width":3, "height":3,
+					"position":"absolute", "bottom":9, "left":36,
 					"border":{ "width":"thick", "style":"solid", "color":[0.57,0.35,0.68]} },
 				{">":"circle", "radius":25, "color":[0.41,0.66,0.35], "opacity":0.6,
-					"position":"absolute", "bottom":22, "left":22, "width":3, "height":3,
+					"position":"absolute", "bottom":31, "left":22,
 					"border":{ "width":"thick", "style":"solid", "color":[0.23,0.58,0.17]} },
 				{">":"div",	"display":"inline-block", "width":140, "height":80,
-					"margin":[95,0,0,0],
+					"margin":[95,6,0,0],
 					"nodes":[
 						{">":"div", "display":"inline-block", "text":"julia",
 							"font":{ "color":"black", "size":64, "align":"center", "lineHeight":1.4, "family":"Georgia",
 							"vertical-align":"middle" },
 							"nodes":[ ] },
-						{">":"circle", "radius":5,"color":[0.55,0.4,0.8],
-							"position":"absolute", "top":15, "left":10, "width":3, "height":3 },
-						{">":"circle", "radius":5, "color":[0.39,0.23,0.22],
-							"position":"absolute", "top":15, "left":84, "width":3, "height":3},
-						{">":"circle", "radius":5,"color":[0.57,0.35,0.68],
-							"position":"absolute", "top":15, "left":97, "width":3, "height":3},
-						{">":"circle", "radius":5, "color":[0.23,0.58,0.17],
-							"position":"absolute", "top":4, "left":91, "width":3, "height":3}
+						{">":"circle", "radius":5,"color":[0.41,0.51,0.87],
+							"position":"absolute", "top":15, "left":10 },
+						{">":"circle", "radius":5, "color":[0.84,0.39,0.36],
+							"position":"absolute", "top":15, "left":84},
+						{">":"circle", "radius":5,"color":[0.66,0.48,0.75],
+							"position":"absolute", "top":15, "left":97},
+						{">":"circle", "radius":5, "color":[0.41,0.67,0.34],
+							"position":"absolute", "top":4, "left":91}
 					] }
 
 
@@ -55,7 +56,7 @@
 
 		{">":"p", "display":"inline-block",
 			"font":{ "color":"white", "size":32, "align":"center", "lineHeight":1.4, "family":"Georgia", "vertical-align":"middle" },
-			"text":"Presenting Naquadah: As a test of julia in General Purpose Computing" }
+			"text":"Presenting Naquadah: As a test of julia in General Purpose Computing"}
 	]
 },
 
@@ -68,7 +69,8 @@
 
 
 {">":"div", "display":"none", "width":125, "margin": 10, "padding":5, "color": "lemonchiffon", "height":200,
-		"border":{"width":"thin", "style":"dashed", "color":"goldenrod"}},
+		"border":{"width":"thin", "style":"dashed", "color":"goldenrod"}
+	},
 
 {">":"div", "float":"left", "display":"inline-block", "width":200, "margin": 10, "padding":5, "color": "lemonchiffon",
 	"border":{"radius":[105,10,105,10], "width":"thin", "style":"dashed", "color":"goldenrod"},
@@ -110,7 +112,13 @@
 	   					 {">":"p", "hover":{"color":[0.996094, 0.5, 0.5]},
 	   						 "font":{ "color":"green", "size":16, "align":"right", "lineHeight":1.4, "family":"Lucida Console" },
 	   						 "text":"This is an example of text that is right-justified in a p element set as an inline-block."
-	   					 }
+	   					 },
+
+		 					{">":"circle", "style":"ball","color":[0.55,0.4,0.8], "top":1, "left":1},
+		 					{">":"circle", "style":"ball","color":[0.55,0.4,0.8], "top":1, "right":1},
+		 					{">":"circle", "style":"ball","color":[0.55,0.4,0.8], "bottom":1, "left":1},
+		 					{">":"circle", "style":"ball","color":[0.55,0.4,0.8], "bottom":1, "right":1}
+
 					] },
    					 {">":"circle", "radius":100, "image":"Mountains.png", "color":"lightgreen",
    								"border":{"width":"thick", "style":"solid", "color":"steelblue"}},
@@ -152,21 +160,21 @@
 		{">":"p", "display":"block",
             "font":{ "color":"black", "size":15, "align":"center",
             "lineHeight":1.4, "weight":"normal", "family":"Georgia" },
-         	"text":"Although it is often best to just use the tools that others have worked so hard to build and perfect, there are actually times when it is fitting to start again... but when? Well, one obvious answer is when your specific needs are very different from the norm. However, there are other reasons. For instance, maybe you really want to get a good understanding of the motives behind a standard design. Trying out a few changes to see why they succeed or fail can help you to get a feel of just that. In the case of this browser design, there is a different reason. As a technology develops new features get added and removed. Some technologies are repurposed. In the end it is not uncommon to get a patchwork of parts which generally funtion as one but each part has its overhead. The overhead is often tolerated because refining, consolidation and re-education is a huge task. Browsers use and comunicate with so many separate languages (ex: HTML, XML, SVG, css, JS, JSON...) and tech that learning them all and integrating them seemlessly into one app or site is getting quite complex. There is also a lot of overlap in all of that. What if we could step back and consolidate all the benefits of the various tools and languages, thereby simplifying it all and eliminating needless complexity and overhead? This experement is to test just that."
+         	"text":"Although it's often best to just use the tools that others have worked so hard to build and perfect, there are actually times when it's fitting to start again... but when? Well, one obvious answer is when your specific needs are different from the norm. However, there are other good reasons. For instance, maybe you really want to get a good understanding of the motives behind a standard design. Trying out a few changes to see why they succeed or fail can help you to get a feel of just that. In the case of this browser design, there's a different reason. As a technology develops, new features get added and removed. Some technologies are repurposed. In the end it's not uncommon to get a patchwork of parts which generally funtion as one but each part has its overhead. The overhead is often tolerated because refining, consolidation and re-education is a huge task. Browsers use and comunicate with so many separate languages (ex: HTML, XML, SVG, css, JS, JSON...) and tech that learning them all and integrating them seemlessly into one app or site is getting quite complex. There's also a lot of overlap in all of that. What if we could step back and consolidate all the benefits of the various tools and languages we just might simplify it all and eliminate needless complexity and overhead? This experement is to test that idea."
         },
 
 		{">":"p", "color":[0.5,0.7,0.5],
-			"float":"left", "margin":15, "width":100, "height":40,
+			"float":"left", "margin":5, "width":100, "height":40,
 			"border":{"radius":7, "width":"thin", "style":"solid", "color":"black"},
 			"font":{ "color":"black", "size":12, "align":"center", "lineHeight":1.4, "family":"Georgia" },
-			"text":"This is a block Element" },
+			"text":"This is an inline-block Element with width and height set." },
 
         {">":"circle", "radius":5, "color":"lightgreen",
        		 "border":{"width":"thin", "style":"solid", "color":"blue"}},
 		{">":"circle", "radius":5, "color":"pink",
 			"border":{"width":"thin", "style":"solid", "color":"blue"}},
 
-		{">":"div", "bottom":10, "right":10, "width":150, "height": 60,
+		{">":"div", "bottom":10, "right":10, "width":150,
 			"position":"absolute", "color":"black", "opacity":0.6,
 			"linear-gradient":{ "start":"left", "colors":["red","green","blue"] },
 			"border":{"width":"thin", "style":"solid", "color":"black"},
@@ -227,14 +235,16 @@
 	"font":{ "color":"black", "size":18, "align":"center", "lineHeight":1.4, "family":"Georgia" }
 },
 {">":"hr"},
-{">":"div", "color":"white", "display":"inline", "marked":true, "style": "Button", "text":"Button",
-	"mousedown":{"color":"green"} },
+{">":"div", "color":"white", "display":"inline", "style": "Button", "text":"Button",
+	"mousedown":{"color":"green"},
+ 	"click":{"code":"println(\"Print something to the console!\")", "preventDefault":true}},
 
 
 
 {">":"hr"},
 
 
+{">":"a",  "marked":true, "text":"This is a link" },
 {">":"a", "text":"This is a link" },
 {">":"a", "text":"This is another link" },
 {">":"pre", "text":"This is a pre (code) element." },
