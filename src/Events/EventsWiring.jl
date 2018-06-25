@@ -25,7 +25,7 @@ end
 # ======================================================================================
 #
 # ======================================================================================
-onArea(x, y,  shape ) = onArea(x, y,  getContentBox(shape)... )
+onArea(x, y,  shape ) = onArea(x, y,  getBorderBox(shape)... ) # WAS: getContentBox
 
 function onArea(x, y,    l, t, w, h)
         return x > l && x < l+w && y > t && y < t+h ? true : false
@@ -196,17 +196,13 @@ function ClickEvent(document, widget, event)
                 click = node.DOM["click"]
                 if haskey(click, "code")
 
-                     # variable = "Hello dude!"
-                     # # ex = :(:($variable), :(parse(click["code"])))
-                     # ex = :(f($variable) = begin  # none, line 1:
-                     #        :(parse(click["code"]))
-                     #    end)
+                    code = parse(click["code"])
+                    ex = :($(Expr(:toplevel, :(document = $document), :($code))))
+                    eval(ex)
 
-                    # @eval begin
-                    #     $variable
-                    #     $str
-                    # end
-                    eval(parse(click["code"]))
+
+
+                    # WAS: eval(parse(click["code"]))
                 end
             end
             #"click":{"code":"println(\"This is some code!\")", "preventDefault":true}

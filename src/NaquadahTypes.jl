@@ -1,5 +1,5 @@
 
-export getCreateLastRow, Page, Scroller, Row, Element, Text, Page,
+export getCreateLastRow, Page, Scroller, Row, Element, Text,
        feedRow #Event,
 
 begin

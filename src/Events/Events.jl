@@ -144,16 +144,6 @@ end
 
 #======================================================================================#
 #    Similar to MoveAll() in LayoutBuild.jl
-"""
-##
-
-...
-
-# Examples
-```julia-repl
-```
-[Source](https://github.com/TravisA9/NaquadahBrowser/blob/39c41cbb1ac28fe94876fe01beaa6e046c8b63d3/src/DOM/DomTree.jl#L54)
-"""
 #======================================================================================#
 function VmoveAll(node,y)
   shape = node.shape

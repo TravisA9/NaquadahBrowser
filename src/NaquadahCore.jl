@@ -36,18 +36,20 @@ struct Win
     documents::Vector{Page}
     document::Page
     function Win()
-        c = Canvas();
-        win = Window("Naquadah: An experimental web browser", 1000, 600); # later we can make it save last page size
-        push!(win, c);
+        win = Window("Naquadah: An experimental web browser", 1000, 600) # later we can make it save last page size
+        canvas = Canvas()
+        push!(win, canvas)
+        document = Page(defaultPage)
+        document.canvas = canvas
+        node = document.children[1]
+        node.DOM = Dict( ">" => "window", "width" => 1000, "display" => "block", "padding" => [0,0,0,0], "nodes"=>[])
+        FetchPage(document, defaultPage)
 
-            # STRUCTURE:
-            #            node.DOM[1] / tabControls / windowControls / tab
-            #            node.DOM[2] / navigation
-            #            node.DOM[3] / newPage
-        document, controls = FetchPage(win, defaultPage, c, 1000) # Let's start out with a default page
-        return new(win, c, controls, [document], document)
+        document.win = win
+        return new(win, canvas, node, [document], document)
     end
 end
+
 # ======================================================================================
 # This is where drawing starts after a page is fetched.
 # ======================================================================================

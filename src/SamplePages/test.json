@@ -239,7 +239,7 @@
 {">":"hr"},
 {">":"div", "color":"white", "display":"inline", "style": "Button", "text":"Button",
 	"mousedown":{"color":"green"},
- 	"click":{"code":"println(\"Print something to the console!\")", "preventDefault":true}},
+ 	"click":{"code":"println(\"Width: \", document.width, \"Height: \", document.height)", "preventDefault":true}},
 
 
 

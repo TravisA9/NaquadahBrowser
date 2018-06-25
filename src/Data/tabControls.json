@@ -9,7 +9,10 @@
                     {">":"circle","display":"inline-block", "color":[1,1,1], "margin":[5,2,4,0], "radius":8, "image":"JuliaIcon.png"}
                     ]
                 },
-                {">":"circle","display":"inline-block", "margin":[5,2,4,4], "radius":12, "image":"NewPage.png"}
+                {">":"circle","display":"inline-block", "margin":[5,2,4,4], "radius":12,
+                    "image":"NewPage.png",
+                    "click":{ "code":"println(document, \"file:///.julia/v0.6/NaquadahBrowser/src/SamplePages/test.json\")" }
+                }
             ]
         }
     ]
