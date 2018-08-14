@@ -157,7 +157,7 @@ As you can see there are three major sections to a Json page and these may be on
 ```julia
    $ julia
 
-   julia> include("<path_to>/.julia/v0.6/NaquadahBrowser/src/NaquadahBrowser.jl")
+   julia> include("<path_to>/.julia/v0.7/NaquadahBrowser/src/NaquadahBrowser.jl")
 ```
 ...or run NaquadahBrowser.jl from Juno or another editor.
 # Code overview
