@@ -8,13 +8,7 @@ text = [  "p", "a", "em", "h1", "h2", "h3", "h4", "h5", "h6",
           "i", "s", "span", "small", "strong", "title", "abbr", "address",
           "b", "blockquote", "q", "title", "sub", "sup"]
 # ======================================================================================
-"""
-## isAny(key::String, strings::Array{String})
-
-Test for string in array (this probably already exists somewhere).
-
-[Source](https://github.com/TravisA9/NaquadahBrowser/blob/39c41cbb1ac28fe94876fe01beaa6e046c8b63d3/src/DOM/DomToLayout.jl#L23)
-"""
+# Test for string in array (this probably already exists somewhere).
 # ======================================================================================
 function isAny(key::String, strings::Array{String})
      for str in strings
@@ -53,15 +47,9 @@ function CopyDict(primary::Dict, secondary::Dict)
     end
 end
 # ======================================================================================
-"""
-## AtributesToLayout(document::Page, node::Element)
-
-Generate a layout Tree from the data stored in the DOM. This does not position the nodes
-in the page but only parses the DOM attributes to the Layout tree.
-
-[Source](https://github.com/TravisA9/NaquadahBrowser/blob/39c41cbb1ac28fe94876fe01beaa6e046c8b63d3/src/DOM/DomToLayout.jl#L65)
-"""
-
+# Generate a layout Tree from the data stored in the DOM. This does not position the nodes
+# in the page but only parses the DOM attributes to the Layout tree.
+# ======================================================================================
 function CreateShape(form::String, node::Element, h, w)
 
     if form == "circle"
@@ -85,7 +73,7 @@ function CreateShape(form::String, node::Element, h, w)
         node.shape = NBox()
         if haskey(node.DOM, "text")
                 node.font = Font()
-                textnode = Text()
+                textnode = TextElement()
                 textnode.shape = TextLine(node, node.DOM["text"])
                 push!(node.children, textnode)
                 # TODO: set text width as a default
@@ -99,6 +87,21 @@ function CreateShape(form::String, node::Element, h, w)
     #     #node.shape = NText()
     #     node.font = Font() # The actual text nodes are created later.
     # end
+end
+# ======================================================================================
+# Parse something like this:   "M-2,2 L8,2.8"   to   [('M', [-2,2]),('L', [8,2.8])]
+# WAS: ([A-Za-z])+([\s\d\.,-]*)
+# ======================================================================================
+function parsePathData(str)
+           steps = matchall(r"([a-zA-Z] *(?:(?:-?\d*(?:\.\d+)?(?: *|,?)))*)", str)
+           s = []
+    for step in steps
+        values = matchall(r"[\d\.-]+", step)
+        fvals = map(x->parse(Float64,x), values)
+        l = step[1]
+        push!(s, (l, fvals))
+    end
+    return s
 end
 # ======================================================================================
 #
@@ -116,7 +119,15 @@ function DomToLayout(document::Page, node)
               node.shape.flags[FloatLeft] = true
           end
       end
+# "path":"M2,2 L8,2 L2,5 L8,5 L2,8 L8,8"
+# b = "M2,2 L-8,2 L2,5 L8,5 L2,8 L8,8"
 
+
+
+      if haskey(DOM, "path")
+                    node.shape.flags[HasPath] = true
+                    properties
+      end
 
       if haskey(DOM, "image")
                     node.shape.flags[HasImage] = true

@@ -48,9 +48,9 @@ function getReal(box::Draw)
              shape.height + padding.height + (border.height);
  end
 
-getBorderBox(shape) = getBorderBox(shape, get(shape.border,
-                       Border(0,0,0,0,0,0, 0,[],[0,0,0,0])),
-                       get(shape.padding, BoxOutline(0,0,0,0,0,0)))
+
+getBorderBox(shape) = getBorderBox(shape, get(shape.border, Border()),
+                       get(shape.padding, BoxOutline()))
 
 getContentBox(box) = ( box.left, box.top, box.width, box.height )
 # ==============================================================================

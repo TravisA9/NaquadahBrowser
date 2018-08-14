@@ -2,7 +2,7 @@ export
         FloatLeft,   FloatRight,
         Relative, Fixed, Absolute, HasAbsolute,
         Bottom, Right,
-        HasOpacity, HasImage,
+        HasOpacity, HasImage, HasPath,
         TextPath, LinearGrad, RadialGrad,
 
         RowFinalized,
@@ -17,7 +17,7 @@ export
         IsHScroll, IsVScroll,
         Percent,
         Marked
-        
+
 
 const FloatLeft, FloatRight, RowFinalized = 1, 2, 3
 const Absolute, HasAbsolute, Relative, Fixed = 4, 5, 6, 7
@@ -43,7 +43,8 @@ const LinearGrad, RadialGrad = 35, 36
 const LineBreakBefore, LineBreakAfter = 37, 38
 
 const Percent      = 39
-const Marked      = 39
+const Marked       = 39
 
+const HasPath      = 40
 
 #.==============================================================================

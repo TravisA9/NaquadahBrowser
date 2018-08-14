@@ -12,10 +12,9 @@ Take a look:
 
 **Long[er] answer**: Although, Naquadah looks and functions much like a standard web browser, you will find that there are a few interesting differences. Like a normal browser, Naquadah principally consists of a **layout engine** and a **render engine** built from the ground up. So it is not a repackaging of some browser engine such as webkit. For convenience, it includes a basic GUI as well.
 
-* Naquadah currently uses **Cairo** for graphics and **GTK** for the GUI.
+* Naquadah uses **Cairo** for graphics and **GTK** for the GUI.
 
-* Written in **julia** language as a test of its usability as a general purpose programming language. Currently tested in julia v0.6.x
-
+* Written in **julia** language as a test of its usability as a general purpose programming language. Currently tested in julia v0.7 in linux. Previous versions have been tested on Windows.
 
  It is being developed for fun and for the purpose of displaying my work but if it proves to be useful, that would be great too.
 
@@ -23,7 +22,7 @@ Take a look:
 
 | Feature :construction_worker:|  State of development |
 | :--- |  :--- |
-|  :white_check_mark: Tags |  div, p, h1-h6, hr, a, pre, circle, page (and more)|
+|  :white_check_mark: Tags |  div, p, h1-h6, hr, a, pre, circle, page ( 'path' is currently under development)|
 |  :white_check_mark: Styles |  color, opacity, gradients, size, display, position, border, radius, padding, margin, font, alignment and more! |
 |  :white_check_mark: Classes |  working (as a bonus: can be used as templates) |
 | Floats :soon: |  Left is working but I need to finish Right \(I think\) |
@@ -153,11 +152,14 @@ As you can see there are three major sections to a Json page and these may be on
   julia> Pkg.clone("https://github.com/TravisA9/NaquadahBrowser.git")
 ```
 
-* Finally, one way you can start the application is with a command similar to this:
+* Finally, one way you can start the application is with a REPL command similar to this:
 
 ```julia
-   julia> include("<path_to>/.julia/v0.6/NaquadahBrowser/src/NaquadahCore.jl")
+   $ julia
+
+   julia> include("<path_to>/.julia/v0.6/NaquadahBrowser/src/NaquadahBrowser.jl")
 ```
+...or run NaquadahBrowser.jl from Juno or another editor.
 # Code overview
 
 * [NaquadahCore](https://github.com/TravisA9/NaquadahBrowser/blob/master/src/Naquadah.md)

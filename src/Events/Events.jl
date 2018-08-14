@@ -1,6 +1,6 @@
 include("EventsWiring.jl")
 
-using Cairo, Gtk, Gtk.ShortNames
+using Cairo, Gtk, Gtk.ShortNames, Graphics
 
 export AttatchEvents
 

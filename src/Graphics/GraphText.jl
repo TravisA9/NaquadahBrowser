@@ -21,7 +21,7 @@ function fontWeight(shape)
 end# ======================================================================================
 #  This is to tell text_extents() how to measure text
 # ======================================================================================
-function setTextContext(ctx::CairoContext, node::Text)
+function setTextContext(ctx::CairoContext, node::TextElement)
     font = node.parent.font
     slant  = fontSlant(font)
     weight = fontWeight(font)
@@ -29,7 +29,7 @@ function setTextContext(ctx::CairoContext, node::Text)
     set_font_size(ctx, font.size);
 end
 #======================================================================================#
-function TextWidth(node::Text)
+function TextWidth(node::TextElement)
     ctx = CairoContext( CairoRGBSurface(0,0) )
     setTextContext(ctx, node)
     return text_extents(ctx, node.shape.text )[3]
@@ -40,7 +40,7 @@ end
 # PushToRow(document, node, l,t,w)
 # l,t,w   define the content area of the parent
 ##======================================================================================#
-function PushToRow(document::Page, node::Text, l::Float64, t::Float64, wide::Float64)
+function PushToRow(document::Page, node::TextElement, l::Float64, t::Float64, wide::Float64)
     #set up all variables...
     text = node.shape.text # Entire unbroken string
     ctx = CairoContext( CairoRGBSurface(0,0) )
@@ -52,7 +52,7 @@ function PushToRow(document::Page, node::Text, l::Float64, t::Float64, wide::Flo
     function textToNode(line, textWidth)
         parent = node.parent # This would be like say a 'p' element
         textLine = TextLine(parent, line, l, t, textWidth, parent.font.lineHeight*fontheight)
-        textNode = Text(parent, textLine)
+        textNode = TextElement(parent, textLine)
         flags = getFlags(parent)
         feedRow(parent, textNode)
     end
@@ -76,6 +76,7 @@ function PushToRow(document::Page, node::Text, l::Float64, t::Float64, wide::Flo
      end
      line = text[lastbreak:length(text)]
      textToNode(line, text_extents(ctx,line )[3])
+     destroy(ctx)
 end
 #======================================================================================#
 # TODO: simplify / clean up

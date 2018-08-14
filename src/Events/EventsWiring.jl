@@ -196,7 +196,7 @@ function ClickEvent(document, widget, event)
                 click = node.DOM["click"]
                 if haskey(click, "code")
 
-                    code = parse(click["code"])
+                    code = Meta.parse(click["code"])
                     ex = :($(Expr(:toplevel, :(document = $document), :($code))))
                     eval(ex)
 

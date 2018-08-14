@@ -1,11 +1,11 @@
-if is_linux()
-    global PATH = pwd() * "/.julia/v0.6/NaquadahBrowser/src/SamplePages/BrowserImages/"
+if Sys.islinux()
+    global PATH = pwd() * "/src/SamplePages/BrowserImages/"
 elseif is_windows() # Do something windows-y here
-    global PATH = pwd() * "\\.julia\\v0.6\\NaquadahBrowser\\src\\SamplePages\\BrowserImages\\"
+    global PATH = pwd() * "/src\\SamplePages\\BrowserImages\\"
 end
 
 
-using Cairo, Gtk, Gtk.ShortNames
+using Cairo, Gtk, Gtk.ShortNames, Graphics
 
 export    DrawViewport, DrawContent, DrawShape, setcolor, drawNode,
           lastClipParent, inheritColor
@@ -124,24 +124,31 @@ function drawNode(ctx, document, node)
                  # DrawText(ctx, row, shape)
              #else
                  DrawShape(ctx, node, shape, clipPath)
-            if !isa(node, Text)
+            if !isa(node, TextElement)
                  DrawContent(ctx, document, node, clipPath)     # Now draw children
             end
     reset_clip(ctx)
 
 end
+
+
+
+# linpat = cairo_pattern_create_linear(0, 0, 1, 1);
+# pattern_add_color_stop_rgb(linpat, 0, 0, 0.3, 0.8);
+# pattern_add_color_stop_rgb(linpat, 1, 0, 0.8, 0.3);
+
+# radpat = cairo_pattern_create_radial(0.5, 0.5, 0.25, 0.5, 0.5, 0.75);
+# pattern_add_color_stop_rgba(radpat, 0, 0, 0, 0, 1);
+# pattern_add_color_stop_rgba(radpat, 0.5, 0, 0, 0, 0);
+
+# set_source(cr, linpat);
+# mask(cr, radpat);
+
+
 # ======================================================================================
 # http://www.nongnu.org/guile-cairo/docs/html/Patterns.html
 # Draw a circle.
 # TODO: remove node from function
-"""
-## DrawShape(ctx::CairoContext, node, shape, clipPath)
-
-Draw ...
-
-
-[Source](https://github.com/TravisA9/NaquadahBrowser/blob/39c41cbb1ac28fe94876fe01beaa6e046c8b63d3/src/Graphics/GraphDraw.jl#L54)
-"""
 # ======================================================================================
 function DrawShape(ctx::CairoContext, node::Element, shape::Draw, clipPath)
     Cairo.save(ctx)
@@ -154,6 +161,7 @@ function DrawShape(ctx::CairoContext, node::Element, shape::Draw, clipPath)
             if haskey(DOM, "image")
                 imagePath = PATH * DOM["image"] # "Mountains.png"
             end
+            println(imagePath)
             BackgroundImage(ctx, path.wide, path.tall, shape.left, shape.top, imagePath)
 
   elseif  shape.flags[LinearGrad]
@@ -193,16 +201,6 @@ function DrawShape(ctx::CairoContext, node::Element, shape::Draw, clipPath)
 end
 # ======================================================================================
 # Temporary shortcut: draw the virticle scroll bar
-"""
-## VScroller(ctx::CairoContext, document, node, shape, clipPath)
-
-Temporary hack: draw the virticle scroll bar
-
-# Examples
-```julia-repl
-```
-[Source](https://github.com/TravisA9/NaquadahBrowser/blob/39c41cbb1ac28fe94876fe01beaa6e046c8b63d3/src/Graphics/GraphDraw.jl#L54)
-"""
 # ======================================================================================
 function VScroller(ctx::CairoContext, document::Page, node::Element, shape::Draw, clipPath)
 
@@ -237,12 +235,40 @@ function VScroller(ctx::CairoContext, document::Page, node::Element, shape::Draw
 end
 
 
+#type
+# ('m',1,2)
+# ('m',1,2) M = moveto
+# ('l',1,2) L = lineto                   H = horizontal lineto                 V = vertical lineto
+# ('c',1,2) C = curveto                  S = smooth curveto
+# ('q',1,2) Q = quadratic Bézier curve   T = smooth quadratic Bézier curveto
+# ('a',1,2) A = elliptical Arc
+# ('z',1,2) Z = closepath
 
 
+    # close_path,
+    # move_to, line_to, rel_line_to, rel_move_to,
+    # arc, arc_negative,
+    # curve_to, rel_curve_to,
 
-
-
-
+function drawPath(ctx, path)
+    startPoint = nothing
+    for step in path
+        if step[1] == 'm'
+            startPoint = step[1]
+            move_to(ctx, step[2], step[3])
+        elseif step[1] == 'l'
+            line_to(ctx, step[2], step[3])
+        elseif step[1] == 'c'
+            curve_to(ctx, )
+        elseif step[1] == 'q'
+            curve_to(ctx, )
+        elseif step[1] == 'a'
+            arc(ctx, )
+        elseif step[1] == 'z'
+            close_path(ctx, )
+        end
+    end
+end
 
 
 
@@ -277,7 +303,7 @@ paint(cr);
 
 
 
-type NQCircle
+mutable struct NQCircle
     border::Border
     radius::Float64
     left::Float64
@@ -286,7 +312,7 @@ type NQCircle
     tall::Float64
     NQCircle() = new()
 end
-type NQBox
+mutable struct NQBox
     border::Border
     padding::BoxOutline
     left::Float64
@@ -299,17 +325,8 @@ type NQBox
 end
 
 # ======================================================================================
-"""
-## BackgroundImage(ctx::CairoContext, wide::Float64, tall::Float64, l::Float64, t::Float64, path)
 
-Draw the background image at 100% width and height.
-# Examples
- Stream: https://github.com/JuliaGraphics/Cairo.jl/blob/master/samples/sample_imagestream.jl
- Alpha:  https://github.com/JuliaGraphics/Cairo.jl/blob/master/samples/sample_alpha_paint.jl
-
-
-[Source](https://github.com/TravisA9/NaquadahBrowser/blob/39c41cbb1ac28fe94876fe01beaa6e046c8b63d3/src/Graphics/GraphDraw.jl#L54)
-"""
+# Draw the background image at 100% width and height.
 # ======================================================================================
 function BackgroundImage(ctx::CairoContext, wide::Float64, tall::Float64, l::Float64, t::Float64, path)
 
@@ -325,31 +342,19 @@ function BackgroundImage(ctx::CairoContext, wide::Float64, tall::Float64, l::Flo
 end
 # ======================================================================================
 # Draw a linear gradient
-"""
-## linearGrad(ctx::CairoContext, shape, gradient)
-
-Draw a linear gradient.
-
-[Source](https://github.com/TravisA9/NaquadahBrowser/blob/39c41cbb1ac28fe94876fe01beaa6e046c8b63d3/src/Graphics/GraphDraw.jl#L54)
-"""
 # ======================================================================================
-function linearGrad(ctx::CairoContext, shape, gradient)
-    pat = pattern_create_linear(shape.left+0.0, shape.top+180.0, shape.left+180.0, shape.top+0.0 );
+function linearGrad(ctx::CairoContext, path, gradient)
+    pat = pattern_create_linear(path.left+0.0, path.top+180.0, path.left+180.0, path.top+0.0 );
     for i in 1:length(gradient)
             pattern_add_color_stop_rgba(pat, gradient[i] ...);
     end
-    setPath(ctx, shape)
+    setPath(ctx, path)
     set_source(ctx, pat);
     fill(ctx);
     destroy(pat);
 end
-"""
-## radialGrad(ctx, path, gradient)
-
-Draw a radial gradient.
-
-[Source](https://github.com/TravisA9/NaquadahBrowser/blob/39c41cbb1ac28fe94876fe01beaa6e046c8b63d3/src/Graphics/GraphDraw.jl#L54)
-"""
+# ======================================================================================
+# Draw a radial gradient.
 # ======================================================================================
 function radialGrad(ctx::CairoContext, path, gradient)
     offsetX, offsetY = 0, 0 #This can be added later to the second x,y coords
@@ -365,14 +370,6 @@ function radialGrad(ctx::CairoContext, path, gradient)
             destroy(pat);
 end
 # ======================================================================================
-"""
-## GetPath(shape::NBox)
-
-...
-
-## GetPath(shape::Circle)
-[Source](https://github.com/TravisA9/NaquadahBrowser/blob/39c41cbb1ac28fe94876fe01beaa6e046c8b63d3/src/Graphics/GraphDraw.jl#L54)
-"""
 # ======================================================================================
 function GetPath(shape::NBox)
     b = NQBox()
@@ -406,18 +403,10 @@ function GetPath(shape::Circle)
 end
 # ======================================================================================#
 # Set circle path and fill with color
-"""
-## setPath(ctx::CairoContext, shape::NQBox)
-
-...
-
-
-[Source](https://github.com/TravisA9/NaquadahBrowser/blob/39c41cbb1ac28fe94876fe01beaa6e046c8b63d3/src/Graphics/GraphDraw.jl#L54)
-"""
 # ======================================================================================#
 function setPath(ctx::CairoContext, shape::NQBox)
-    if !isnull(shape.border.radius) #(TR + BR + BL + TL) > 0
-        radius = get(shape.border.radius,[0,0,0,0])
+    if shape.border != nothing #!isnull(shape.border.radius) #(TR + BR + BL + TL) > 0
+        radius = shape.border.radius
         TR = radius[1]
         BR = radius[2]
         BL = radius[3]
@@ -439,16 +428,6 @@ function setPath(ctx, shape::NQCircle)
         arc(ctx, shape.left, shape.top, shape.wide*.5, 0, 2*pi);
 end
 # ======================================================================================
-"""
-## setClipPath(ctx::CairoContext, shape::NQCircle)
-
-...
-
-# Examples
-```julia-repl
-```
-[Source](https://github.com/TravisA9/NaquadahBrowser/blob/39c41cbb1ac28fe94876fe01beaa6e046c8b63d3/src/Graphics/GraphDraw.jl#L54)
-"""
 function setClipPath(ctx::CairoContext, shape::NQCircle)
     b  = shape.border.top #*.5
         move_to(ctx, shape.left + shape.radius, shape.top)
@@ -461,8 +440,8 @@ function setClipPath(ctx::CairoContext, shape::NQBox)
   bh  = shape.border.height*.5
   borderWidth = max(shape.border.left, shape.border.top, shape.border.right,shape.border.bottom)
 
-  if !isnull(shape.border.radius) #(TR + BR + BL + TL) > 0
-      radius = get(shape.border.radius,[0,0,0,0])
+  if shape.border.radius != nothing # !isnull(shape.border.radius) #(TR + BR + BL + TL) > 0
+      radius = shape.border.radius
       TR = radius[1]
       BR = radius[2]
       BL = radius[3]
@@ -487,13 +466,6 @@ function setClipPath(ctx::CairoContext, shape::NQBox)
   return borderWidth
 end
 # ======================================================================================
-"""
-## setborderPath(ctx::CairoContext, shape::NQBox)
-
-...
-
-[Source](https://github.com/TravisA9/NaquadahBrowser/blob/39c41cbb1ac28fe94876fe01beaa6e046c8b63d3/src/Graphics/GraphDraw.jl#L54)
-"""
 function setborderPath(ctx::CairoContext, shape::NQBox)
 
   # TODO: see if curveTo() will work to simplify this.
@@ -504,8 +476,9 @@ function setborderPath(ctx::CairoContext, shape::NQBox)
   r = shape.right - (shape.border.right - line)
   b = shape.bottom - (shape.border.bottom - line)
 
-    if !isnull(shape.border.radius) #(TR + BR + BL + TL) > 0
-      radius = get(shape.border.radius,[0,0,0,0])
+    if shape.border.radius != nothing # !isnull(shape.border.radius) #(TR + BR + BL + TL) > 0
+      radius = shape.border.radius
+      # radius = border.radius,[0,0,0,0])
       TR = radius[1]
       BR = radius[2]
       BL = radius[3]

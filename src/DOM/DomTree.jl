@@ -1,5 +1,5 @@
 import Base
-using JSON, Requests, Gtk
+using JSON, Gtk, HTTP # Requests
 
 export FetchPage
 # ======================================================================================
@@ -35,15 +35,24 @@ function FetchPage(document, URL::String)
     node = document.children[1]
     #node.DOM = Dict( ">" => "window", "width" => wide, "display" => "block", "padding" => [0,0,0,0], "nodes"=>[])
 
+
     # Gtk.GtkWindowLeafGtk.GtkCanvas
        # .......................................................................
        # get the file...
-       uri = URI(URL)
+       uri = HTTP.parse(HTTP.URI, URL)
+
               if uri.scheme == "file"
                  File = pwd() * uri.path
-                       Page_text = readstring(open(File))
+                       # Depreciated: Page_text = readstring(open(File))
+                       # Page_text = read(open(File), String )
+
+                       Page_text = open(File) do file
+                           read(file, String)
+                       end
+
               elseif uri.scheme == "http" || uri.scheme == "https"
-                  got = get(URL; timeout = 10.0)
+                  got = HTTP.request("GET", URL; verbose=3).body
+                  # WAS: get(URL; timeout = 10.0)
                   Page_text = readall(got)
               end
 

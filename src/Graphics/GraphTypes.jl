@@ -1,4 +1,4 @@
-
+using Graphics
 
 export
           # Structural:
@@ -13,30 +13,15 @@ export
 # ======================================================================================
 abstract type Geo end
 
-mutable struct Point
+#=mutable struct Point
     x::Float64
     y::Float64
     Point(x,y) = new(x,y)
-end
+end=#
 
 
 
-"""
-## Types exported from Graphics
 
-# Examples
-```julia-repl
-# Structural:
-Element, Row, LastRow, Font,
-# General utility:
-Point, Square,
-# Drawable Shapes:
-NBox, Circle, Arc, TextLine,
-# Constructors:
-Border, BoxOutline
-```
-[Source](https://github.com/TravisA9/NaquadahBrowser/blob/39c41cbb1ac28fe94876fe01beaa6e046c8b63d3/src/DOM/DomTree.jl#L3)
-"""
 #-------------------------------------------------------------------------------
 # currently not being used..
 #-------------------------------------------------------------------------------
@@ -62,6 +47,8 @@ mutable struct BoxOutline <: Geo
     bottom::Float64
     width::Float64
     height::Float64
+    BoxOutline(left,top,right,bottom,width,height) = new(left,top,right,bottom,width,height)
+    BoxOutline() = new(0,0,0,0,0,0)
 end
 mutable struct Square <: Geo
     left::Float64
@@ -82,9 +69,15 @@ mutable struct Border <: Geo
 
     style::Any # maybe AbstractString
     color::Vector{Float32} # this may be an array of arrays in the case that each side has a different color
-    radius::Nullable{Array}
+    radius::Union{Nothing,Array} # Nullable{Array}
     Border(left,top, right,bottom, width,height, style,color,radius) = new(left,top, right,bottom, width,height, style,color,radius)
+    Border() = new(0,0,0,0,0,0, 0,[],[0,0,0,0])
 end
+
+import Base.get
+get(border::Union{Nothing,Border}, default::Border) = border == nothing ? default : border
+get(marg_or_pad::Union{Nothing,BoxOutline}, default::BoxOutline) = marg_or_pad == nothing ? default : marg_or_pad
+# get(padding::) = padding == nothing ? BoxOutline(0,0,0,0,0,0) : padding
 # ==============================================================================  <: Shape
 
 mutable struct BasicShape <: Draw
@@ -92,37 +85,38 @@ mutable struct BasicShape <: Draw
     color::Vector{Any}
     gradient::Vector{Any}
     opacity::Any
-    padding::Nullable{BoxOutline}
-    border::Nullable{Border}
-    margin::Nullable{BoxOutline}
-    offset::Nullable{Point}
+    padding::Union{Nothing,BoxOutline}
+    border::Union{Nothing,Border}
+    margin::Union{Nothing,BoxOutline}
+    offset::Union{Nothing,Point}
     left::Float64
     top::Float64
     width::Float64
     height::Float64
-    BasicShape() = new(falses(64), [], [], 1, Nullable{BoxOutline}(), Nullable{Border}(), Nullable{BoxOutline}(), Nullable{Point}(),0,0,0,0)
+    BasicShape() = new(falses(64), [], [], 1, nothing, nothing, nothing, nothing,0,0,0,0)
 end
 function Shape()
-    return (falses(64), [], [], 1, Nullable{BoxOutline}(), Nullable{Border}(), Nullable{BoxOutline}(), Nullable{Point}(),0,0,0,0)
+    return (falses(64), [], [], 1, nothing, nothing, nothing, nothing,0,0,0,0)
 end
 # ==============================================================================
 # ==============================================================================
 # ==============================================================================
-# ============================================================================== TextLine, Circle, NBox
+# ==============================================================================
 mutable struct NBox <: Draw
     flags::BitArray{1}
     color::Vector{Any}
+    properties::Vector{Any}
     gradient::Vector{Any}
     opacity::Any
-    padding::Nullable{BoxOutline}
-    border::Nullable{Border}
-    margin::Nullable{BoxOutline}
-    offset::Nullable{Point}
+    padding::Union{Nothing,BoxOutline}
+    border::Union{Nothing,Border}
+    margin::Union{Nothing,BoxOutline}
+    offset::Union{Nothing,Point}
     left::Float64
     top::Float64
     width::Float64
     height::Float64
-    NBox() = new( falses(64), [], [], 1, Nullable{BoxOutline}(), Nullable{Border}(), Nullable{BoxOutline}(), Nullable{Point}(),0,0,0,0 )
+    NBox() = new( falses(64), [], [], [], 1, nothing, nothing, nothing, nothing,0,0,0,0 )
 end
 
 mutable struct Circle <: Draw
@@ -130,34 +124,34 @@ mutable struct Circle <: Draw
     color::Vector{Any}
     gradient::Vector{Any}
     opacity::Any
-    padding::Nullable{BoxOutline}
-    border::Nullable{Border}
-    margin::Nullable{BoxOutline}
-    offset::Nullable{Point}
+    padding::Union{Nothing,BoxOutline}
+    border::Union{Nothing,Border}
+    margin::Union{Nothing,BoxOutline}
+    offset::Union{Nothing,Point}
     left::Float64
     top::Float64
     width::Float64
     height::Float64
-    radius::Float64
-    Circle() = new(falses(64), [], [], 1, Nullable{BoxOutline}(), Nullable{Border}(), Nullable{BoxOutline}(), Nullable{Point}(),0,0,0,0,0,)
+        radius::Float64
+    Circle() = new(falses(64), [], [], 1, nothing, nothing, nothing, nothing,0,0,0,0,0,)
 end
-# Box, RoundBox, Arc, Circle, Line, Curve, Text, Ellipse
+# Box, RoundBox, Arc, Circle, Line, Curve, TextElement, Ellipse
 # Polygon, Polyline, Path
 mutable struct Arc <: Draw
     flags::BitArray{1}
     color::Vector{Any}
     gradient::Vector{Any}
     opacity::Any
-    padding::Nullable{BoxOutline}
-    border::Nullable{Border}
-    margin::Nullable{BoxOutline}
-    offset::Nullable{Point}
+    padding::Union{Nothing,BoxOutline}
+    border::Union{Nothing,Border}
+    margin::Union{Nothing,BoxOutline}
+    offset::Union{Nothing,Point}
     left::Float64
     top::Float64
     width::Float64
     height::Float64
-    radius::Float64
-    origin::Point
+        radius::Float64
+        origin::Point
     startAngle::Float64
     stopAngle::Float64
     Arc() = new(0, Point(0,0), 0,0)
@@ -169,17 +163,17 @@ mutable struct Font #<: Draw
     color::Vector{Any}
     gradient::Vector{Any}
     opacity::Any
-    padding::Nullable{BoxOutline}
-    border::Nullable{Border}
-    margin::Nullable{BoxOutline}
-    offset::Nullable{Point}
+    padding::Union{Nothing,BoxOutline}
+    border::Union{Nothing,Border}
+    margin::Union{Nothing,BoxOutline}
+    offset::Union{Nothing,Point}
     size::Float64
     lineHeight::Float16
     family::String
     fill::Vector{Float32}
     lineWidth::Float64
     Font() = new( falses(64),
-        [], [], 1, Nullable{BoxOutline}(), Nullable{Border}(), Nullable{BoxOutline}(), Nullable{Point}(),
+        [], [], 1, nothing, nothing, nothing, nothing,
         12, 1.4,  "Sans", [], 1 )
 end
 #=---------------------------------=#

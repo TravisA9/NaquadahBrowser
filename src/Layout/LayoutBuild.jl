@@ -35,7 +35,7 @@ end
 # The contents of a container may effect the container itself. Such as height; set that!
 # Set any node heights that are % values.
 
-getFlags(node) = isa(node, Text) ? node.parent.font.flags : node.shape.flags
+getFlags(node) = isa(node, TextElement) ? node.parent.font.flags : node.shape.flags
 #======================================================================================#
 function FinalizeRow(row::Row)
     if row.flags[RowFinalized]

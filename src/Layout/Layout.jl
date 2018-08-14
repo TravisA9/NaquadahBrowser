@@ -3,16 +3,6 @@
 
 #======================================================================================#
 #    Similar to MoveAll() in LayoutBuild.jl
-"""
-## Types exported from Graphics
-
-...
-
-# Examples
-```julia-repl
-```
-[Source](https://github.com/TravisA9/NaquadahBrowser/blob/39c41cbb1ac28fe94876fe01beaa6e046c8b63d3/src/DOM/DomTree.jl#L54)
-"""
 #======================================================================================#
 # may be: TextLine -or- Element
 function VmoveAllChildren(node, y::Float64, moveNode::Bool)
@@ -37,16 +27,6 @@ end
 #======================================================================================#
 #    This is only to translate a shape with all children by x,y
 #    It may also be nesesary to move the node to another location in its row!
-"""
-## Types exported from Graphics
-
-...
-
-# Examples
-```julia-repl
-```
-[Source](https://github.com/TravisA9/NaquadahBrowser/blob/39c41cbb1ac28fe94876fe01beaa6e046c8b63d3/src/DOM/DomTree.jl#L54)
-"""
 #======================================================================================#
 # may be: TextLine -or- Element
 function MoveAll(node, x::Float64, y::Float64)
@@ -69,16 +49,6 @@ function MoveAll(node, x::Float64, y::Float64)
 end
 #======================================================================================#
 #======================================================================================#
-"""
-## Types exported from Graphics
-
-...
-
-# Examples
-```julia-repl
-```
-[Source](https://github.com/TravisA9/NaquadahBrowser/blob/39c41cbb1ac28fe94876fe01beaa6e046c8b63d3/src/DOM/DomTree.jl#L54)
-"""
 function MoveNodeToLeft(row::Row, index::Int64)
   node = row.nodes[index]
   for n in index:-1:2
@@ -99,5 +69,4 @@ end
 
 
 
-include("LayoutBuild.jl")
-include("LayoutBegin.jl")
+

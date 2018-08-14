@@ -1,11 +1,11 @@
 
-export getCreateLastRow, Page, Scroller, Row, Element, Text,
+export getCreateLastRow, Page, Scroller, Row, Element, TextElement,
        feedRow #Event,
 
-begin
+#begin
 
 # if this structure doesn't grow it should be elimenated. Pointless to have a structure for one member...
-    type EventType
+    mutable struct EventType
         pressed::Vector{Point}
         selectedNodes::Any
         EventType() = new([],[])
@@ -100,13 +100,13 @@ mutable struct Element
     Element() = new(Dict(), nothing, [], [], nothing, nothing, nothing, Scroller())
 end
 #-==============================================================================
-mutable struct Text
+mutable struct TextElement
     DOM::Dict       # Reference to dictionary counterpart of this node
     parent::Any               # This node's parent
     shape::Any # link to layout representation of node
-    Text(parent, shape) = new(Dict(), parent, shape)
-    Text(shape) = new(Dict(), nothing, shape)
-    Text() = new(Dict(), nothing, nothing)
+    TextElement(parent, shape) = new(Dict(), parent, shape)
+    TextElement(shape) = new(Dict(), nothing, shape)
+    TextElement() = new(Dict(), nothing, nothing)
 end
 #-==============================================================================
 mutable struct AttachedEvents
@@ -162,4 +162,4 @@ end
 
 
 
-end
+# end
