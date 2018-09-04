@@ -4,15 +4,6 @@ using Cairo, Gtk, Gtk.ShortNames, Graphics
 
 export AttatchEvents
 
-
-
-
-
-function MouseSetBoth(document, px, py, rx, ry)
-  document.event.pressed = Point(px, py)
-      #document.event.released = Point(rx, ry)
-end
-
 function AttatchEvents(document, canvas)
   #= Example of keypress output:
 Gtk.GdkEventKey(
@@ -38,7 +29,6 @@ Gtk.GdkEventKey(
     end
     #.............................................................
     canvas.mouse.button1motion = @guarded (widget, event) -> begin
-        #MouseSetBoth(document, event.x, event.y, -1, -1)
         #DrawEvent(document, widget, event)
         push!(document.event.pressed, Point(event.x, event.y) )
         #println("move x$(event.x) y$(event.y)")
@@ -120,6 +110,7 @@ Gtk.GdkEventKey(
     # Record to later test for click event
     #.............................................................
     canvas.mouse.button1press = @guarded (widget, event) -> begin
+        document.event.pressed = [] # Test code to be removed!
         document.event.pressed = [Point(event.x, event.y)]
         #push!(document.event.pressed, Point(event.x, event.y) )
         MouseDownEvent(document, widget, event)

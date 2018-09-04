@@ -161,7 +161,6 @@ function DrawShape(ctx::CairoContext, node::Element, shape::Draw, clipPath)
             if haskey(DOM, "image")
                 imagePath = PATH * DOM["image"] # "Mountains.png"
             end
-            println(imagePath)
             BackgroundImage(ctx, path.wide, path.tall, shape.left, shape.top, imagePath)
 
   elseif  shape.flags[LinearGrad]

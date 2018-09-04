@@ -7,7 +7,8 @@ function getInheritWidth(document::Page, p)
         end
         return p.shape.width
 end
-
+# width, h = getSize(p.shape)
+# return width
 # ======================================================================================
 ## CreateLayoutTree(document::Page, node::Element)
 # Generate a layout tree starting at `node` in `document`. This should be callable
@@ -61,7 +62,7 @@ function CreateLayoutTree(document::Page, parent)
                       MoveAll(n, shape.left - left, shape.top - top)
                     end
                   end
-              end
+                end
           end
         end
     end

@@ -38,91 +38,94 @@ end
 getFlags(node) = isa(node, TextElement) ? node.parent.font.flags : node.shape.flags
 #======================================================================================#
 function FinalizeRow(row::Row)
-    if row.flags[RowFinalized]
-        return 0 # maybe this should return row.y (!?!)
-    end
+    if !row.flags[RowFinalized]
 
-
-
-    vertHorizDisplacement(row)
-    #..........................................
-    # float LEFT: MoveNodeToLeft(row, index)
-    #..........................................
-    for i in 2:length(row.nodes)
-        n = row.nodes[i]
-        flags = getFlags(n)
-        if flags[FloatLeft] && !flags[Absolute]
-            w, h = getSize(n.shape) # we really only need width here.
-            MoveAll(n, -(n.shape.left - row.nodes[1].shape.left) ,0.0)
-            for j in 1:(i-1)
-              MoveAll(row.nodes[j],w,0.0)
+        setVertHorizDisplacement(row)
+        #..........................................
+        # float LEFT: MoveNodeToLeft(row, index)
+        #..........................................
+        for i in 2:length(row.nodes)
+            n = row.nodes[i]
+            flags = getFlags(n)
+            if flags[FloatLeft] && !flags[Absolute]
+                w, h = getSize(n.shape) # we really only need width here.
+                MoveAll(n, -(n.shape.left - row.nodes[1].shape.left) ,0.0) # move to row-start (left)
+                for j in 1:(i-1) # move everything before N to the right by w
+                  MoveAll(row.nodes[j],w,0.0)
+                end
+                MoveNodeToLeft(row, i)
             end
-            MoveNodeToLeft(row, i)
         end
-    end
-    #..........................................
-    # float RIGHT: MoveNodeToRight(row, index)
-    #..........................................
-    for i in length(row.nodes):-1:1
-        n = row.nodes[i]
-        flags = getFlags(n)
-        #shape = n.
-        if flags[FloatRight] && !flags[Absolute]
-            w, h = getSize(n.shape)
-            for j in (i+1):length(row.nodes)
-                row.nodes[j].shape.left -= w
+        #..........................................
+        # float RIGHT: MoveNodeToRight(row, index)
+        #    Begin with this...
+        #--|-1-| |-2-| |-FR-| |-4-|--empty-space--#
+        #    Desired result...
+        #--|-1-| |-2-| |-4-|--empty-space-- |-FR-|#
+        #..........................................
+        for i in length(row.nodes):-1:1
+            n = row.nodes[i]
+            flags = getFlags(n)
+            if flags[FloatRight] && !flags[Absolute]
+                w = getWidthfromContentLeft(n.shape)
+                MoveAll(n, row.width-n.shape.left-w, 0.0) # move to row-start (left)
+                for j in (i+1):length(row.nodes)
+                    w, h = getSize(n.shape)
+                    MoveAll(row.nodes[j], -w, 0.0)
+                end
+                wide,high = getSize(row.nodes[end].shape)
+                n.shape.left = row.nodes[end].shape.left + wide + row.space
             end
-            wide,high = getSize(row.nodes[end].shape)
-            n.shape.left = row.nodes[end].shape.left + wide + row.space
-        end
 
-end # for loop
-    # Mark row as finalized!
-    row.flags[RowFinalized] = true
+        end # for loop
+
+        # Mark row as finalized!
+        row.flags[RowFinalized] = true
+    end
     return row.top + row.height
 end
 # ======================================================================================
-#
+# vertical/hirizintal shift
 # ======================================================================================
-function vertHorizDisplacement(row::Row)
-    shiftAll = 0.0
-    #..........................................
-    # vertical/hirizintal shift
-    #..........................................
-        X = 0.0
+function setVertHorizDisplacement(row::Row)
+    shiftAll, x_space = 0.0, 0.0
+
+    for i in 1:length(row.nodes)
+        width, height = getSize(row.nodes[i].shape)
+        row.height = max(row.height, height)
+    end
+
   for i in 1:length(row.nodes)
       node = row.nodes[i]
       flags = getFlags(node) #node.parent.font.flags
       if !flags[Absolute]   # flags[Absolute] && return row.top + row.height
               shape = node.shape #.re ference
-              Y = 0
+              y_space = 0.0
               # set row height: this may need changed to take into account
-              if !isa(shape, TextLine)
-                  width, height = getSize(shape)
-                  if height > row.height
-                      row.height = height
-                  end
-              end
+              width, height = getSize(shape)
+              #row.height = max(row.height, height)
 
               if flags[TextCenter]
-                      X = row.space * .5
+                      x_space = row.space * .5
               elseif flags[TextRight]
-                      X = row.space
-                      row.space = 0
+                      x_space = row.space
               end
+              row.space = 0
 
               if flags[AlignBase]
-                  Y = (row.height - shape.height)
-              end
-                  # if !parent.shape.flags[FixedHeight]
-                  #     parent.shape.height = parent.scroll.contentHeight
-                  # end
-
-              if flags[AlignMiddle]  &&  row.height > shape.height
-                      Y::Float64 = (row.height - shape.height) *.5
+                  println("row.height: ", row.height)
+                  println("Shape height: ", height)
+                  println("row.height - height: ", row.height - height)
+                  y_space = (row.height - height)
               end
 
-              MoveAll(row.nodes[i], X,Y)
+              if flags[AlignMiddle]  &&  row.height > height
+                      y_space = (row.height - height) *.5
+              end
+
+              if x_space > 0 || y_space > 0
+                  MoveAll(row.nodes[i], x_space, y_space)
+              end
       end # ! Absolute
   end
 end
@@ -170,7 +173,7 @@ function PushToRow(document::Page, node, l::Float64,t::Float64,w::Float64) # hei
     end
     # InlineBlock /////////////////////////////////////////////////////
     if flags[DisplayInlineBlock] && shape.width < 1
-        shape.width = parent.rows[end].space # parent.rows[end].width
+        shape.width = parent.rows[end].space-width # parent.rows[end].width
     end
     # Block /////////////////////////////////////////////////////
     if flags[DisplayBlock]
