@@ -13,17 +13,54 @@
 				"hover":{"color":[0.996094, 0.5, 0.5]},
 				"border":{"radius":3, "color":"steelblue", "style":"solid", "width":"medium"}
 			},
+			"MenuButton":{  "display":"inline-block", "width":50, "padding":[8,16,8,16], "float":"right",
+				"font":{ "color":"black", "size":15, "align":"center", "lineHeight":1.4, 	"family":"Georgia", "vertical-align":"middle"},
+				"hover":{
+					"border":{"color":"steelblue", "style":"solid", "width":[0,0,0,3]}
+				}
+			},
 			"ball":{"radius":5, "color":[0.55,0.4,0.8], "position":"absolute" }
 		},
 
+
+
+
+
+
+
+
+
+
+
+
 "body":[
 
+	{">":"div", "color":"white", "padding":10,
+		"nodes":[
+			{">":"div",	"display":"inline-block", "width": 108,
+				"font":{ "color":[0.21, 0.26, 0.41], "size":18, "style":"oblique"},
+			"text":"Presenting Naquadah:"},
+			{">":"div",	"display":"inline-block", "width": 200, "padding":[8,0,0,0], "vertical-align":"middle",
+				"border":{"width":[2,0,0,0],"color":[0.41, 0.51, 0.82], "style":"solid" },
+				"font":{ "color":"black", "size":14, "align":"center"},
+			"text":"As a test of julia in General Purpose Computing"},
+
+			{">":"div", "style":"MenuButton",	"text":"INFO"},
+			{">":"div", "style":"MenuButton",	"text":"TESTS"},
+			{">":"div", "style":"MenuButton",	"text":"IDEAS"},
+			{">":"div", "style":"MenuButton",	"text":"ABOUT"},
+			{">":"div", "style":"MenuButton",	"text":"HOME"}
 
 
-{">":"div","color":"steelblue", "padding":5,"margin": [0, 0, 0, 20], "data": [107, 133, 221, 66, 102, 213],
+		]
+	},
+
+
+
+{">":"div","color":[0.41, 0.51, 0.82], "padding":5, "data": [107, 133, 221, 66, 102, 213],
 	"hover":{"color":[0.996094, 0.5, 0.5]},
   	"nodes":[
-		{">":"div",	"display":"inline-block", "width":230, "height":90, "margin": 10, "color":"lightgrey",
+		{">":"div",	"display":"inline-block", "width":240, "height":90, "margin": 10, "color":"lightgrey",
 			"border":{"width":"thin", "style":"longdashed", "color":"forestgreen", "radius":7},
 			"nodes":[
 				{">":"circle", "radius":25, "color":[0.83,0.39,0.37], "opacity":0.7,
@@ -35,12 +72,11 @@
 				{">":"circle", "radius":25, "color":[0.41,0.66,0.35], "opacity":0.6,
 					"position":"absolute", "bottom":31, "left":22,
 					"border":{ "width":"thick", "style":"solid", "color":[0.23,0.58,0.17]} },
-				{">":"div",	"display":"inline-block", "width":140, "height":80,
-					"margin":[95,6,0,0],
+
+				{">":"div",	"display":"inline-block", "width":140, "height":80, "margin":[95,6,0,0],
 					"nodes":[
 						{">":"div", "display":"inline-block", "text":"julia",
-							"font":{ "color":"black", "size":64, "align":"center", "lineHeight":1.4, "family":"Georgia",
-							"vertical-align":"middle" },
+							"font":{ "color":"black", "size":64, "align":"center", "lineHeight":1.4, "family":"Georgia"},
 							"nodes":[ ] },
 						{">":"circle", "radius":5,"color":[0.41,0.51,0.87],
 							"position":"absolute", "top":15, "left":10 },
@@ -57,7 +93,7 @@
         },
 
 		{">":"p", "display":"inline-block",
-			"font":{ "color":"white", "size":32, "align":"center", "lineHeight":1.4, "family":"Georgia", "vertical-align":"middle" },
+			"font":{ "color":"white", "size":32, "align":"center", "lineHeight":1.4, "family":"Georgia", "vertical-align":"middle", "style":"solid" },
 			"text":"Presenting Naquadah: As a test of julia in General Purpose Computing"}
 	]
 },
@@ -66,7 +102,17 @@
 
 
 
-
+{">":"div", "color":[0.25,0.25,0.27], "padding": 10, "margin":[0,0,0,20],
+	"nodes":[
+			{">":"h1", "font":{ "align":"center", "color":"white"},
+					"text":"Why reinvent the wheel?"},
+			{">":"p", "display":"block",
+					"font":{ "color":"lightgrey", "size":20, "align":"center",
+					"lineHeight":1.4, "weight":"normal", "family":"Georgia" },
+					"text":"Although it's often best to just use the tools that others have worked so hard to build and perfect, there are actually times when it's fitting to start again... but when? Well, one obvious answer is when your specific needs are different from the norm. However, there are other good reasons. For instance, maybe you really want to get a good understanding of the motives behind a standard design. Trying out a few changes to see why they succeed or fail can help you to get a feel of just that. In the case of this browser design, there's a different reason. As a technology develops, new features get added and removed. Some technologies are repurposed. In the end it's not uncommon to get a patchwork of parts which generally funtion as one but each part has its overhead. The overhead is often tolerated because refining, consolidation and re-education is a huge task. Browsers use and comunicate with so many separate languages (ex: HTML, XML, SVG, css, JS, JSON...) and tech that learning them all and integrating them seemlessly into one app or site is getting quite complex. There's also a lot of overlap in all of that. What if we could step back and consolidate all the benefits of the various tools and languages we just might simplify it all and eliminate needless complexity and overhead? This experement is to test that idea."
+		}
+	]
+},
 
 
 
@@ -74,7 +120,7 @@
 		"border":{"width":"thin", "style":"dashed", "color":"goldenrod"}
 	},
 
-{">":"div", "float":"left", "display":"inline-block", "width":200, "margin": 10, "padding":5, "color": "lemonchiffon",
+{">":"div", "float":"left", "vertical-align":"middle", "display":"inline-block", "width":200, "margin": 10, "padding":5, "color": "lemonchiffon",
 	"border":{"radius":[105,10,105,10], "width":"thin", "style":"dashed", "color":"goldenrod"},
 	"nodes":[
 			{">":"circle", "display":"inline-block", "radius":88, "color":"pink", "image":"coffee.png",
@@ -96,7 +142,7 @@
 },
 
 
-{">":"div", "display":"inline-block", "width":206, "margin": 10, "padding":8,
+{">":"div", "display":"inline-block", "width":206, "margin": 10, "padding":8, "vertical-align":"bottom",
 	"border":{"radius":7, "width":"thick", "style":"longdashed", "color":"brown"},
    	"nodes":[
 
@@ -132,7 +178,7 @@
 
 
 
-{">":"div", "display":"inline-block", "vertical-align":"bottom",
+{">":"div", "display":"inline-block",
 	"margin":0, "padding":5, "width":443, "color":[0.5,0.8,0.8],
     "border":{"radius":7, "width":[1,3,6,9], "style":"solid", "color":[0.0,0.3,0.6]},
     "nodes":[

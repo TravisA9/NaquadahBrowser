@@ -10,7 +10,7 @@ Take a look:
 ![window](doc/figures/NaquadahMay2018.gif)
 ![window](doc/figures/Naquadah_June_2017.png)
 
-**Long[er] answer**: Although, Naquadah looks and functions much like a standard web browser, you will find that there are a few interesting differences. Like a normal browser, Naquadah principally consists of a **layout engine** and a **render engine** built from the ground up. So it is not a repackaging of some browser engine such as webkit. For convenience, it includes a basic GUI as well.
+**Longer answer**: Although, Naquadah looks and functions much like a standard web browser, you will find that there are a few interesting differences. Like a normal browser, Naquadah principally consists of a **layout engine** and a **render engine** built from the ground up. So it is not a repackaging of some browser engine such as webkit. For convenience, it includes a basic GUI as well.
 
 * Naquadah uses **Cairo** for graphics and **GTK** for the GUI.
 
@@ -157,9 +157,12 @@ As you can see there are three major sections to a Json page and these may be on
 ```julia
    $ julia
 
-   julia> include("<path_to>/.julia/v0.7/NaquadahBrowser/src/NaquadahBrowser.jl")
+   julia> include("NaquadahBrowser.jl")
 ```
 ...or run NaquadahBrowser.jl from Juno or another editor.
+
+Note: you may also have to install Xclip for text copy/pasting just run something like `sudo apt install xclip` if you are running linux.
+
 # Code overview
 
 * [NaquadahCore](https://github.com/TravisA9/NaquadahBrowser/blob/master/src/Naquadah.md)
@@ -173,24 +176,22 @@ As you can see there are three major sections to a Json page and these may be on
 # General Goals
 
 * Maintain modularity in order to be adaptable. If in the future there is good reason to switch out something such as the graphics interface, it should be easy to do so without reworking all the code. Also, if someone wants to use just one module out of Naquadah it should be easy to do so.
-* ~~Maintain a measure of compatibility with~~ Learn from principal features of web standards. I believe that a lot of thought was put into the design and functionality of the WWW and that in general it is a good model to follow.
-* Simplify as much as possible while increasing functionality. It's pointless to build another browser if it doesn't offer good features.
-* Take advantage of opportunities to add select functionality that may not be feasible in an ordinary browser.
+* ~~Maintain a measure of compatibility with~~ Learn from principal features of web standards.
 * Make Naquadah easy to modify and re-purpose. Naquadah is made with the hopes of being useful. It may be modified for standalone apps, mobile devices, text editors and more. The more it is used, the more it will be developed.
 
 # Wish List:
 
-* Generate proper images from blobs
+* sass-like syntax as a cleaner and more descriptive alternative to JSON
 * Integrated page editor (perhaps WYSIWYG)
 * Optimize speed
 * Plotting and plot animation utilities \(Ex. force layout functionality\). Since Naquadah is meant to be a layout engine, it may be nice to include more than just the basic browser options.
 * Experiment with reactively connecting to databases for real-time page updates.
 
-##  Naquadah has now been overhualed!
+##  Naquadah has now been overhauled!
 
 In order to improve the general design and improve modularity I rewrote about 90% of the code. A lot of work you say? Yes, that is roughly 4,250 lines of code as I am writing this. That is in spite of the fact that I have made major simplifications to the code.
 
-**More progress** has been made... As the lines code increase so does the complexity but as I also continue to learn julia I see better ways of writing. I have simplified a lot of code and cleaned up quite a bit as well. As a result I have removed removed a great number of lines while still increasing functionality. I'm sure this will continue to happen and Naquadah will someday become a polished project ...I hope ;)
+**More progress** has been made... As the lines of code increase so does the complexity but as I also continue to learn julia I see better ways of writing. I have simplified a lot of code and cleaned up quite a bit as well. As a result I have removed removed a great number of lines while still increasing functionality. I'm sure this will continue to happen and Naquadah will someday become a polished project ...I hope ;)
 
 ### Take a look at the old version
 

@@ -29,13 +29,12 @@ mutable struct Row
     width::Float64 # because elements could be wider than the parent
     left::Float64  # TODO: change these to left/top for cmpatability
     top::Float64
+
+    Finalize(n) = length(n.rows) > 0 ? FinalizeRow(n.rows[end]) : n.shape.top
+
     Row(left, top, width) = new(falses(32),[],width,0,width,left,top)
     function Row(node)
-        if length(node.rows) > 0
-            top = FinalizeRow(node.rows[end])
-        else
-            top = node.shape.top
-        end
+        top = Finalize(node)
         r = Row(node.shape.left, top, node.shape.width)
         push!(node.rows, r ) # There were no rows. Create one!
         return r
@@ -48,6 +47,8 @@ mutable struct Row
     end
 end
 # maybe rename: GetNewRow or something similar.
+getCreateLastRow(n) = length(n.rows) < 1 ? Row(n) : n.rows[end]
+
 function getCreateLastRow(rows::Vector{Row}, l, t, w)
     if length(rows) < 1
         r = Row(l, t, w)
@@ -55,27 +56,30 @@ function getCreateLastRow(rows::Vector{Row}, l, t, w)
     end
     return rows[end]
 end
+
 #-==============================================================================
 #-==============================================================================
 function feedRow(parent, node)
-    if isa(node.shape, TextLine)
-        width, height = node.shape.width, node.shape.height
-    else
+
+
+
      width, height = getSize(node.shape)
+
+    if parent.shape.width < 1 # set parent width
+        parent.shape.width = width
     end
-    if parent.shape.width < 1
-        parent.shape.width = width #         print("parent width $(parent.shape.width), ")
+
+    row = getCreateLastRow(parent)
+
+    if node.shape.flags[Marked]
+        println("parrent.row.space: $(row.space) , node.width: $(width)")
+
     end
-    if length(parent.rows) < 1
-        row = Row(parent) # There were no rows. Create one!
-        row.top = parent.shape.top
-    else
-        row = parent.rows[end]   # Get a handle on it.
+
+    if row.space < width # Not enough room for node!
+        row = Row(parent) # This automatically finalises the row and returns a new one.
     end
-    if row.space < width
-        row = Row(parent) # This automatically finalises the previous row.
-    end
-    #node.shape.top = row.top # + padding etc.
+
     row.space -= width
     row.height = max(row.height, height)
 
