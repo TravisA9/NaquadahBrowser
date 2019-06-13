@@ -4,7 +4,7 @@
 
 #### What is Naquadah?
 
-**Short answer**: A browser and _layout engine_ that consumes -**Json**- instead of **HTML/CSS**
+**Short answer**: A browser and _layout engine_ that consumes ---**Json**--- instead of **HTML/CSS**
 
 Take a look:
 ![window](doc/figures/NaquadahMay2018.gif)
