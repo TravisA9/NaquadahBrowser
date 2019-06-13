@@ -4,9 +4,23 @@
 
 #### What is Naquadah?
 
-**Short answer**: A browser and _layout engine_ that consumes <s>  **Json**  </s> instead of **HTML/CSS**
+**Short answer**: A browser and _layout engine_ that consumes <s>**Json**</s>  **Scss** instead of **HTML/CSS**
 
 ## Scss-like syntax update in progress :construction_worker:
+
+Making web pages in JSON is working and has been great but after seeing the results it is clear we can still do better. This browser is a big experement and I think it is already proving to be worth the while. Json is great but with an Scss-like syntax we can benefit from a greater expressivness and readability of the code. That will mean less typing and better code highlighting features making the code prettier and easier to read. It will also mean fewer punctuation marks such as quotation marks and such.
+
+Here are some observations on a few languages:
+
+| language | Structured | Expressive | Terse |
+| :--- |  :--- |  :--- |  :--- |
+| Html |  |  |  |
+| Css |  |  |  |
+| Json |  |  |  |
+| Scss |  |  |  |
+
+
+
 
 Take a look:
 ![window](doc/figures/NaquadahMay2018.gif)
