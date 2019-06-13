@@ -4,7 +4,9 @@
 
 #### What is Naquadah?
 
-**Short answer**: A browser and _layout engine_ that consumes <s>**Json**</s> instead of **HTML/CSS**
+**Short answer**: A browser and _layout engine_ that consumes <s>  **Json**  </s> instead of **HTML/CSS**
+
+## Scss-like syntax update in progress :construction_worker:
 
 Take a look:
 ![window](doc/figures/NaquadahMay2018.gif)
