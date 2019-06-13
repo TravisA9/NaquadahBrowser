@@ -14,10 +14,10 @@ Here are some observations on a few languages:
 
 | language | Structured | Expressive | Terse |
 | :--- |  :--- |  :--- |  :--- |
-| Html |  |  |  |
-| Css |  |  |  |
-| Json |  |  |  |
-| Scss |  |  |  |
+| Html | :thumbsup: | :thumbsup: | :x: |
+| Css | :x: | :thumbsup: | :interrobang: |
+| Json | :thumbsup: | :interrobang: | :x: |
+| Scss | :thumbsup: | :thumbsup: | :thumbsup: |
 
 
 
