@@ -26,6 +26,14 @@ Take a look:
 ![window](doc/figures/NaquadahMay2018.gif)
 ![window](doc/figures/Naquadah_June_2017.png)
 
+<form action="https://www.paypal.com/cgi-bin/webscr" method="post" target="_top">
+<input type="hidden" name="cmd" value="_s-xclick" />
+<input type="hidden" name="hosted_button_id" value="6EUBLKUKFAPU8" />
+<input type="image" src="https://www.paypalobjects.com/en_US/MX/i/btn/btn_donateCC_LG.gif" border="0" name="submit" title="PayPal - The safer, easier way to pay online!" alt="Donate with PayPal button" />
+<img alt="" border="0" src="https://www.paypal.com/en_MX/i/scr/pixel.gif" width="1" height="1" />
+</form>
+
+
 **Longer answer**: Although, Naquadah looks and functions much like a standard web browser, you will find that there are a few interesting differences. Like a normal browser, Naquadah principally consists of a **layout engine** and a **render engine** built from the ground up. So it is not a repackaging of some browser engine such as webkit. For convenience, it includes a basic GUI as well.
 
 * Naquadah uses **Cairo** for graphics and **GTK** for the GUI.
