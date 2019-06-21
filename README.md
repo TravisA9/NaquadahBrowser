@@ -4,7 +4,7 @@
 
 #### What is Naquadah?
 
-**Short answer**: A browser and _layout engine_ that consumes <s>**Json**</s>  **Scss** instead of **HTML/CSS**
+**Short answer**: A browser and _layout engine_ that consumes <s>Json</s>  **Scss** instead of **HTML/CSS**
 
 ## Scss-like syntax update in progress :construction_worker:
 
@@ -26,6 +26,11 @@ Take a look:
 ![window](doc/figures/NaquadahMay2018.gif)
 ![window](doc/figures/Naquadah_June_2017.png)
 
+## Why donate?
+A project like this takes many hundreds of hours to get up and running. If no one invests the time to develop and test new ideas like this no one will benefit from them. The time I spend on this project coukd well be spent on other activities but if you think this project is worth investing in you can donate so that I can afford to spend more time developing NaquadahBrowser.
+
+https://travisa9.github.io/NaquadahBrowser/
+
 <form action="https://www.paypal.com/cgi-bin/webscr" method="post" target="_top">
 <input type="hidden" name="cmd" value="_s-xclick" />
 <input type="hidden" name="hosted_button_id" value="6EUBLKUKFAPU8" />
@@ -34,13 +39,12 @@ Take a look:
 </form>
 
 
-**Longer answer**: Although, Naquadah looks and functions much like a standard web browser, you will find that there are a few interesting differences. Like a normal browser, Naquadah principally consists of a **layout engine** and a **render engine** built from the ground up. So it is not a repackaging of some browser engine such as webkit. For convenience, it includes a basic GUI as well.
+**Longer answer**: Although, Naquadah looks and functions much like a standard web browser, you will find that there are a few interesting differences. Like a normal browser, Naquadah principally consists of a **layout engine** and a **render engine** built from the ground up. So, it's not a repackaging of some browser engine such as webkit. 
 
 * Naquadah uses **Cairo** for graphics and **GTK** for the GUI.
 
-* Written in **julia** language as a test of its usability as a general purpose programming language. Currently tested in julia v0.7 in linux. Previous versions have been tested on Windows.
+* Written in **julia** programming language. Currently tested in julia v1.04 in linux. Previous versions have been tested on Windows.
 
- It is being developed for fun and for the purpose of displaying my work but if it proves to be useful, that would be great too.
 
 #### State of the project
 
@@ -84,82 +88,86 @@ Take a look:
 
 ---
 
+Initially, I used JSON in place of Html and Css as web pages. After a lot of thought, I realised that an Scss-like syntax would be much better. It is easier to read and fewer punctuation marks as delimiters. It is way more expressive and looks cleaner. I call it Sml!
+
 # General structure
 
 Example of Json as a Web Page
 
-```JSON
-{
-    "head":{ ... },
-    "styles":{ ... },
-    "body":[ ... ]
+```scss
+div{
+    div{ color:white; padding:10;
+        div{	display:inline-block; width: 108;
+          font-color:0.21 0.26 0.41; font-size:18; font-style:oblique;
+        text:"Presenting Naquadah:"}
+        div{	display:inline-block; width: 200; padding:8 0 0 0; vertical-align:middle;
+          border-width:2 0 0 0;border-color:0.41 0.51 0.82; border-style:solid;
+          font-color:black; font-size:14; align:center
+        text:"As a test of julia in General Purpose Computing"; }
+
+        div{ class:MenuButton;	text:INFO}
+        div{ class:MenuButton;	text:TESTS}
+        div{ class:MenuButton;	text:IDEAS}
+        div{ class:MenuButton;	text:ABOUT}
+        div{ class:MenuButton;	text:HOME}
+    }
+    
+...
+
+```
+
+
+
+**Styles** can be added right in the nodes but you can also create classes and add the class name to your Sml element. The cool thing here is that unlike Sml classes can apply styles to nested structures. In the example below, you can see that ```Scss .round-button ``` has styles but contains ```Scss Circle ``` which also has a style. Both get applied to their respective elements.
+
+```scss
+.round-button{
+    display:inline-block; margin:7; radius:12; color: 0.6 0.6 0.6
+    hover{ color: 0.8 0.8 0.8; }
+    circle{ radius:12;}
 }
+
+div{ height:39; color:0.6 0.6 0.6; padding:2;
+    circle{ class:round-button; circle{ image:"Back.png"} }
+    ...
+    }
+
 ```
 
-The **head** may look something like this.
 
-```JSON
-    "head":{
-            "title":"MyPageTitle",
-            "favicon":"http://myapp/favicon.ico",
-            "charset":"utf-8",
-            "keywords":"web tech, browser concept, Json Pages",
-            "author":"Travis Deane Ashworth",
-            "links":[
-                {"url":"http://myapp/somescript.js"}
-            ]
-        }
+Styles are great but what if you want to insert new elements or even whole sections into your web page? For that we have **templates**! Let's suppose we want to make a footer for [Slashdot...](https://slashdot.org)
+
+```scss
+ @SlashdotGreen:#006666;
+ 
+ @SlashdotFooter:footer{ 
+								id:fhft; 
+								class:grid_24 nf;
+		
+		div{ id:logo_nf; class:fleft;
+			a{ href:"//slashdot.org">span{Slashdot}}
+		}
+		nav{ role:"firehose footer"
+				ul{ id:pagination-controls;
+					...
+				}
+			
+			ul{ class:"fright submitstory">
+					li{ class:fright;>
+						a{ href:"/submit"; Submitspan{ class:opt; text:Story; }}
+					}
+			}
+		}
+}
+ 
 ```
 
-The **styles** section stores frequently used styles \(similar to CSS\). However, since JSON can describe structure (_unlike CSS_), you can also use this section to define color swatches, templates and more, which automatically get applied :sparkles: to your page.
-
-```JSON
-    "styles":{
-
-            "Button":{
-                "onhover":{
-                    "color":"steelblue"
-                    },
-                "color":"lightblue",
-                "padding":5,
-                "border":{
-                    "radius":3,
-                    "width":"thick",
-                    "style":"solid",
-                    "color":"blue"
-                    },
-                "font":{
-                    "color":"white"
-                    }
-            },
-
-            "ColoredBox":{
-                style_data...
-            }
-        }
-```
-
-The **body** describes general structure \(similar to HTML and SVG\) and may also contain style information.
-
-```JSON
-    "body":[
-            {">":"div",
-                "class":"Button",
-                "mousedown":"doSomething()",
-                "text":"Some text"
-            },
-            {">":"circle",
-                "onhover":"doSomethingElse()",
-                "display":"inlineBlock",
-                    "radius":25,        
-                    "color":"lightgreen",
-                "center":[25,25],
-                "border":{"width":"thick",
-                    "style":"solid",
-                    "color":"blue"},
-                "nodes":[...]
-            }
-    ]
+We can now use ```scss @SlashdotGreen ``` as a variable like this: ``scss color:@SlashdotGreen; ``` and in a similar manner we can automatically insert a Slashdot footer: 
+```scss 
+div{ 
+   ... 
+   @SlashdotFooter; 
+}
 ```
 
 As you can see there are three major sections to a Json page and these may be one file or spread across several files. It may be modified (in the future) by script as well.
