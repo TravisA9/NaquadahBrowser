@@ -156,7 +156,7 @@ Styles are great but what if you want to insert new elements or even whole secti
     }
     ul{ class:"fright submitstory" 
         li{ class:fright;
-            a{ href:"/submit"; Submitspan{ class:opt; text:Story; }}
+            a{ href:"/submit"; span{ class:opt; text:Story; }}
         }
     }
 }
