@@ -22,7 +22,7 @@ Here are some observations on a few languages:
 
 Take a look:
 ![window](doc/figures/NaquadahMay2018.gif)
-![window](doc/figures/Naquadah_June_2017.png)
+![window](doc/figures/Naquadah-sml.png)
 
 ## Why donate?
 A project like this takes many hundreds of hours to get up and running. If no one invests the time to develop and test new ideas like this no one will benefit from them. The time I spend on this project could well be spent on other activities, but if you think this project is worth investing in, you can donate so that I can afford to spend more time developing NaquadahBrowser.
