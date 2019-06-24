@@ -90,10 +90,10 @@ Although, Naquadah looks and functions much like a standard web browser, you wil
 
 ---
 
-### Introducing SML
+# Introducing SML
 Initially, I used JSON in place of Html, Svg and Css as web pages. After a lot of thought, I realised that an Scss-like syntax would be much better. It is easier to read and fewer punctuation marks as delimiters. It is way more expressive and looks cleaner. I call it Sml!
 
-# General structure
+### General structure
 
 Example of SML as a Web Page
 
@@ -178,7 +178,7 @@ div{
 
 * First, install [Julia](http://julialang.org/downloads/) if you haven't already done so.
 
-* To start julia up go to your terminal and type: `julia`
+* To start julia up, go to your terminal and type: `julia`
 
 * Clone NaquadahBrowser thusly:
 
