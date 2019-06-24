@@ -1,16 +1,18 @@
+# include("Projects/NaquadahBrowser/src/NaquadahBrowser.jl")
 using Gtk, Gtk.ShortNames, Cairo, Graphics   # Colors
+println(pwd())
 
 if Sys.islinux()
     if basename(pwd()) != "NaquadahBrowser" # Make sure we're in the right dir
-        cd(".julia/v0.7/NaquadahBrowser")
+        cd("Projects/NaquadahBrowser")
     end
-    defaultPage = "file:///src/SamplePages/test.json"
+    defaultPage = "file:///src/SamplePages/test.sml"
     global PATH = pwd() * "/src/SamplePages/"
 elseif is_windows() # Do something windows-y here... needs tested by someone with a MS machine
     if basename(pwd()) != "NaquadahBrowser" # Make sure we're in the right dir
-        cd(".julia\\v0.7\\NaquadahBrowser")
+        cd("Projects\\NaquadahBrowser")
     end
-    defaultPage = "file:///src\\SamplePages\\test.json"
+    defaultPage = "file:///src\\SamplePages\\test.sml"
     global PATH = pwd() * "src\\SamplePages\\"
 end
 #using NaquadahCore

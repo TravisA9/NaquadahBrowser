@@ -7,8 +7,22 @@
 function GetTheColor(shape, DOMColor)
                 if isa(DOMColor, Array)
                     color = DOMColor
-                else
-                    color = collect(color_names[ DOMColor ]).*0.00390625
+                # elseif isa(DOMColor, Float64)
+                elseif isa(DOMColor, String)
+                    if DOMColor[1:1] == "#"
+                        if length(DOMColor) == 7
+                            color = [ parse(Int, DOMColor[2:3], base = 16)*0.00390625,
+                              parse(Int, DOMColor[4:5], base = 16)*0.00390625,
+                              parse(Int, DOMColor[6:7], base = 16)*0.00390625 ]
+                        elseif length(DOMColor) == 4
+                            color = [ parse(Int, DOMColor[2:2]^2, base = 16)*0.00390625,
+                              parse(Int, DOMColor[3:3]^2, base = 16)*0.00390625,
+                              parse(Int, DOMColor[4:4]^2, base = 16)*0.00390625 ]
+                        end
+                    else
+                        color = collect(color_names[ DOMColor ]).*0.00390625
+                    end
+                    # println("Color is $DOMColor")
                 end
 
                 if shape.flags[HasOpacity] && length(color) == 3
@@ -47,9 +61,9 @@ function printDict(DOM)
 end
 
 
+include("parseSml.jl")
 include("ElementDefaults.jl")
 include("DomTree.jl")
 include("DomBuildDefault.jl")
 include("DomShadow.jl")
 include("DomToLayout.jl")
-#include("DomUtilities.jl")

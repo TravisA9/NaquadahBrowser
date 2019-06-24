@@ -1,12 +1,12 @@
 
 export allAtributesToLayout, AtributesToLayout, CopyDict, DomToLayout
-# ordering these from most to least common should speed up testing!
-boxes = [ "div", "aside", "audio", "button", "canvas", "form", "header", "img",
-          "input", "ul", "ol", "li", "menu", "menuitem", "progress", "textarea",
-          "table", "tbody", "td", "th", "thead", "tr", "tfoot", "video"]
-text = [  "p", "a", "em", "h1", "h2", "h3", "h4", "h5", "h6",
-          "i", "s", "span", "small", "strong", "title", "abbr", "address",
-          "b", "blockquote", "q", "title", "sub", "sup"]
+
+# boxes = [ "div", "aside", "audio", "button", "canvas", "form", "header", "img",
+#           "input", "ul", "ol", "li", "menu", "menuitem", "progress", "textarea",
+#           "table", "tbody", "td", "th", "thead", "tr", "tfoot", "video"]
+# textboxes = [  "p", "a", "em", "h1", "h2", "h3", "h4", "h5", "h6",
+#           "i", "s", "span", "small", "strong", "title", "abbr", "address",
+#           "b", "blockquote", "q", "title", "sub", "sup"]
 # ======================================================================================
 # Test for string in array (this probably already exists somewhere).
 # ======================================================================================
@@ -62,16 +62,17 @@ function CreateShape(form::String, node::Element, h, w)
           node.shape.color = [1,1,1]
           node.shape.border = Border(0,0, 0,0, 0,0, "solid",[.8,.8,.8,1],[0,0,0,0])
           node.shape.width   = w
-          node.shape.height  =  h
+          node.shape.height  = h
           node.shape.flags[IsVScroll] = true # IsHScroll, IsVScroll
           node.shape.flags[FixedHeight] = true # Because it's the window!
           node.shape.flags[Clip] = true
     # elseif isAny(tag, boxes) !== nothing
     #             node.shape = NBox()
-    #         end
+            # end
     else
         node.shape = NBox()
         if haskey(node.DOM, "text")
+            # println(node.DOM["text"])
                 node.font = Font()
                 textnode = TextElement()
                 textnode.shape = TextLine(node, node.DOM["text"])
@@ -122,7 +123,10 @@ function DomToLayout(document::Page, node)
 # "path":"M2,2 L8,2 L2,5 L8,5 L2,8 L8,8"
 # b = "M2,2 L-8,2 L2,5 L8,5 L2,8 L8,8"
 
-
+        # display:inline-block; height:21; padding:3;
+        # width:100; color:0.6 0.6 0.6; margin:0 1 0 0;
+        # border-radius:7 0 0 3; border-width:0 2 0 0; border-style:solid;
+        # border-color:0.2 0.6 0.99;
 
       if haskey(DOM, "path")
                     node.shape.flags[HasPath] = true
@@ -264,12 +268,58 @@ function DomToLayout(document::Page, node)
      end
 
        #.........................................................................
+#        b = false
+#        bcolor = [0,0,0]
+#        bradius = [0,0,0,0]
+#        bstyle = "solid"
+#        bwidth = [0,0,0,0, 0,0]
+# if haskey(DOM, "border-color")
+#     bcolor = GetTheColor(node.shape, DOM["border-color"]) #DOM["border-color"]
+#     b=true
+# end
+# if haskey(DOM, "border-radius")
+#     r = DOM["border-radius"]
+#    if isa(r, Array)
+#      bradius = r
+#    else
+#      bradius = [r,r,r,r]
+#    end
+#    node.shape.flags[IsRoundBox] = true # IsRoundBox
+#     b=true
+# end
+#
+# if haskey(DOM, "border-width")
+#     w = DOM["border-width"]
+#    if isa(w, Array) && length(w) == 4
+#      bwidth = [ w[1],w[2],w[3],w[4],  w[1]+w[3], w[2]+w[4] ]
+#    elseif isa(w, Number)
+#      bwidth = [ w,w,w,w,  w*2, w*2 ]
+#    else
+#      if w == "thin"
+#        bwidth = [1,1,1,1,  2,2]
+#      end
+#      if w == "medium"
+#        bwidth = [3,3,3,3,  6,6]
+#      end
+#      if w == "thick"
+#        bwidth = [4,4,4,4,  8,8]
+#      end
+#    end
+#
+#     b=true
+# end
+# if haskey(DOM, "border-style")
+#     bstyle = DOM["border-style"]
+#     b=true
+# end
+# if b == true
+#     node.shape.border  = Border(bwidth... , bstyle, bcolor, bradius)
+# end
+
+
 if haskey(DOM, "border")
           border = DOM["border"]
-             color = [0,0,0]
-             radius = [0,0,0,0]
-             style = "solid"
-             width = [0,0,0,0, 0,0]
+
           if haskey(border, "color")
             color = GetTheColor(node.shape, border["color"]) # only works for: [.5,.8,.8]
           end
@@ -277,16 +327,20 @@ if haskey(DOM, "border")
                r = border["radius"]
               if isa(r, Array)
                 radius = r
-              else
+            else
                 radius = [r,r,r,r]
               end
               node.shape.flags[IsRoundBox] = true # IsRoundBox
+          else
+              radius = [0,0,0,0]
           end
+
           if haskey(border, "style")
               style = border["style"]
           else
               style = border["solid"] # default
           end
+
           if haskey(border, "width")
                   w = border["width"]
                  if isa(w, Array) && length(w) == 4
@@ -340,15 +394,43 @@ if haskey(DOM, "border")
         node.shape.margin = BoxOutline(margin...)
       end
       #.........................................................................
+# font-color:black; font-size:15; align:left; lineHeight:1.4; font-family:sans;
+
+if haskey(DOM, "font-color") || haskey(DOM, "font-size") || haskey(DOM, "font-family")
+    node.font = Font()
+
+    if haskey(DOM, "font-color")
+        node.font.color = GetTheColor(node.font, DOM["font-color"])
+    end
+    if haskey(DOM, "font-size")
+        node.font.size = DOM["font-size"]
+    end
+    if haskey(DOM, "font-family")
+        node.font.family = DOM["font-family"]
+    end
+    if haskey(DOM, "lineHeight")
+        node.font.lineHeight = DOM["lineHeight"]
+    end
+    if haskey(DOM, "align")
+        if DOM["align"] == "center"
+            node.font.flags[TextCenter] = true
+        elseif DOM["align"] == "right"
+            node.font.flags[TextRight] = true
+        end
+    end
+
+
+end
+# "font-weight"  "font-size"  "font-family"  "font-style"  "font-color"  "font-gradient"
+# "font-opacity"  "font-padding"  "font-border"  "font-margin"  "font-offset"
+# "font-lineHeight"  "font-lineWidth"  "font-fill"  "vertical-align"  "align"
       if haskey(DOM, "font") # && isa(node.shape, F o n t)
 
           if !isdefined(node, :font)
               node.font = Font()
           end
         font = DOM["font"]
-
-
-
+# "fill" "linewidth" "color" "align" "vertical-align" "style" "size" "lineHeight" "weight" "family"
         if haskey(font, "fill")
                 node.font.fill = GetTheColor(node.shape, font["fill"])
                 node.font.flags[TextPath] = true
@@ -400,12 +482,11 @@ if haskey(DOM, "border")
                 node.font.family = font["family"]
         end
       end
-      #...............Event Registration..................
+
+#...............Event Registration..................
       if haskey(DOM, "hover")
-            #  = DOM["hover"]
-
-     end
-
+          #  = DOM["hover"]
+      end
 end # function
 
 # ======================================================================================
@@ -413,9 +494,8 @@ end # function
 # ======================================================================================
 function AtributesToLayout(document::Page, node, generative::Bool=true)
 
-    DOM = node.DOM
-    PageStyles = document.styles
-    h, w = document.height ,document.width
+    DOM = node.DOM # PageStyles = document.styles
+    h, w = document.height, document.width
 
     if haskey(DOM, ">")
         tag = DOM[">"]
@@ -434,14 +514,18 @@ function AtributesToLayout(document::Page, node, generative::Bool=true)
         end
         # Create actual node.
         if generative
-            CreateShape(tag, node, h, w)
+            if isa(tag, Array)
+                println(DOM)
+            else
+                CreateShape(tag, node, h, w)
+            end
         end
 
         # Add user defined styles to node's DOM.
-        if haskey(DOM, "style")
-            style = DOM["style"]
-            CopyDict(DOM, PageStyles[style])
-        end
+        # if haskey(DOM, "style")
+        #     style = DOM["style"]
+        #     CopyDict(DOM, PageStyles[style])
+        # end
 
         # Add default values generally associated with this tag
         CopyDict(DOM, Tags_Default[tag])
@@ -453,3 +537,4 @@ end
 # ======================================================================================
 
 # ======================================================================================
+# Dict{Any,Any}("nodes"=>Any[],">"=>Any["h", 1.0],"font"=>Dict{Any,Any}("nodes"=>Any[],"color"=>"white","align"=>"center"),"text"=>"Why reinvent the wheel?")

@@ -1,13 +1,12 @@
 # Shaddow DOM defaults
-# s = open("src/Data/tab.json") do file read(file, String) end
 
-s = open(f->read(f, String), "src/Data/tab.json")
-tab = JSON.parse(s)
+s = open(f->read(f, String), "src/Data/tab.sml")
+tab = readSml(s)[1]
 
-s = open(f->read(f, String), "src/Data/tabControls.json")
-tabControls = JSON.parse(s)
+s = open(f->read(f, String), "src/Data/navigation.sml")
+navigation = readSml(s)
 
-s = open(f->read(f, String), "src/Data/navigation.json")
-navigation = JSON.parse(s)
+s = open(f->read(f, String), "src/Data/tabControls.sml")
+tabControls = readSml(s)[1]
 
 newPage = Dict( ">" => "page", "display" => "block", "color" => [0.8,0.8,0.8], "nodes"   => [] )

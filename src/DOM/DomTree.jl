@@ -33,40 +33,22 @@ end
 function FetchPage(document, URL::String)
 
     node = document.children[1]
-    #node.DOM = Dict( ">" => "window", "width" => wide, "display" => "block", "padding" => [0,0,0,0], "nodes"=>[])
-
-
-    # Gtk.GtkWindowLeafGtk.GtkCanvas
        # .......................................................................
        # get the file...
        uri = HTTP.parse(HTTP.URI, URL)
-
               if uri.scheme == "file"
                  File = pwd() * uri.path
-                       # Depreciated: Page_text = readstring(open(File))
-                       # Page_text = read(open(File), String )
-
-                       Page_text = open(File) do file
-                           read(file, String)
-                       end
-
+                       Page_text = open(f->read(f, String), File)
               elseif uri.scheme == "http" || uri.scheme == "https"
                   got = HTTP.request("GET", URL; verbose=3).body
-                  # WAS: get(URL; timeout = 10.0)
                   Page_text = readall(got)
               end
 
-        pageContent = JSON.parse(Page_text)
+        pageContent = readSml(Page_text)
         # ......................................................................
+        document.styles = Dict("charset"=>"utf-8")
+        document.head = Dict("charset"=>"utf-8","author"=>"Travis Deane Ashworth","links"=>Dict("url"=>"http://travis.net16.net/test.sml"),"keywords"=>"web tech,browser concept,sml Pages,fragmented web tech","title"=>"MyPage")
 
-        if haskey(pageContent, "head")
-            document.head = pageContent["head"]
-        end
-        if haskey(pageContent, "style")
-            document.styles = pageContent["style"]
-        end
-        if haskey(pageContent, "body")
-                #CreateControls(node,wide)
                 push!(node.DOM["nodes"], tabControls)
                 push!(node.DOM["nodes"], navigation)
 
@@ -75,10 +57,8 @@ function FetchPage(document, URL::String)
                 push!(tabControls["nodes"][1]["nodes"], tab)  # Add new tab.
                 push!(tabControls["nodes"][1]["nodes"], plus) # put button back on.
                 # Page content
-                newPage["nodes"] = pageContent["body"] # add this way because it is an array!
+                newPage["nodes"] = [pageContent]
                 push!(node.DOM["nodes"], newPage)
-
-        end
         # ......................................................................
         CreateDomTree(document, node)
 end

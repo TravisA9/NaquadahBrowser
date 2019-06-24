@@ -194,16 +194,13 @@ function ClickEvent(document, widget, event)
         if onArea(event.x, event.y, node.shape ) && insideParentClip( event.x, event.y, node)
             if haskey(node.DOM, "click")
                 click = node.DOM["click"]
-                if haskey(click, "code")
-
-                    code = Meta.parse(click["code"])
+                println(click)
+                # if haskey(click, "code")
+                    code = Meta.parse(click)
                     ex = :($(Expr(:toplevel, :(document = $document), :($code))))
                     eval(ex)
-
-
-
                     # WAS: eval(parse(click["code"]))
-                end
+                # end
             end
             #"click":{"code":"println(\"This is some code!\")", "preventDefault":true}
 
