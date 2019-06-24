@@ -147,15 +147,15 @@ Styles are great but what if you want to insert new elements or even whole secti
     id:fhft;
     class:grid_24 nf;
     div{ id:logo_nf; class:fleft;
-        a{ href:"//slashdot.org">span{Slashdot}}
+        a{ href:"//slashdot.org"; span{Slashdot}}
     }
     nav{ role:"firehose footer"
         ul{ id:pagination-controls;
         ...
 	}
     }
-    ul{ class:"fright submitstory">
-        li{ class:fright;>
+    ul{ class:"fright submitstory" 
+        li{ class:fright;
             a{ href:"/submit"; Submitspan{ class:opt; text:Story; }}
         }
     }
