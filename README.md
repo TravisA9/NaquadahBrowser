@@ -1,7 +1,7 @@
 # Naquadah Browser 
 
 ### If you like this project [give it a star or Download](https://github.com/TravisA9/NaquadahBrowser/tree/master/src)
-
+![window](doc/figures/NaquadahMay2018.gif)
 ---
 
 #### What is Naquadah?
@@ -22,8 +22,7 @@ Here are some observations on a few languages:
 
 
 
-Take a look:
-![window](doc/figures/NaquadahMay2018.gif)
+Take a look at a more recent image:
 ![window](doc/figures/Naquadah-sml.png)
 
 ## Why donate?
