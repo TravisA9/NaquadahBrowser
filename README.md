@@ -1,6 +1,5 @@
-# Naquadah Browser 
 
-### If you like this project [give it a star or Download](https://github.com/TravisA9/NaquadahBrowser/tree/master/src)
+## If you like this project please [give it a star or Download](https://github.com/TravisA9/NaquadahBrowser/tree/master/src)
 ![window](doc/figures/NaquadahMay2018.gif)
 ---
 
