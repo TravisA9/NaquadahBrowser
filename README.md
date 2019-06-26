@@ -1,4 +1,6 @@
-# Naquadah Browser [Download](https://github.com/TravisA9/NaquadahBrowser/tree/master/src)
+# Naquadah Browser 
+
+### If you like this project [give it a star or Download](https://github.com/TravisA9/NaquadahBrowser/tree/master/src)
 
 ---
 
