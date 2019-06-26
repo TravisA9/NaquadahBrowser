@@ -18,13 +18,13 @@ Here are some observations on a few languages:
 | Json | Yes | So-So | No |
 | Scss | Yes | Yes | Yes |
 
-
+One of the principal experimental features of Naquadah is a consolidation of the many langauges into just one. This should greatly reduce the complexity of both the browser and web site/app design. It also opens up new possibilities for the browser.
 
 
 Take a look at a more recent image:
 ![window](doc/figures/Naquadah-sml.png)
 
-## Why donate?
+## Why You should donate?
 A project like this takes many hundreds of hours to get up and running and thousands of hours to polish and mantain. If no one invests the time to develop and test new ideas like this no one will benefit from them. The time I spend on this project could well be spent on other activities, but if you think this project is worth investing in, you can donate so that I can afford to spend more time developing NaquadahBrowser.
 
 https://travisa9.github.io/NaquadahBrowser/
@@ -67,7 +67,7 @@ Although, Naquadah looks and functions much like a standard web browser, you wil
 
 | Features In Progress |
 | :--- |
-| **Shadows:** Temporary hack for text/basically not yet begun |
+| **Shadows:** Temporary hack for text/ currently a full implementation is being developed |
 | **Links**  |
 
 
