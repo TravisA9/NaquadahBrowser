@@ -3,11 +3,11 @@
 ![window](doc/figures/NaquadahMay2018.gif)
 ---
 
-#### What is Naquadah?
+## What is Naquadah?
 
-**Short answer**: An experimental browser that consumes **Scss**-like code instead of **HTML/SVG/CSS**
+**Short answer**: An experimental web browser that consumes **Scss**-like code instead of **HTML/SVG/CSS**
 
-#### Why would we do that?
+#### Why would we want that?
 
 Here are some observations on a few languages:
 
@@ -25,7 +25,7 @@ Take a look at a more recent image:
 ![window](doc/figures/Naquadah-sml.png)
 
 ## Why donate?
-A project like this takes many hundreds of hours to get up and running. If no one invests the time to develop and test new ideas like this no one will benefit from them. The time I spend on this project could well be spent on other activities, but if you think this project is worth investing in, you can donate so that I can afford to spend more time developing NaquadahBrowser.
+A project like this takes many hundreds of hours to get up and running and thousands of hours to polish and mantain. If no one invests the time to develop and test new ideas like this no one will benefit from them. The time I spend on this project could well be spent on other activities, but if you think this project is worth investing in, you can donate so that I can afford to spend more time developing NaquadahBrowser.
 
 https://travisa9.github.io/NaquadahBrowser/
 
