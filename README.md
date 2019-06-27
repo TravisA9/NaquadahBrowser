@@ -171,7 +171,7 @@ div{
    @SlashdotFooter;
 }
 ```
-## [Roadmap for Sml](NaquadahBrowser/src/DOM/SML.md)
+## [Roadmap for Sml](src/DOM/SML.md)
 
 # How To Get Started
 
