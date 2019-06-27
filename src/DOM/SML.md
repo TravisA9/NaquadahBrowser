@@ -25,12 +25,12 @@
  
  ```
  The objective here would be that an template generate a button for each element in the```$BtnNames``` array. Likewise, if the template is structured, having element B nested in A, and A is passed an array of two items to populate it and B is passed an array of 1 item, something like the following structure would be generated in the final document:
- ```JSON
- A1{...
-     B{...}
+ ```Scss
+ div{ text:"A1";
+     div{ text:"B"}
 }
- A2{...
-     B{...}
+ div{ text:"A2";
+     div{ text:"B"}
 }
  
  ```
