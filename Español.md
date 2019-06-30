@@ -4,18 +4,19 @@
 
 ## ¿Qué es Naquadah?
 
-** Respuesta corta **: un navegador web experimental que consume ** Scss **: código similar en lugar de ** HTML / SVG / CSS **
+**Respuesta corta**: un navegador web experimental que consume **Scss**: código similar en lugar de **HTML/SVG/CSS**
 
 #### ¿Por qué querríamos eso?
 
 Aquí hay algunas observaciones en algunos idiomas:
 
-| idioma | Estructurado | Expresivo | Terse |
-| : --- | : --- | : --- | : --- |
-| Html | Si | Si | No |
-| Css | No | Si | No |
-| Json | Si | Tan-tan | No |
-| Scss | Si | Si | Si |
+
+|idioma|Estructurado|Expresivo|Terse|
+|:---|:---|:---|:---|
+|Html|Si|Si|No|
+|Css|No|Si|No|
+|Json|Si|Tan-tan|No|
+|Scss|Si|Si|Si|
 
 Una de las principales características experimentales de Naquadah es la consolidación de los muchos idiomas en solo uno. Esto debería reducir en gran medida la complejidad tanto del navegador como del diseño del sitio web/aplicación. También abre nuevas posibilidades para el navegador.
 
@@ -28,11 +29,11 @@ Un proyecto como este toma muchos cientos de horas para ponerse en marcha y mile
 
 https://travisa9.github.io/NaquadahBrowser/
 
-<form action = "https://www.paypal.com/cgi-bin/webscr" method = "post" target = "_ top">
-<input type = "hidden" name = "cmd" value = "_ s-xclick" />
-<tipo de entrada = nombre "oculto" = nombre_botón_cubierto "valor =" 6EUBLKUKFAPU8 "/>
-<input type = "image" src = "https://www.paypalobjects.com/en_US/MX/i/btn/btn_donateCC_LG.gif" border = "0" name = "submit" title = "PayPal - The Safe, ¡Una forma más fácil de pagar en línea! " alt = "Donar con el botón de PayPal" />
-<img alt = "" border = "0" src = "https://www.paypal.com/en_MX/i/scr/pixel.gif" width = "1" height = "1" />
+<form action="https://www.paypal.com/cgi-bin/webscr" method="post" target="_top">
+<input type="hidden" name="cmd" value="_s-xclick" />
+<input type="hidden" name="hosted_button_id" value="6EUBLKUKFAPU8" />
+<input type="image" src="https://www.paypalobjects.com/en_US/MX/i/btn/btn_donateCC_LG.gif" border="0" name="submit" title="PayPal - The safer, easier way to pay online!" alt="Donate with PayPal button" />
+<img alt="" border="0" src="https://www.paypal.com/en_MX/i/scr/pixel.gif" width="1" height="1" />
 </form>
 
 
@@ -47,33 +48,33 @@ Aunque, Naquadah se ve y funciona como un navegador web estándar, encontrará q
 
 #### Estado del proyecto
 
-| Características de trabajo |
-| : --- |
-| **Etiquetas:** div, p, h1-h6, hr, a, pre, circle, page ('path' está actualmente en desarrollo) |
-| **Estilos:** color, opacidad, degradados, tamaño, visualización, posición, borde, borde-radio, radio, relleno, margen, fuente, alineación y más. |
-| **SML:** Clases, plantillas, etiquetas, variables |
-| **Flotador:** Izquierda, Derecha |
-| **Pantalla:** inline, inline-block, block, none |
-| **Posición:** fija, absoluta, relativa |
-| **Cuadro-Modal:** contenido, relleno, borde, margen |
-| **Colores:** Cualquier color (con o sin opacidad) |
-| **Eventos:** |
-| **julia:** Los navegadores web usualmente ejecutan JavaScript. Este navegador ejecuta julia |
-| **Recorte, selección de texto, degradados, desbordamiento** |
-| **Shadow DOM:** Scrollbars (parcialmente funcional), controles de ventana |
-| **Fondos:** color, degradado radial, degradado lineal, imagen\(con opacidad opcional) |
+|Características de trabajo|
+|: ---|
+|**Etiquetas:** div, p, h1-h6, hr, a, pre, circle, page ('path' está actualmente en desarrollo)|
+|**Estilos:** color, opacidad, degradados, tamaño, visualización, posición, borde, borde-radio, radio, relleno, margen, fuente, alineación y más.|
+|**SML:** Clases, plantillas, etiquetas, variables|
+|**Flotador:** Izquierda, Derecha|
+|**Pantalla:** inline, inline-block, block, none|
+|**Posición:** fija, absoluta, relativa|
+|**Cuadro-Modal:** contenido, relleno, borde, margen|
+|**Colores:** Cualquier color (con o sin opacidad)|
+|**Eventos:**|
+|**julia:** Los navegadores web usualmente ejecutan JavaScript. Este navegador ejecuta julia|
+|**Recorte, selección de texto, degradados, desbordamiento**|
+|**Shadow DOM:** Scrollbars (parcialmente funcional), controles de ventana|
+|**Fondos:** color, degradado radial, degradado lineal, imagen\(con opacidad opcional)|
 
 
-| Características en progreso |
-| : --- |
-| **Sombras:** Se está desarrollando un hack temporal para texto / actualmente se está desarrollando una implementación completa |
-| **Enlaces** |
+|Características en progreso|
+|: ---|
+|**Sombras:** Se está desarrollando un hack temporal para texto / actualmente se está desarrollando una implementación completa|
+|**Enlaces**|
 
 
-| Característica aún no implementada |
-| : --- |
-| **Transformaciones, Transiciones, Animaciones, Columnas, Consultas de medios, Máx / min, Tablas, Listas** |
-| **Selectores:** \ (. \), \ #, \ [\], $ =, \ * =, & Gt; |
+|Característica aún no implementada|
+|: ---|
+|**Transformaciones, Transiciones, Animaciones, Columnas, Consultas de medios, Máx / min, Tablas, Listas**|
+|**Selectores:** \(.\), \ #, \[ \], $ =, \* =, &Gt;|
 
 
 
