@@ -1,5 +1,5 @@
 ## Si te gusta este proyecto, [dale una estrella o descarga](https://github.com/TravisA9/NaquadahBrowser/tree/master/src)
-![ventana](doc / figures / NaquadahMay2018.gif)
+![ventana](doc/figures/NaquadahMay2018.gif)
 ---
 
 ## ¿Qué es Naquadah?
@@ -48,33 +48,33 @@ Aunque, Naquadah se ve y funciona como un navegador web estándar, encontrará q
 
 #### Estado del proyecto
 
-|Características de trabajo|
-|: ---|
-|**Etiquetas:** div, p, h1-h6, hr, a, pre, circle, page ('path' está actualmente en desarrollo)|
-|**Estilos:** color, opacidad, degradados, tamaño, visualización, posición, borde, borde-radio, radio, relleno, margen, fuente, alineación y más.|
-|**SML:** Clases, plantillas, etiquetas, variables|
-|**Flotador:** Izquierda, Derecha|
-|**Pantalla:** inline, inline-block, block, none|
-|**Posición:** fija, absoluta, relativa|
-|**Cuadro-Modal:** contenido, relleno, borde, margen|
-|**Colores:** Cualquier color (con o sin opacidad)|
-|**Eventos:**|
-|**julia:** Los navegadores web usualmente ejecutan JavaScript. Este navegador ejecuta julia|
-|**Recorte, selección de texto, degradados, desbordamiento**|
-|**Shadow DOM:** Scrollbars (parcialmente funcional), controles de ventana|
-|**Fondos:** color, degradado radial, degradado lineal, imagen\(con opacidad opcional)|
+| Características de trabajo |
+| : --- |
+| **Etiquetas:** div, p, h1-h6, hr, a, pre, circle, page ('path' está actualmente en desarrollo) |
+| **Estilos:** color, opacidad, degradados, tamaño, visualización, posición, borde, borde-radio, radio, relleno, margen, fuente, alineación y más. |
+| **SML:** Clases, plantillas, etiquetas, variables |
+| **Flotador:** Izquierda, Derecha |
+| **Pantalla:** inline, inline-block, block, none |
+| **Posición:** fija, absoluta, relativa |
+| **Cuadro-Modal:** contenido, relleno, borde, margen |
+| **Colores:** Cualquier color (con o sin opacidad) |
+| **Eventos:** |
+| **julia:** Los navegadores web usualmente ejecutan JavaScript. Este navegador ejecuta julia |
+| **Recorte, selección de texto, degradados, desbordamiento** |
+| **Shadow DOM:** Scrollbars (parcialmente funcional), controles de ventana |
+| **Fondos:** color, degradado radial, degradado lineal, imagen\(con opacidad opcional) |
 
 
-|Características en progreso|
-|: ---|
-|**Sombras:** Se está desarrollando un hack temporal para texto / actualmente se está desarrollando una implementación completa|
-|**Enlaces**|
+| Características en progreso |
+| : --- |
+| **Sombras:** Se está desarrollando un hack temporal para texto / actualmente se está desarrollando una implementación completa |
+| **Enlaces** |
 
 
-|Característica aún no implementada|
-|: ---|
-|**Transformaciones, Transiciones, Animaciones, Columnas, Consultas de medios, Máx / min, Tablas, Listas**|
-|**Selectores:** \(.\), \ #, \[ \], $ =, \* =, &Gt;|
+| Característica aún no implementada |
+| : --- |
+| **Transformaciones, Transiciones, Animaciones, Columnas, Consultas de medios, Máx / min, Tablas, Listas** |
+| **Selectores:** \(.\), \ #, \[ \], $ =, \* =, &Gt; |
 
 
 
