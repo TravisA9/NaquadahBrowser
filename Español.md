@@ -179,15 +179,15 @@ div {
 
 * Clone NaquadahBrowser de esta manera:
 
-`` `julia
+```julia
   julia> Pkg.clone("https://github.com/TravisA9/NaquadahBrowser.git")
-`` `
+```
 
 * Finalmente, una forma en que puedes iniciar la aplicación es con un comando REPL similar a este:
 
-`` `julia
+```julia
    julia> include("ruta/a/NaquadahBrowser.jl")
-`` `
+```
 ... o ejecute NaquadahBrowser.jl desde Juno u otro editor.
 
 Nota: es posible que también tenga que instalar Xclip para copiar/pegar texto, simplemente ejecute algo como `sudo apt install xclip` si está ejecutando Linux.
