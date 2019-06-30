@@ -48,34 +48,33 @@ Aunque, Naquadah se ve y funciona como un navegador web estándar, encontrará q
 
 #### Estado del proyecto
 
-| Características de trabajo |
-| : --- |
-| **Etiquetas:** div, p, h1-h6, hr, a, pre, circle, page ('path' está actualmente en desarrollo) |
-| **Estilos:** color, opacidad, degradados, tamaño, visualización, posición, borde, borde-radio, radio, relleno, margen, fuente, alineación y más. |
-| **SML:** Clases, plantillas, etiquetas, variables |
-| **Flotador:** Izquierda, Derecha |
-| **Pantalla:** inline, inline-block, block, none |
-| **Posición:** fija, absoluta, relativa |
-| **Cuadro-Modal:** contenido, relleno, borde, margen |
-| **Colores:** Cualquier color (con o sin opacidad) |
-| **Eventos:** |
-| **julia:** Los navegadores web usualmente ejecutan JavaScript. Este navegador ejecuta julia |
-| **Recorte, selección de texto, degradados, desbordamiento** |
+| Features Working |
+| :---  |
+| **Tags:**  div, p, h1-h6, hr, a, pre, circle, page ( 'path' está actualmente en desarrollo)|
+|  **Styles:**   color, opacity, gradients, size, display, position, border, border-radius, radius, padding, margin, font, alignment and more! |
+|  **SML:** Classes, Templates, Tags, Variables |
+| **Float:** Left, Right |
+|  **Display:**  inline, inline-block, block, none |
+|  **Position:**  fixed, absolute, relative |
+|  **Box-Modal:**  content, padding, border, margin |
+|  **Colors:**  Any color (con o sin opacidad) |
+| **Events:**  |
+| **julia:** WLos navegadores web usualmente ejecutan JavaScript. Este navegador ejecuta julia |
+|  **Clipping, Text selection, Gradients, Overflow**  |
 | **Shadow DOM:** Scrollbars (parcialmente funcional), controles de ventana |
-| **Fondos:** color, degradado radial, degradado lineal, imagen\(con opacidad opcional) |
+|  **Backgrounds:**  color, radial-gradient, linear-gradient, image \(with optional opacity\) |
 
 
 | Características en progreso |
-| : --- |
-| **Sombras:** Se está desarrollando un hack temporal para texto / actualmente se está desarrollando una implementación completa |
-| **Enlaces** |
+| :--- |
+| **Shadows:** Se está desarrollando un hack temporal para texto/actualmente se está desarrollando una implementación completa |
+| **Links**  |
 
 
-| Característica aún no implementada |
-| : --- |
-| **Transformaciones, Transiciones, Animaciones, Columnas, Consultas de medios, Máx / min, Tablas, Listas** |
-| **Selectores:** \(.\), \ #, \[ \], $ =, \* =, &Gt; |
-
+|  Característica aún no implementada |
+| :--- |
+| **Transforms, Transitions, Animations, Columns, Media queries, Max/min, Tables, Lists** |
+|  **Selectors:**   \(.\),   \#,   \[\],   $=,   \*=,   &gt;  |
 
 
 
