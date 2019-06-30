@@ -15,7 +15,7 @@ Aquí hay algunas observaciones en algunos idiomas:
 |:---|:---|:---|:---|
 |Html|Si|Si|No|
 |Css|No|Si|No|
-|Json|Si|Tan-tan|No|
+|Json|Si|mas o menos|No|
 |Scss|Si|Si|Si|
 
 Una de las principales características experimentales de Naquadah es la consolidación de los muchos idiomas en solo uno. Esto debería reducir en gran medida la complejidad tanto del navegador como del diseño del sitio web/aplicación. También abre nuevas posibilidades para el navegador.
