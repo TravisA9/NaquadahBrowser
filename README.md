@@ -2,6 +2,7 @@
 ## If you like this project please [give it a star or Download](https://github.com/TravisA9/NaquadahBrowser/tree/master/src)
 ![window](doc/figures/NaquadahMay2018.gif)
 ---
+#### [Leer en español](/Español.md)
 
 ## What is Naquadah?
 
@@ -12,7 +13,7 @@
 Here are some observations on a few languages:
 
 | language | Structured | Expressive | Terse |
-| :--- |  :--- |  :--- |  :--- |
+| :--- | :--- | :--- | :--- |
 | Html | Yes | Yes | No |
 | Css | No | Yes | No |
 | Json | Yes | So-So | No |
@@ -62,7 +63,7 @@ Although, Naquadah looks and functions much like a standard web browser, you wil
 | **julia:** Web browsers usually execute JavaScript. This browser executes julia |
 |  **Clipping, Text selection, Gradients, Overflow**  |
 | **Shadow DOM:** Scrollbars (partially working), window controls |
-|  **Backgrounds:**  color, radial-gradient, linear-gradient, image \(with optional opacity\)
+|  **Backgrounds:**  color, radial-gradient, linear-gradient, image \(with optional opacity\) |
 
 
 | Features In Progress |
