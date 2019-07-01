@@ -4,11 +4,11 @@
 
 ## ¿Qué es Naquadah?
 
-**Respuesta corta**: un navegador web experimental que consume **Scss**: código similar en lugar de **HTML/SVG/CSS**
+**Respuesta corta**: un navegador web experimental que consume código similar a **Scss**: en lugar de **HTML/SVG/CSS**
 
 #### ¿Por qué querríamos eso?
 
-Aquí hay algunas observaciones en algunos idiomas:
+Aquí hay algunas observaciones sobre algunos idiomas:
 
 
 |idioma|Estructurado|Expresivo|Terse|
@@ -18,10 +18,10 @@ Aquí hay algunas observaciones en algunos idiomas:
 |Json|Si|mas o menos|No|
 |Scss|Si|Si|Si|
 
-Una de las principales características experimentales de Naquadah es la consolidación de los muchos idiomas en solo uno. Esto debería reducir en gran medida la complejidad tanto del navegador como del diseño del sitio web/aplicación. También abre nuevas posibilidades para el navegador.
+Una de las principales características experimentales de Naquadah es la consolidación de los muchos idiomas en solo uno. Esto debería reducir en gran medida la complejidad tanto del navegador como del diseño de sitios-web/aplicaciones. También abre nuevas posibilidades para el navegador.
 
 
-Echa un vistazo a una imagen más reciente:
+Echa un vistazo a una imagen reciente:
 ![ventana](doc/figures/Naquadah-sml.png)
 
 ## ¿Por qué deberías donar?
@@ -51,7 +51,7 @@ Aunque, Naquadah se ve y funciona como un navegador web estándar, encontrará q
 | Features Working |
 | :---  |
 | **Tags:**  div, p, h1-h6, hr, a, pre, circle, page ( 'path' está actualmente en desarrollo)|
-|  **Styles:**   color, opacity, gradients, size, display, position, border, border-radius, radius, padding, margin, font, alignment and more! |
+|  **Styles:**   color, opacity, gradients, size, display, position, border, border-radius, radius, padding, margin, font, alignment y mas! |
 |  **SML:** Classes, Templates, Tags, Variables |
 | **Float:** Left, Right |
 |  **Display:**  inline, inline-block, block, none |
@@ -62,12 +62,12 @@ Aunque, Naquadah se ve y funciona como un navegador web estándar, encontrará q
 | **julia:** WLos navegadores web usualmente ejecutan JavaScript. Este navegador ejecuta julia |
 |  **Clipping, Text selection, Gradients, Overflow**  |
 | **Shadow DOM:** Scrollbars (parcialmente funcional), controles de ventana |
-|  **Backgrounds:**  color, radial-gradient, linear-gradient, image \(with optional opacity\) |
+|  **Backgrounds:**  color, radial-gradient, linear-gradient, image \(con opacidad optcional \) |
 
 
 | Características en progreso |
 | :--- |
-| **Shadows:** Se está desarrollando un hack temporal para texto/actualmente se está desarrollando una implementación completa |
+| **Shadows:** Se está desarrollando un hack temporal para texto/actualmente se está desarrollando una implementación completa. |
 | **Links**  |
 
 
@@ -90,7 +90,7 @@ Aunque, Naquadah se ve y funciona como un navegador web estándar, encontrará q
 ---
 
 # Introduciendo SML
-Inicialmente, usé JSON en lugar de Html, Svg y Css como páginas web. Después de pensarlo mucho, me di cuenta de que una sintaxis similar a Scss sería mucho mejor. Es más fácil de leer y menos signos de puntuación como delimitadores. Es mucho más expresivo y se ve más limpio. Yo lo llamo Sml!
+Inicialmente, usé JSON en lugar de Html, Svg y Css como páginas web. Después de pensarlo mucho, me di cuenta de que una sintaxis similar a Scss sería mucho mejor. Es más fácil de leer y tiene menos signos de puntuación como delimitadores. Es mucho más expresivo y se ve más limpio. Yo lo llamo Sml!
 
 ### Estructura general
 
@@ -129,7 +129,7 @@ div{
 }
 
 div{ height:39; color:0.6 0.6 0.6; padding:2;
-    círculo {clase: botón-redondo; círculo {imagen: "Back.png"}}
+    circle {clase: botón-redondo; circle {imagen: "Back.png"}}
     ...
     }
 
