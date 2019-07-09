@@ -99,6 +99,8 @@ Initially, I used JSON in place of Html, Svg and Css as web pages. After a lot o
 Example of SML as a Web Page
 
 ```scss
+	// This is a comment.
+
 div{
     div{ color:white; padding:10;
         div{	display:inline-block; width: 108;
