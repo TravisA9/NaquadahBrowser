@@ -197,15 +197,9 @@ div{
 
 Note: you may also have to install Xclip for text copy/pasting just run something like `sudo apt install xclip` if you are running linux.
 
-# Code overview
+# Code overview: Warning, always changing!
 
-* [NaquadahCore](https://github.com/TravisA9/NaquadahBrowser/blob/master/src/Naquadah.md)
-    - [DOM](https://github.com/TravisA9/NaquadahBrowser/blob/master/src/DOM/Readme.md)
-    - [Events](https://github.com/TravisA9/NaquadahBrowser/blob/master/src/Events/Readme.md)
-    - [Graphics](https://github.com/TravisA9/NaquadahBrowser/blob/master/src/Graphics/Readme.md)
-    - [Layout](https://github.com/TravisA9/NaquadahBrowser/blob/master/src/Layout/Readme.md)
-
-![window](doc/figures/projectMap.png)
+![window](doc/figures/projectMap.png) 
 
 # General Goals
 
