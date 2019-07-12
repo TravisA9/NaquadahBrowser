@@ -1,31 +1,32 @@
-# Naquadah Browser [Download](https://github.com/TravisA9/NaquadahBrowser/tree/master/src)
 
+## If you like this project please [give it a star or try it out](https://github.com/TravisA9/NaquadahBrowser/tree/master/src)
+![window](doc/figures/NaquadahMay2018.gif)
 ---
+#### [Leer en español](/Español.md)
 
-#### What is Naquadah?
+## What is Naquadah?
 
-**Short answer**: An experimental browser that consumes **Scss**-like code instead of **HTML/SVG/CSS**
+**Short answer**: An experimental web browser that consumes **Scss**-like code instead of **HTML/SVG/CSS**
 
-#### Why would we do that?
+#### Why would we want that?
 
 Here are some observations on a few languages:
 
 | language | Structured | Expressive | Terse |
-| :--- |  :--- |  :--- |  :--- |
+| :--- | :--- | :--- | :--- |
 | Html | Yes | Yes | No |
 | Css | No | Yes | No |
 | Json | Yes | So-So | No |
 | Scss | Yes | Yes | Yes |
 
+One of the principal experimental features of Naquadah is a consolidation of the many langauges into just one. This should greatly reduce the complexity of both the browser and web site/app design. It also opens up new possibilities for the browser.
 
 
+Take a look at a more recent image:
+![window](doc/figures/Naquadah-sml.png)
 
-Take a look:
-![window](doc/figures/NaquadahMay2018.gif)
-![window](doc/figures/Naquadah_June_2017.png)
-
-## Why donate?
-A project like this takes many hundreds of hours to get up and running. If no one invests the time to develop and test new ideas like this no one will benefit from them. The time I spend on this project could well be spent on other activities, but if you think this project is worth investing in, you can donate so that I can afford to spend more time developing NaquadahBrowser.
+## Why You should donate?
+A project like this takes many hundreds of hours to get up and running and thousands of hours to polish and mantain. If no one invests the time to develop and test new ideas like this no one will benefit from them. The time I spend on this project could well be spent on other activities, but if you think this project is worth investing in, you can donate so that I can afford to spend more time developing NaquadahBrowser.
 
 https://travisa9.github.io/NaquadahBrowser/
 
@@ -62,12 +63,12 @@ Although, Naquadah looks and functions much like a standard web browser, you wil
 | **julia:** Web browsers usually execute JavaScript. This browser executes julia |
 |  **Clipping, Text selection, Gradients, Overflow**  |
 | **Shadow DOM:** Scrollbars (partially working), window controls |
-|  **Backgrounds:**  color, radial-gradient, linear-gradient, image \(with optional opacity\)
+|  **Backgrounds:**  color, radial-gradient, linear-gradient, image \(with optional opacity\) |
 
 
 | Features In Progress |
 | :--- |
-| **Shadows:** Temporary hack for text/basically not yet begun |
+| **Shadows:** Temporary hack for text/ currently a full implementation is being developed |
 | **Links**  |
 
 
@@ -90,14 +91,16 @@ Although, Naquadah looks and functions much like a standard web browser, you wil
 
 ---
 
-### Introducing SML
+# Introducing SML
 Initially, I used JSON in place of Html, Svg and Css as web pages. After a lot of thought, I realised that an Scss-like syntax would be much better. It is easier to read and fewer punctuation marks as delimiters. It is way more expressive and looks cleaner. I call it Sml!
 
-# General structure
+### General structure
 
 Example of SML as a Web Page
 
 ```scss
+	// This is a comment.
+
 div{
     div{ color:white; padding:10;
         div{	display:inline-block; width: 108;
@@ -147,16 +150,16 @@ Styles are great but what if you want to insert new elements or even whole secti
     id:fhft;
     class:grid_24 nf;
     div{ id:logo_nf; class:fleft;
-        a{ href:"//slashdot.org">span{Slashdot}}
+        a{ href:"//slashdot.org"; span{Slashdot}}
     }
     nav{ role:"firehose footer"
         ul{ id:pagination-controls;
         ...
 	}
     }
-    ul{ class:"fright submitstory">
-        li{ class:fright;>
-            a{ href:"/submit"; Submitspan{ class:opt; text:Story; }}
+    ul{ class:"fright submitstory" 
+        li{ class:fright;
+            a{ href:"/submit"; span{ class:opt; text:Story; }}
         }
     }
 }
@@ -171,14 +174,13 @@ div{
    @SlashdotFooter;
 }
 ```
-
-
+## [Roadmap for Sml](src/DOM/SML.md)
 
 # How To Get Started
 
 * First, install [Julia](http://julialang.org/downloads/) if you haven't already done so.
 
-* To start julia up go to your terminal and type: `julia`
+* To start julia up, go to your terminal and type: `julia`
 
 * Clone NaquadahBrowser thusly:
 
@@ -195,15 +197,9 @@ div{
 
 Note: you may also have to install Xclip for text copy/pasting just run something like `sudo apt install xclip` if you are running linux.
 
-# Code overview
+# Code overview: Warning, always changing!
 
-* [NaquadahCore](https://github.com/TravisA9/NaquadahBrowser/blob/master/src/Naquadah.md)
-    - [DOM](https://github.com/TravisA9/NaquadahBrowser/blob/master/src/DOM/Readme.md)
-    - [Events](https://github.com/TravisA9/NaquadahBrowser/blob/master/src/Events/Readme.md)
-    - [Graphics](https://github.com/TravisA9/NaquadahBrowser/blob/master/src/Graphics/Readme.md)
-    - [Layout](https://github.com/TravisA9/NaquadahBrowser/blob/master/src/Layout/Readme.md)
-
-![window](doc/figures/projectMap.png)
+![window](doc/figures/projectMap.png) 
 
 # General Goals
 
