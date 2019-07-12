@@ -46,7 +46,7 @@ Gtk.GdkEventKey(
         for node in hovers
             if onArea( event.x, event.y, node.shape) && insideParentClip(event.x, event.y, node) && node !== document.focusNode
                 ctx = getgc(widget)
-                page = document.children[1].children[3]
+                page = document.content
                 node.temp = deepcopy(node.shape)
 
                 #"hover":{"color":"yellow"},

@@ -60,9 +60,6 @@ end
 #-==============================================================================
 #-==============================================================================
 function feedRow(parent, node)
-
-
-
      width, height = getSize(node.shape)
 
     if parent.shape.width < 1 # set parent width
@@ -70,11 +67,6 @@ function feedRow(parent, node)
     end
 
     row = getCreateLastRow(parent)
-
-    if node.shape.flags[Marked]
-        println("parrent.row.space: $(row.space) , node.width: $(width)")
-
-    end
 
     if row.space < width # Not enough room for node!
         row = Row(parent) # This automatically finalises the row and returns a new one.
@@ -120,6 +112,7 @@ mutable struct AttachedEvents
     mouseover::Vector{Any}
     mouseup::Vector{Any}
     mouseout::Vector{Any}
+    scroll::Vector{Any}
 
     drag::Vector{Any}
     drop::Vector{Any}
@@ -140,10 +133,12 @@ end
 #-==============================================================================
 mutable struct Page
          parent::Any  # First node needs a Psudo-parent too ..maybe!
-         children::Vector{Any} # First node in a tree-like data structure representing all elements on page
+         children::Vector{Element} # First node in a tree-like data structure representing all elements on page
          fixed::Element # First node in a tree-like data structure representing all elements on page
-         styles::Dict
-         head::Dict
+         controls::Element
+         tabs::Element
+         nav::Element
+         content::Vector{Element}
          width::Float64
          height::Float64
 
@@ -154,12 +149,34 @@ mutable struct Page
          canvas::Any
          event::EventType
          eventsList::AttachedEvents
-             function Page(url::String)
-                     children::Vector{Element} = [Element()]
-                     parent = children[1]
-                     children[1].parent = parent
-                 new(parent, children, Element(), Dict(), Dict(), 0,0, nothing, url, falses(8),
-                    nothing, 0, EventType(), AttachedEvents())
+             function Page(url::String, w,h)
+                 # Build DOM and then Generate nodes from that:
+                 controls::Element = Element()
+                 controls.DOM = Dict( ">" => "window", "width" => 1000, "display" => "block", "padding" => [0,0,0,0], "nodes"=>[])
+                 navigation["nodes"][6]["nodes"][2]["text"] = url
+                 tab["nodes"][2]["text"] = "newtab"
+                 plus = pop!(tabControls["nodes"][1]["nodes"]) # Take button off end.
+                 push!(tabControls["nodes"][1]["nodes"], tab)  # Add new tab.
+                 push!(tabControls["nodes"][1]["nodes"], plus) # put button back on.
+                 controls.DOM["nodes"]  = [tabControls, navigation]
+                 CreateDomTree(controls)
+                 # controls[ tab, nav, *pages* ]
+                 # tab = controls.children[1]
+                 # nav = controls.children[2]
+                 # content = controls.children[3].children
+
+                 tabs = controls.children[1]
+                 nav = controls.children[2]
+
+                 children::Vector{Element} = [controls]
+                 parent = children[1]
+                 controls.parent = parent
+
+            new( parent, children,
+                 Element(),# (FIXED) Needs to be an array to serve all documents
+                 controls, tabs, nav, [],
+                 w, h, nothing, url, falses(8),
+                 nothing, 0, EventType(), AttachedEvents())
              end
 end
 

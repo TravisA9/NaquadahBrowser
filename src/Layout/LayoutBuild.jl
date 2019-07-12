@@ -1,30 +1,4 @@
 export setUpWindow, PushToRow, FinalizeRow
-# ======================================================================================
-### Types exported from Graphics
-# ======================================================================================
-function setUpWindow(document::Page, w::Float64,h::Float64)
-
-    n = document.children[1]
-    n.shape = NBox()
-     n.shape.color = [1,1,1]
-     n.shape.padding = BoxOutline(0,0,0,0,0,0)
-     n.shape.border = Border(0,0, 0,0, 0,0, "solid",[.5,.5,.5,1],[0,0,0,0])
-     n.shape.left    = 0
-     n.shape.top     = 0
-     n.shape.width   = w # S hould be window width  - controls
-     n.shape.height  = h # S hould be window height - controls
-
-    document.fixed.rows = [] #Row(0, 0, w)
-    fn = document.fixed
-    fn.shape = NBox()
-      fn.shape.color = [1,1,1]
-      fn.shape.padding = BoxOutline(0,0,0,0,0,0)
-      fn.shape.border = Border(0,0, 0,0, 0,0, "solid",[.5,.5,.5,1],[0,0,0,0])
-      fn.shape.left    = 0
-      fn.shape.top     = 0
-      fn.shape.width   = w # S hould be window width  - controls
-      fn.shape.height  = h # S hould be window height - controls
-end
 #======================================================================================#
 #======================================================================================#
 # Types exported from Graphics
@@ -106,25 +80,24 @@ function setVertHorizDisplacement(row::Row)
               #row.height = max(row.height, height)
 
               if flags[TextCenter]
-                      x_space = row.space * .5
+                  x_space = (row.space/(length(row.nodes)+1))*i
               elseif flags[TextRight]
-                      x_space = row.space
+                  x_space = row.space
+                  row.space = 0
               end
-              row.space = 0
 
               if flags[AlignBase]
-                  println("row.height: ", row.height)
-                  println("Shape height: ", height)
-                  println("row.height - height: ", row.height - height)
                   y_space = (row.height - height)
               end
 
               if flags[AlignMiddle]  &&  row.height > height
-                      y_space = (row.height - height) *.5
+                  y_space = (row.height - height) *.5
               end
 
               if x_space > 0 || y_space > 0
-                  MoveAll(row.nodes[i], x_space, y_space)
+                  MoveAll(node, x_space, y_space)
+                  # MoveAll(row.nodes[i], x_space*i, y_space)
+                  node
               end
       end # ! Absolute
   end
@@ -190,10 +163,4 @@ function PushToRow(document::Page, node, l::Float64,t::Float64,w::Float64) # hei
 end
 #======================================================================================#
 #
-#======================================================================================#
-
-#======================================================================================#
-#
-#======================================================================================#
-
 #======================================================================================#

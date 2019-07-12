@@ -117,6 +117,9 @@ mutable struct NBox <: Draw
     width::Float64
     height::Float64
     NBox() = new( falses(64), [], [], [], 1, nothing, nothing, nothing, nothing,0,0,0,0 )
+    NBox(w,h) = new( falses(64), [1,1,1], [], [], 1, 
+        BoxOutline(0,0,0,0,0,0), Border(0,0, 0,0, 0,0, "solid",[.5,.5,.5,1],[0,0,0,0]),
+        nothing, nothing, 0,0,w,h )
 end
 
 mutable struct Circle <: Draw

@@ -107,7 +107,7 @@ while i < length(s)
     # Hex-------------------------
         elseif s[from] == '#'
             i+=1
-            while isdigit(s[i+1]) || 'a' <= s[i+1] <= 'f'
+            while isdigit(s[i+1]) || 'a' <= s[i+1] <= 'f' || 'A' <= s[i+1] <= 'F'
                 i+=1
             end
 			push!(toks, ["Hex", s[from:i]])

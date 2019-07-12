@@ -1,12 +1,13 @@
 
 export allAtributesToLayout, AtributesToLayout, CopyDict, DomToLayout
 
-# boxes = [ "div", "aside", "audio", "button", "canvas", "form", "header", "img",
-#           "input", "ul", "ol", "li", "menu", "menuitem", "progress", "textarea",
-#           "table", "tbody", "td", "th", "thead", "tr", "tfoot", "video"]
-# textboxes = [  "p", "a", "em", "h1", "h2", "h3", "h4", "h5", "h6",
-#           "i", "s", "span", "small", "strong", "title", "abbr", "address",
-#           "b", "blockquote", "q", "title", "sub", "sup"]
+boxes = [ "div", "aside", "audio", "button", "canvas", "form", "header", "img",
+          "input", "ul", "ol", "li", "menu", "menuitem", "progress", "textarea",
+          "table", "tbody", "td", "th", "thead", "tr", "tfoot", "video",
+          "scrollbar-thumb", "v-scroll"]
+textboxes = [ "p", "a", "em", "h1", "h2", "h3", "h4", "h5", "h6",
+              "i", "s", "span", "small", "strong", "title", "abbr", "address",
+              "b", "blockquote", "q", "title", "sub", "sup"]
 # ======================================================================================
 # Test for string in array (this probably already exists somewhere).
 # ======================================================================================
@@ -36,6 +37,12 @@ end
 # ======================================================================================
 function CopyDict(primary::Dict, secondary::Dict)
    allKeys = union([key for key in keys(primary)],[key for key in keys(secondary)])
+
+   # tag = primary[">"]
+   # if tag == "body"
+   #     println(keys(secondary))
+   # end
+
     for key in allKeys
           if haskey(primary, key) && haskey(secondary, key)
                 if isa(primary[key], Dict) # its a sub-Dict
@@ -57,33 +64,86 @@ function CreateShape(form::String, node::Element, h, w)
     # elseif form == "path"
     elseif form == "arc"
         node.shape = Arc()
-    elseif form == "page" # alternatively I could use the familiar "body" tag for this!
+    else # if isAny(form, boxes) !== nothing
         node.shape = NBox()
-          node.shape.color = [1,1,1]
-          node.shape.border = Border(0,0, 0,0, 0,0, "solid",[.8,.8,.8,1],[0,0,0,0])
-          node.shape.width   = w
-          node.shape.height  = h
-          node.shape.flags[IsVScroll] = true # IsHScroll, IsVScroll
-          node.shape.flags[FixedHeight] = true # Because it's the window!
-          node.shape.flags[Clip] = true
-    # elseif isAny(tag, boxes) !== nothing
-    #             node.shape = NBox()
-            # end
-    else
-        node.shape = NBox()
-        if haskey(node.DOM, "text")
-            # println(node.DOM["text"])
-                node.font = Font()
-                textnode = TextElement()
-                textnode.shape = TextLine(node, node.DOM["text"])
-                push!(node.children, textnode)
-                # TODO: set text width as a default
-                # something like this:
-                    # ctx = CairoContext( CairoRGBSurface(0,0) )
-                    # setTextContext(ctx, node)
-                    # text_extents(ctx, node.shape.text )[3]
-        end
     end
+
+    # if form == "page" # alternatively I could use the familiar "body" tag for this!
+    if form == "body" # alternatively I could use the familiar "body" tag for this!
+        node.shape.left  = 0 # will be something like vw & vh
+        node.shape.top   = 74 # will be something like vw & vh
+        node.shape.width  = w # will be something like vw & vh
+        node.shape.height = h-74
+        node.shape.flags[FixedHeight] = true # gets set when Hight is calculated
+        node.shape.flags[Clip] = true # gets set when Hight is calculated
+    end
+
+    if haskey(node.DOM, "text") || haskey(node.DOM, "font")
+        node.font = Font()
+        if haskey(node.DOM, "text")
+            textnode = TextElement()
+            textnode.shape = TextLine(node, node.DOM["text"])
+            push!(node.children, textnode)
+        end
+        # TODO: set text width as a default
+        # something like this:
+        # ctx = CairoContext( CairoRGBSurface(0,0) )
+        # setTextContext(ctx, node)
+        # text_extents(ctx, node.shape.text )[3]
+    end
+
+    # if form == "v-scroll"
+    #     container = node.parent.shape
+    #
+    #     border = get(container.border,  Border(0,0,0,0,0,0, 0,[],[0,0,0,0]))
+    #     padding = get(container.padding, BoxOutline(0,0,0,0,0,0))
+    #     l,t,w,h = getBorderBox(container, border, padding)
+    #
+    #     h/node.scroll.contentHeight
+    #     r, b = l+w-12, t+h-12
+    #
+    #     realTop = abs(t)
+    #     setcolor(ctx, .3,.3,.3, .3)
+    #     rectangle(ctx,r,t,12,h )
+    #     fill(ctx);
+    #     node.shape.left  = 0 # will be something like vw & vh
+    #     node.shape.top   = 74 # will be something like vw & vh
+    #     node.shape.width  = w # will be something like vw & vh
+    #     node.shape.height = h-74
+    #
+    # elseif form == "scrollbar-thumb"
+    #     #.............................................................
+    #      height       = node.shape.height - node.shape.top    # Height of the viewport and of the scrollbarArea
+    #      scrollHeight = node.scroll.contentHeight     # Height of the content
+    #      scrollTop    = node.scroll.y      # Scrolled position of the content from the top
+    #      #.............................................................
+    #      scrollButHeight = height / (scrollHeight / height)
+    #      y = scrollTop / (scrollHeight / height)
+    #
+    #
+    #      node.shape.left  = 0 #
+    #      node.shape.width  = w #
+    #      node.shape.height = height / (scrollHeight / height)
+    #      node.shape.top   = scrollTop / (scrollHeight / height) #
+    #
+    #      setcolor(ctx, .4,.4,.4, 1)
+    #      rectangle(ctx,r+1,t-y,10,scrollButHeight )
+    # end
+    # "v-scroll" => Dict( ">" => "v-scroll", "offset" => 0, "color" => "darkgrey",
+    # 					"width" =>  12, "height" =>  12, "opacity" => 0.3,
+    #                     "hover" => Dict("opacity" => 0.9 ),
+    # 										"nodes" => [ Dict(">" => "scrollbar-thumb", "color" => "grey", "height" =>  12,"width" =>  10 , "nodes" => []) ]
+    # 										),
+    # "scrollbar-thumb" => Dict( "scrollbar-thumb" => "body","color" => "grey", "height" =>  12,"width" =>  10 , "nodes" => []),
+    #
+    #
+#.............................................................
+
+
+
+
+#.............................................................
+
     # if  isAny(form, text) !== nothing # Any from the list
     #     #node.shape = NText()
     #     node.font = Font() # The actual text nodes are created later.
@@ -110,8 +170,61 @@ end
 function DomToLayout(document::Page, node)
 
           DOM = node.DOM
-          PageStyles = document.styles
           h, w = document.height ,document.width
+
+
+    if haskey(DOM, "overflow")
+
+        overflow = DOM["overflow"]
+        if overflow == "scroll"
+            push!(document.eventsList.scroll, node)
+            println(length(document.eventsList.scroll))
+            # push!(DOM["nodes"],  Tags_Default["v-scroll"])
+            node.shape.flags[IsVScroll] = true # IsHScroll, IsVScroll
+            # node.shape.flags[IsHScroll] = true # IsHScroll, IsVScroll
+            node.shape.flags[Clip] = true # This is
+            # node.shape.flags[FixedHeight] = true # gets set when Hight is calculated
+        elseif overflow == "scroll-x"
+            push!(document.eventsList.scroll, node)
+            node.shape.flags[FixedHeight] = true # gets set when Hight is calculated
+
+            node.shape.flags[IsHScroll] = true # IsHScroll, IsVScroll
+            node.shape.flags[Clip] = true # This is
+        elseif overflow == "scroll-y"
+            push!(document.eventsList.scroll, node)
+            node.shape.flags[FixedHeight] = true # gets set when Hight is calculated
+
+            node.shape.flags[IsVScroll] = true # IsHScroll, IsVScroll
+            node.shape.flags[Clip] = true # This is
+        elseif overflow == "hidden"
+            node.shape.flags[Clip] = true # This is
+        elseif overflow == "auto"
+        elseif overflow == "visible"
+        end
+    end
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
       if haskey(DOM, "float")
           if DOM["float"] == "right"
@@ -129,26 +242,26 @@ function DomToLayout(document::Page, node)
         # border-color:0.2 0.6 0.99;
 
       if haskey(DOM, "path")
-                    node.shape.flags[HasPath] = true
-                    properties
+            node.shape.flags[HasPath] = true
+            # properties
       end
 
       if haskey(DOM, "image")
-                    node.shape.flags[HasImage] = true
+            node.shape.flags[HasImage] = true
       end
       if haskey(DOM, "radius")
           r =  DOM["radius"]
-                    node.shape.radius = r
-                    node.shape.width  = r*2
-                    node.shape.height = r*2
+            node.shape.radius = r
+            node.shape.width  = r*2
+            node.shape.height = r*2
       end
 
       if haskey(DOM, "opacity")
-                    node.shape.opacity = DOM["opacity"]
-                    node.shape.flags[HasOpacity] = true
+                node.shape.opacity = DOM["opacity"]
+                node.shape.flags[HasOpacity] = true
       end
       if haskey(DOM, "color")
-                    node.shape.color = GetTheColor(node.shape, DOM["color"])
+                node.shape.color = GetTheColor(node.shape, DOM["color"])
       end
 
       if haskey(DOM, "linear-gradient")
@@ -192,24 +305,24 @@ function DomToLayout(document::Page, node)
               node.shape.flags[Marked] = true
       end
       if haskey(DOM, "top")
-              node.shape.top = DOM["top"]
+              node.shape.top = round(DOM["top"])
       end
       if haskey(DOM, "left")
-              node.shape.left = DOM["left"]
+              node.shape.left = round(DOM["left"])
       end
       if haskey(DOM, "bottom")
-              node.shape.top = DOM["bottom"]
+              node.shape.top = round(DOM["bottom"])
               node.shape.flags[Bottom] = true
       end
       if haskey(DOM, "right")
-              node.shape.left = DOM["right"]
+              node.shape.left = round(DOM["right"])
               node.shape.flags[Right] = true
       end
       if haskey(DOM, "width")
-              node.shape.width = DOM["width"]
+              node.shape.width = round(DOM["width"])
       end
       if haskey(DOM, "height")
-              node.shape.height = DOM["height"]
+              node.shape.height = round(DOM["height"])
               node.shape.flags[FixedHeight] = true
       end
 
@@ -267,55 +380,16 @@ function DomToLayout(document::Page, node)
          end
      end
 
-       #.........................................................................
-#        b = false
-#        bcolor = [0,0,0]
-#        bradius = [0,0,0,0]
-#        bstyle = "solid"
-#        bwidth = [0,0,0,0, 0,0]
-# if haskey(DOM, "border-color")
-#     bcolor = GetTheColor(node.shape, DOM["border-color"]) #DOM["border-color"]
-#     b=true
-# end
-# if haskey(DOM, "border-radius")
-#     r = DOM["border-radius"]
-#    if isa(r, Array)
-#      bradius = r
-#    else
-#      bradius = [r,r,r,r]
-#    end
-#    node.shape.flags[IsRoundBox] = true # IsRoundBox
-#     b=true
-# end
-#
-# if haskey(DOM, "border-width")
-#     w = DOM["border-width"]
-#    if isa(w, Array) && length(w) == 4
-#      bwidth = [ w[1],w[2],w[3],w[4],  w[1]+w[3], w[2]+w[4] ]
-#    elseif isa(w, Number)
-#      bwidth = [ w,w,w,w,  w*2, w*2 ]
-#    else
-#      if w == "thin"
-#        bwidth = [1,1,1,1,  2,2]
-#      end
-#      if w == "medium"
-#        bwidth = [3,3,3,3,  6,6]
-#      end
-#      if w == "thick"
-#        bwidth = [4,4,4,4,  8,8]
-#      end
-#    end
-#
-#     b=true
-# end
-# if haskey(DOM, "border-style")
-#     bstyle = DOM["border-style"]
-#     b=true
-# end
-# if b == true
-#     node.shape.border  = Border(bwidth... , bstyle, bcolor, bradius)
-# end
+     if haskey(DOM, "align")
+         if DOM["align"] == "center"
+             node.shape.flags[TextCenter] = true
+         elseif DOM["align"] == "right"
+             node.shape.flags[TextRight] = true
+         #else node.shape.flags[TextJustify] = true
+         end
+     end
 
+       #.........................................................................
 
 if haskey(DOM, "border")
           border = DOM["border"]
@@ -393,42 +467,13 @@ if haskey(DOM, "border")
                end
         node.shape.margin = BoxOutline(margin...)
       end
-      #.........................................................................
-# font-color:black; font-size:15; align:left; lineHeight:1.4; font-family:sans;
+#.........................................................................
+if haskey(DOM, "font") # && isa(node.shape, F o n t)
 
-if haskey(DOM, "font-color") || haskey(DOM, "font-size") || haskey(DOM, "font-family")
-    node.font = Font()
-
-    if haskey(DOM, "font-color")
-        node.font.color = GetTheColor(node.font, DOM["font-color"])
-    end
-    if haskey(DOM, "font-size")
-        node.font.size = DOM["font-size"]
-    end
-    if haskey(DOM, "font-family")
-        node.font.family = DOM["font-family"]
-    end
-    if haskey(DOM, "lineHeight")
-        node.font.lineHeight = DOM["lineHeight"]
-    end
-    if haskey(DOM, "align")
-        if DOM["align"] == "center"
-            node.font.flags[TextCenter] = true
-        elseif DOM["align"] == "right"
-            node.font.flags[TextRight] = true
-        end
-    end
-
-
-end
-# "font-weight"  "font-size"  "font-family"  "font-style"  "font-color"  "font-gradient"
-# "font-opacity"  "font-padding"  "font-border"  "font-margin"  "font-offset"
-# "font-lineHeight"  "font-lineWidth"  "font-fill"  "vertical-align"  "align"
-      if haskey(DOM, "font") # && isa(node.shape, F o n t)
-
-          if !isdefined(node, :font)
+          if node.font == nothing # !isdefined(node, :font)
               node.font = Font()
           end
+
         font = DOM["font"]
 # "fill" "linewidth" "color" "align" "vertical-align" "style" "size" "lineHeight" "weight" "family"
         if haskey(font, "fill")
@@ -488,13 +533,12 @@ end
           #  = DOM["hover"]
       end
 end # function
-
 # ======================================================================================
 #
 # ======================================================================================
-function AtributesToLayout(document::Page, node, generative::Bool=true)
+function AtributesToLayout(document::Page, node)
 
-    DOM = node.DOM # PageStyles = document.styles
+    DOM = node.DOM
     h, w = document.height, document.width
 
     if haskey(DOM, ">")
@@ -512,23 +556,10 @@ function AtributesToLayout(document::Page, node, generative::Bool=true)
             push!(document.eventsList.mouseover, node)
             push!(document.eventsList.mouseout, node)
         end
-        # Create actual node.
-        if generative
-            if isa(tag, Array)
-                println(DOM)
-            else
-                CreateShape(tag, node, h, w)
-            end
-        end
 
-        # Add user defined styles to node's DOM.
-        # if haskey(DOM, "style")
-        #     style = DOM["style"]
-        #     CopyDict(DOM, PageStyles[style])
-        # end
-
-        # Add default values generally associated with this tag
         CopyDict(DOM, Tags_Default[tag])
+
+        CreateShape(tag, node, h, w)
         DomToLayout(document, node)
     end
 end

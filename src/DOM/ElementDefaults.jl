@@ -6,25 +6,24 @@ Tags_Default = Dict(
 # SHADOW DOM stuff
 # ==============================================================================
 # h-scroll v-scroll: scrollbar-track scrollbar-thumb
-"h-scroll" => Dict( "offset" => 0,
-                    "color" => "darkgrey",
-										"width" =>  12,
-										"height" =>  12,
-										"opacity" => 0.3,
+"h-scroll" => Dict( ">" => "h-scroll", "offset" => 0, "color" => "darkgrey",
+					"width" =>  12, "height" =>  12, "opacity" => 0.3,
                     "hover" => Dict("opacity" => 0.9 ),
-										"nodes" => [ Dict(">" => "scrollbar-thumb", "color" => "grey", "height" =>  12,"width" =>  10 ) ]
+										"nodes" => [ Dict(">" => "scrollbar-thumb", "color" => "grey", "height" =>  12,"width" =>  10 , "nodes" => []) ]
 									),
-"v-scroll" => Dict( "offset" => 0,
-                    "color" => "darkgrey",
-										"width" =>  12,
-										"height" =>  12,
-										"opacity" => 0.3,
+"v-scroll" => Dict( ">" => "v-scroll", "offset" => 0, "color" => "darkgrey",
+					"width" =>  12, "height" =>  12, "opacity" => 0.3,
                     "hover" => Dict("opacity" => 0.9 ),
-										"nodes" => [ Dict(">" => "scrollbar-thumb", "color" => "grey", "height" =>  12,"width" =>  10 ) ]
-									),
+										"nodes" => [ Dict(">" => "scrollbar-thumb", "color" => "grey", "height" =>  12,"width" =>  10 , "nodes" => []) ]
+										),
+"scrollbar-thumb" => Dict( "scrollbar-thumb" => "body","color" => "grey", "height" =>  12,"width" =>  10 , "nodes" => []),
+"body" => Dict( ">" => "body", "overflow" => "scroll",
+				"color" => [0.8,0.8,0.8], "display" => "block", "nodes" => []),
 
-"page" => Dict("color" => "white"),
-"circle" => Dict("color" => "white"),
+# Page encompases the controls and content[s]
+	"page" => Dict( ">" => "page","color" => "white"),
+
+"circle" => Dict("color" => "white", "radius" => 5),
 "window" => Dict("color" => "white"),
 # ==============================================================================
 # NORMAL DOM stuff
@@ -57,8 +56,6 @@ Tags_Default = Dict(
 "bdo" => Dict( "font" =>  Dict( "size" => 13, "family" => "Sans", "color" => "black" )),
 # <blockquote>	Defines a section that is quoted from another source
 "blockquote" => Dict("display" => "inline",  "font" =>  Dict( "size" => 13, "family" => "Sans", "color" => "black" )),
-# <body>	    Defines the document's body
-"body" => Dict("display" => "block",  "font" =>  Dict( "size" => 13, "family" => "Sans", "color" => "black" )),
 # <br>	        Defines a single line break
 "br" => Dict( "font" =>  Dict( "size" => 13, "family" => "Sans", "color" => "black" )),
 # <button>	    Defines a clickable button

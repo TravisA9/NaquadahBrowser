@@ -8,9 +8,9 @@ div{ display:block;  height:31; color:0.4 0.4 0.4;
                 radius:8; image:"JuliaIcon.png"}
             }
             circle{ display:inline-block; margin:5 2 4 4; radius:12; image:"NewPage.png";
-                click:"println(document, \"file:///src/SamplePages/test.sml\")"
+                click:"FetchPage(document, \"file:///src/SamplePages/test.sml\")";
             }
-        } 
+        }
 
 
     }

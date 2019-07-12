@@ -1,41 +1,38 @@
 # export GetTheColor, printDict
-
 # ======================================================================================
 # EX: GetTheColor(border["color"])
 # Get color depending on format and add opacity to it.
 # ======================================================================================
 function GetTheColor(shape, DOMColor)
-                if isa(DOMColor, Array)
-                    color = DOMColor
+    shape == nothing && return [0,0,0,1]
+    if isa(DOMColor, Array)
+        color = DOMColor
                 # elseif isa(DOMColor, Float64)
-                elseif isa(DOMColor, String)
-                    if DOMColor[1:1] == "#"
-                        if length(DOMColor) == 7
-                            color = [ parse(Int, DOMColor[2:3], base = 16)*0.00390625,
-                              parse(Int, DOMColor[4:5], base = 16)*0.00390625,
-                              parse(Int, DOMColor[6:7], base = 16)*0.00390625 ]
-                        elseif length(DOMColor) == 4
-                            color = [ parse(Int, DOMColor[2:2]^2, base = 16)*0.00390625,
-                              parse(Int, DOMColor[3:3]^2, base = 16)*0.00390625,
-                              parse(Int, DOMColor[4:4]^2, base = 16)*0.00390625 ]
-                        end
-                    else
-                        color = collect(color_names[ DOMColor ]).*0.00390625
-                    end
+    elseif isa(DOMColor, String)
+        if DOMColor[1:1] == "#"
+            if length(DOMColor) == 7
+                color = [ parse(Int, DOMColor[2:3], base = 16)*0.00390625,
+                parse(Int, DOMColor[4:5], base = 16)*0.00390625,
+                parse(Int, DOMColor[6:7], base = 16)*0.00390625 ]
+            elseif length(DOMColor) == 4
+                color = [ parse(Int, DOMColor[2:2]^2, base = 16)*0.00390625,
+                parse(Int, DOMColor[3:3]^2, base = 16)*0.00390625,
+                parse(Int, DOMColor[4:4]^2, base = 16)*0.00390625 ]
+            end
+        else
+            color = collect(color_names[ DOMColor ]).*0.00390625
+        end
                     # println("Color is $DOMColor")
-                end
+    end
 
-                if shape.flags[HasOpacity] && length(color) == 3
-                    color = [color... , shape.opacity]
+    if shape.flags[HasOpacity] && length(color) == 3
+        color = [color... , shape.opacity]
                     #push!(color, shape.opacity)
-                    # println("opacity: ", typeof(color))
-                    # println("opacity: ", color)
-                end
+    end
 
     return color
 end
 # ======================================================================================
-# Print out Element's DOM but not children
 # Print out Element's DOM but not children
 # ======================================================================================
 function printDict(DOM)

@@ -99,9 +99,9 @@ end
 function selectText(ctx, document, pressed, released)
 
     left, right, top, bottom = order2(pressed.x,released.x, pressed.y,released.y)
-    selected = findNodesInBox(document.children[1].children[3], left, top, right, bottom)
+    selected = findNodesInBox(document.content[1], left, top, right, bottom)
 
-    clipPath = getContentBox(document.children[1].children[3].shape)
+    clipPath = getContentBox(document.content[1].shape)
     # Objective here is to remove duplicates and also repaint tainted rows
     selectedNodes = document.event.selectedNodes
 
@@ -119,7 +119,7 @@ for oldnode in selectedNodes
         setcolor( ctx, c...)
         rectangle(ctx,  oldnode.shape.left-1, oldnode.shape.top-1, oldnode.shape.width+2, oldnode.shape.height+2 )
         fill(ctx)
-        DrawText(ctx, oldnode, clipPath)
+        DrawText(ctx, oldnode)
     end
 end
 
@@ -138,9 +138,9 @@ end
     # selected = buffer
 
     if pressed.y < released.y # just in case the selection is made from bottom to top
-        DrawSelectedText(ctx, selected, pressed.x, released.x, pressed.y, released.y, clipPath)
+        DrawSelectedText(ctx, selected, pressed.x, released.x, pressed.y, released.y)
     else
-        DrawSelectedText(ctx, selected, released.x, pressed.x, released.y, pressed.y, clipPath)
+        DrawSelectedText(ctx, selected, released.x, pressed.x, released.y, pressed.y)
     end
     document.event.selectedNodes = selected
 
@@ -180,7 +180,7 @@ end
 
 # ======================================================================================
 function setAttribute(d, key::String, attribute::String)
-    println(d.DOM)
+    # println(d.DOM)
     d.DOM[key] = attribute
 end
 # ======================================================================================
@@ -220,65 +220,57 @@ end
 # ======================================================================================
 function ScrollEvent(document, widget, event)
   ctx = getgc(widget)
-  node = document.children[1].children[3] # TODO: fix! ..test to see if mouse is over object.
+  node = document.tabs
 
-  Unit = 70.0
+   down = document.eventsList.scroll
+   for n in down
+       if onArea(event.x, event.y, n.shape ) && insideParentClip( event.x, event.y, n)
+           node = n # document.content[1]
+       end
+   end
+
+   Unit = 40.0
 
   # I am scrolling(jumping) by 30px here but Opera scrolls by about 50px
   # Opera lacks smoothness too but it seems to transition-scroll by the 50px
   # ...so using the mouse wheel it is impossible to move less than that increment.
   function drawTwice()
-      setcolor(ctx, node.shape.color...)
-      rectangle(ctx,  node.shape.left,  node.shape.top, node.shape.width,  node.shape.height )
-      fill(ctx);
 
-      DrawViewport(ctx, document, node)
+      # rectangle(ctx, node.shape.left,  node.shape.top, node.shape.width,  node.shape.height )
+      # clip(ctx)
+        drawNode(ctx, document, node)
+      # reset_clip(ctx)
+
       reveal(widget)
   end
 
+  # node.shape.flags[IsVScroll] = true # IsHScroll, IsVScroll
+  # node.shape.flags[IsHScroll] = true # IsHScroll, IsVScroll
+ySpace =   node.scroll.contentHeight - node.shape.height
+lastY = node.scroll.y
   # SCROLL UP!
-  if event.direction == 0 && node.scroll.y < node.shape.top # was: 0
-    diff = abs(node.scroll.y)
-    if diff < Unit
-      Unit = diff
+  if event.direction == 0 && node.scroll.y > 0
+    if node.scroll.y < Unit
+      Unit = node.scroll.y
     end
-    node.scroll.y += (Unit*.5)
-    VmoveAllChildren(node, (Unit*.5), false)
+    node.scroll.y -= Unit
+    VmoveAllChildren(node, Unit, false)
     drawTwice()
-    node.scroll.y += (Unit*.5)
-    VmoveAllChildren(node, (Unit*.5), false)
-    drawTwice()
+
     # SCROLL DOWN!
-elseif event.direction == 1 && (node.scroll.contentHeight + node.scroll.y + node.shape.top) > node.shape.height
-      diff = (node.scroll.contentHeight + node.scroll.y + node.shape.top) - node.shape.height
-      if diff < Unit
-        Unit = diff
+elseif event.direction == 1 && node.scroll.y < ySpace
+      if node.scroll.y+Unit > ySpace
+        Unit = ySpace-node.scroll.y
       end
-      node.scroll.y -= (Unit*.5)
-      VmoveAllChildren(node, -(Unit*.5), false) # -30
+
+      node.scroll.y += Unit
+      VmoveAllChildren(node, -Unit, false)
       drawTwice()
-      node.scroll.y -= (Unit*.5)
-      VmoveAllChildren(node, -(Unit*.5), false) # -30
-      drawTwice()
+
   end
 
-  # #set_source_rgb(ctx, 1,1,1)
-  # setcolor( ctx, node.shape.color...)
-  # rectangle(ctx,  node.shape.left,  node.shape.top, node.shape.width,  node.shape.height )
-  # fill(ctx);
-  #
-  # DrawViewport(ctx, document, node)
-  # reveal(widget)
 
-end
 
-function drawTwice()
-    setcolor( ctx, node.shape.color...)
-    rectangle(ctx,  node.shape.left,  node.shape.top, node.shape.width,  node.shape.height )
-    fill(ctx);
-
-    DrawViewport(ctx, document, node)
-    reveal(widget)
 end
 # ======================================================================================
 # Draw a splotch

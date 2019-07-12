@@ -45,8 +45,8 @@ function getReal(box::Draw)
 function getBorderBox(shape::Draw, border::Border, padding::BoxOutline)
      return  shape.left   - padding.left   - (border.left *.5),
              shape.top    - padding.top    - (border.top *.5),
-             shape.width  + padding.width  + (border.width),
-             shape.height + padding.height + (border.height);
+             shape.width  + padding.width  + (border.width *.5),
+             shape.height + padding.height + (border.height *.5);
 end
 
 getBorderBox(shape::TextLine) = getContentBox(shape)
@@ -56,6 +56,26 @@ getBorderBox(shape) = getBorderBox(shape, get(shape.border, Border()),
                        get(shape.padding, BoxOutline()))
 
 getContentBox(box) = ( box.left, box.top, box.width, box.height )
+
+function getBorderOuter(shape::Draw, border::Border, padding::BoxOutline)
+     return  shape.left   - padding.left   - (border.left),
+             shape.top    - padding.top    - (border.top),
+             shape.width  + padding.width  + (border.width),
+             shape.height + padding.height + (border.height);
+end
+
+getBorderOuter(shape) = getBorderBox(shape, get(shape.border, Border()),
+                       get(shape.padding, BoxOutline()))
+
+function getBorderInner(shape::Draw, border::Border, padding::BoxOutline)
+     return  shape.left   - padding.left,
+             shape.top    - padding.top,
+             shape.width  + padding.width,
+             shape.height + padding.height;
+end
+
+getBorderInner(shape) = getBorderBox(shape, get(shape.border, Border()),
+                       get(shape.padding, BoxOutline()))
 # ==============================================================================
 contentOffset(padding::BoxOutline, border::Border, margin::BoxOutline) =
    (padding.left + border.left + margin.left) , (padding.top + border.top + margin.top)

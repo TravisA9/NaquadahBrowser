@@ -12,7 +12,8 @@
 }
 .ball{ radius:5; color:0.55 0.4 0.8; position:absolute }
 
-div{
+body{
+  div{
 div{ color:white; padding:10;
 
     div{ display:inline-block; width:108;
@@ -32,8 +33,10 @@ div{ color:white; padding:10;
 
 
 
+    div{ width:2; height:2; color:white;
+      border{ width:2 1 1 1; color:#873600; style:solid }
+    }
 }
-
 
 
 div{ color:0.41 0.51 0.82; padding:5; data:107 133 221 66 102 213;
@@ -278,6 +281,29 @@ circle{ radius:100; color:lightgreen;
 radial-gradient{ color:lightgreen;}
 border{ width:thick; style:solid; color:purple;} }
 
+
+pre{ display:inline-block; overflow:scroll;
+  width:300; height:200; color:white; padding:5; margin:5;
+  border{ radius:7; width:thin; style:solid; color:black;}
+  text:"div{
+    div{ color:white; padding:10;
+        div{ display:inline-block; width: 108;
+          font-color:0.21 0.26 0.41; font-size:18; font-style:oblique;
+        text:\"Presenting Naquadah:\"}
+        div{ display:inline-block; width: 200; padding:8 0 0 0; vertical-align:middle;
+          border-width:2 0 0 0;border-color:0.41 0.51 0.82; border-style:solid;
+          font-color:black; font-size:14; align:center
+        text:\"As a test of julia in General Purpose Computing\"; }
+
+        div{ class:MenuButton; text:INFO}
+        div{ class:MenuButton; text:TESTS}
+        div{ class:MenuButton; text:IDEAS}
+        div{ class:MenuButton; text:ABOUT}
+        div{ class:MenuButton; text:HOME}
+    }
+" }
+
+
 p{ display:block; color:0.7 0.5 0.5; margin:10;
 border{ radius:7; width:thin; style:solid; color:black;}
 font{ color:black; weight:bold; size:42; fill:coral; linewidth:1;
@@ -312,4 +338,5 @@ click{"println(\"Width:\"; document.width; \"Height:\"; document.height)"; preve
 
 
 
+}
 }

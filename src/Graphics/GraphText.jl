@@ -1,8 +1,9 @@
-export    textWidth, DrawText, DrawSelectedText, setTextContext, PushToRow, fontSlant, fontWeight
+export  textWidth, DrawText, DrawSelectedText, setTextContext,
+        PushToRow, fontSlant, fontWeight
 #======================================================================================#
 #
 #======================================================================================#
-function fontSlant(shape)
+function fontSlant(shape::Font)
     if shape.flags[TextItalic]
         return Cairo.FONT_SLANT_ITALIC
     elseif shape.flags[TextOblique]
@@ -12,7 +13,7 @@ function fontSlant(shape)
     end
 end
 #======================================================================================#
-function fontWeight(shape)
+function fontWeight(shape::Font)
     if shape.flags[TextBold]
         return Cairo.FONT_WEIGHT_BOLD
     else
@@ -57,50 +58,38 @@ function PushToRow(document::Page, node::TextElement, l::Float64, t::Float64, wi
         feedRow(parent, textNode)
     end
 
-
-     # TODO: make faster.
-     breaks = vcat([ i.match.offset+1 for i in eachmatch(r" ", text)], length(text))
-     lastbreak = 1
-     lineWidth = wide
-     if length(breaks) > 1
-         for i in 2:length(breaks)
-             extetents = text_extents(ctx, text[lastbreak:breaks[i]])
-             if extetents[3] >= lineWidth # Too long ...cut!
-                 brk = breaks[i-1]
-                 line = text[lastbreak:brk]
-                 textToNode(line, text_extents(ctx, line)[3])
-                 lastbreak = brk
-                 lineWidth = wide
+    ls = split(text, r"[\r\n]+")
+    # vcat([ i.match.offset+1 for i in eachmatch(r"[\r\n]*", text)], length(text))
+    for lines in ls
+         # TODO: make faster.
+         breaks = vcat([ i.match.offset+1 for i in eachmatch(r" ", lines)], length(lines))
+         lastbreak = 1
+         lineWidth = wide
+         if length(breaks) > 1
+             for i in 2:length(breaks)
+                 extetents = text_extents(ctx, lines[lastbreak:breaks[i]])
+                 if extetents[3] >= lineWidth # Too long ...cut!
+                     brk = breaks[i-1]
+                     line = lines[lastbreak:brk]
+                     textToNode(line, text_extents(ctx, line)[3])
+                     lastbreak = brk
+                     lineWidth = wide
+                 end
              end
          end
+         line = lines[lastbreak:length(lines)]
+         textToNode(line, text_extents(ctx,line )[3])
+         Row(node.parent)
      end
-     line = text[lastbreak:length(text)]
-     textToNode(line, text_extents(ctx,line )[3])
+
+
      destroy(ctx)
 end
-#======================================================================================#
-# TODO: simplify / clean up
-##
-#======================================================================================#
-# function getTextFor(ctx, maxLength, start, text)
-#     while
-#
-#
-#     for i in 2:length(breaks)
-#         extetents = text_extents(ctx, text[lastbreak:breaks[i]])
-#         if extetents[3] >= lineWidth # Too long ...cut!
-#             brk = breaks[i-1]
-#             line = text[lastbreak:brk]
-#             textToNode(line, text_extents(ctx, line)[3])
-#             lastbreak = brk
-#             lineWidth = wide
-#         end
-#     end
-# end
 # ======================================================================================
 #
 # ======================================================================================
-function DrawSelectedText(ctx::CairoContext, nodeList, l,r,t,b, clipPath)
+function DrawSelectedText(ctx::CairoContext, nodeList::Array{Any,1}, l::Float64,r::Float64,t::Float64,b::Float64) #, clipPath
+
 last = length(nodeList)
 width,left = 0,0
 allSelectedText = ""
@@ -168,18 +157,10 @@ offset = 0
         end
 clipboard(allSelectedText)
 
-        rectangle(ctx,  clipPath... )
-        clip(ctx)
-        # if chunkStart == 0 # how much to redraw before/after selection
-        #     # this does not take into considderation the posibility that the parent could have an image, gradiant or transparency.
-        #     # It may be best to redraw the parent and use this rectangle as a clipping area to reduce the time consumed.
-        #     color = nodeList[n].parent.shape.color
-        #     println(color)
+        # rectangle(ctx,  clipPath... )
+        # clip(ctx)
         #
-        #     PaintBox(ctx, color, chunkStart,  s.top, chunkEnd,  s.height+1)
-        # end
-        PaintBox(ctx, [0.956357, 0.95884, 0.188998], left,  s.top, width,  s.height+1)
-        DrawText(ctx, nodeList[n], clipPath)
+        # reset_clip(ctx)
     end
 end
 # ======================================================================================
@@ -187,7 +168,7 @@ end
 # ======================================================================================
 # -extents[4] is the top of the text
 # ======================================================================================
-function DrawText(ctx::CairoContext, node, clipPath)
+function DrawText(ctx::CairoContext, node::TextElement) # , clipPath
     font = node.parent.font
     shape = node.shape
     left = node.shape.left
@@ -198,8 +179,9 @@ function DrawText(ctx::CairoContext, node, clipPath)
     set_font_size(ctx, font.size);
     text = shape.text
 
+
 # Trim leading space because it causes text to be offset.
-if text[1] == ' '
+if length(text)>0 && text[1] == ' '
     text = text[2:end]
 end
 
@@ -233,4 +215,5 @@ end
           set_line_width(ctx, font.lineWidth ); # 2.56 MyText.lineWidth
           stroke(ctx);
     end
+
 end

@@ -7,10 +7,32 @@ end
 
 using Cairo, Gtk, Gtk.ShortNames, Graphics
 
-export    DrawViewport, DrawContent, DrawShape, setcolor, drawNode,
-          lastClipParent, inheritColor
+export  DrawViewport, DrawContent, DrawShape, setcolor, drawNode,
+        lastClipParent, inheritColor, getClipContext,
+        setClip, resetClip
+# ======================================================================================
+function setClip(ctx, from, saverestore = true)
+    saverestore && save(ctx)
+    clip(ctx)
+end
+# ======================================================================================
+function resetClip(ctx, from, saverestore = true)
+    reset_clip(ctx)
+    saverestore && restore(ctx)
+end
 # ======================================================================================
 # These should go somewhere else.
+# ======================================================================================
+function getClipContext(node)
+    list = []
+    while node.parent !== node
+        if node.shape.flags[Clip]
+            push!(list, node)
+        end
+        node = node.parent
+    end
+    return list
+end
 # ======================================================================================
 function inheritColor(node)
     while !isdefined(node.shape, :color) || length(node.shape.color) < 3
@@ -38,66 +60,59 @@ setcolor( ctx::Cairo.CairoContext, r, g, b, a) = set_source_rgba(ctx, r, g, b, a
 # First draw all page elements (not controls) that flow and then draw "fixed" elements
 # ======================================================================================
 function DrawViewport(ctx::Cairo.CairoContext, document::Page, node::Element)
-    DrawContent(ctx, document, node)
-    DrawContent(ctx, document, document.fixed)
+          DrawContent(ctx, document, node)
+          DrawContent(ctx, document, document.fixed)
+end
+function DrawViewport(ctx::Cairo.CairoContext, document::Page, node::Element, clipPath)
+          DrawContent(ctx, document, node, clipPath)
+          DrawContent(ctx, document, document.fixed, clipPath)
 end
 # ======================================================================================
 # This takes a node and draws it along with all its children.
 # ======================================================================================
-# PROBLEM: This draws the children of a given node and not nesesarily the node itself.
-#          At times, though, we don't want to draw all the children of a node but
-#          specifically one node.
+
 # ======================================================================================
 function DrawContent(ctx::Cairo.CairoContext, document::Page, node::Element, clipPath=nothing)
-      rows = node.rows
-      border = get(node.shape.border,  Border(0,0,0,0,0,0, 0,[],[0,0,0,0]))
-      padding = get(node.shape.padding, BoxOutline(0,0,0,0,0,0))
-      Shape = node.shape
+    Shape = node.shape
 
-      if Shape.flags[Clip]
-          clipPath = getBorderBox(Shape, border, padding)
-      end
+    if Shape.flags[Clip]
+        clipPath = getBorderBox(Shape)
+    end
+    if clipPath !== nothing
+        rectangle(ctx, clipPath... )
+        setClip(ctx, "DrawContent", false)
+    end
+    DrawShape(ctx, node, Shape) #, clipPath
 
-      if clipPath !== nothing
-          rectangle(ctx, clipPath... )
-          clip(ctx)
-      end
-
-  for row in rows
+  for row in node.rows
       for child in row.nodes
           if row.top < (Shape.top + Shape.height) # && !node.shape.flags[DisplayNone]
-              drawNode(ctx, document, row, child.shape, child, clipPath)
+
+              if isa(child.shape, TextLine)
+                  DrawText(ctx, child) #, clipPath
+              else
+                  DrawContent(ctx, document, child, clipPath)     # Now draw children
+              end
+
           end
       end
   end
 
+
+
+
       # Scroll bars.......... TODO: fix
       if Shape.flags[IsVScroll]
-          VScroller(ctx, document, node, Shape, clipPath)
+          VScroller(ctx, document, node, Shape)
       end
-      if Shape.flags[Clip] #|| clipPath === nothing
-         reset_clip(ctx)
-         clipPath = nothing
+      if Shape.flags[Clip]
+         resetClip(ctx, "DrawContent", false)
       end
+
 end
 # ======================================================================================
 # ======================================================================================
-function drawNode(ctx, document, row, shape, node, clipPath)
-             if isa(shape, TextLine)
-                 DrawText(ctx, node, clipPath)
-             else
-                 DrawShape(ctx, node, shape, clipPath)
-                 DrawContent(ctx, document, node, clipPath)     # Now draw children
-             end
-             # Draw box to be able to visualize text's area
-             # if isa(node, Text)
-             #     s = node.parent.shape
-             #     setcolor(ctx, .3,.3,.3)
-             #     set_line_width(ctx, 1)
-             #     rectangle(ctx, s.left,s.top,s.width,s.height )
-             #     stroke(ctx);
-             # end
-end
+
 #...............................................................................
 function lastClipParent(node)
     while node.parent !== node
@@ -109,27 +124,6 @@ function lastClipParent(node)
     return node
 end
 
-function drawNode(ctx, document, node)
-
-    box = lastClipParent(node) #document.children[1].children[3];
-
-    shape = node.shape
-    WinShape = box.shape
-    border = get(WinShape.border,  Border(0,0,0,0,0,0, 0,[],[0,0,0,0]))
-    padding = get(WinShape.padding, BoxOutline(0,0,0,0,0,0))
-    clipPath = getBorderBox(WinShape, border, padding)
-
-    rectangle(ctx, clipPath... )
-    clip(ctx)
-                 # DrawText(ctx, row, shape)
-             #else
-                 DrawShape(ctx, node, shape, clipPath)
-            if !isa(node, TextElement)
-                 DrawContent(ctx, document, node, clipPath)     # Now draw children
-            end
-    reset_clip(ctx)
-
-end
 
 
 
@@ -150,90 +144,80 @@ end
 # Draw a circle.
 # TODO: remove node from function
 # ======================================================================================
-function DrawShape(ctx::CairoContext, node::Element, shape::Draw, clipPath)
-    Cairo.save(ctx)
+function DrawShape(ctx::CairoContext, node::Element, shape::Draw) #, clipPath
     path = GetPath(shape)
-    # set_antialias(ctx,4)
-    setPath(ctx::CairoContext, path)
-    clip(ctx);
+    setPath(ctx, path)
+
   if shape.flags[HasImage]
+      setClip(ctx, "DrawShape");
         DOM =  node.DOM
             if haskey(DOM, "image")
                 imagePath = PATH * DOM["image"] # "Mountains.png"
             end
-            BackgroundImage(ctx, path.wide, path.tall, shape.left, shape.top, imagePath)
 
-  elseif  shape.flags[LinearGrad]
-        linearGrad(ctx, path, shape.gradient)
-  elseif  shape.flags[RadialGrad]
-        radialGrad(ctx, path, shape.gradient)
+            BackgroundImage(ctx, path.wide, path.tall, shape.left, shape.top, imagePath)
+    resetClip(ctx, "DrawShape")
   else
-          # set_antialias(ctx,6)
-          if isdefined(shape, :color) &&  length(shape.color) > 2
-            setPath(ctx::CairoContext, path)
-            setcolor(ctx, shape.color...)
-            fill(ctx);
-          end
+      setClip(ctx, "DrawShape");
+      if shape.flags[LinearGrad]
+          linearGrad(ctx, path, shape.gradient)
+      elseif shape.flags[RadialGrad]
+          radialGrad(ctx, path, shape.gradient)
+      elseif isdefined(shape, :color) &&  length(shape.color) > 2
+          setPath(ctx, path)
+          setcolor(ctx, shape.color...)
+          fill(ctx);
+      end
+      resetClip(ctx, "DrawShape")
   end
-  restore(ctx)
-  #reset_clip(ctx)
-     thickness = setClipPath(ctx::CairoContext, path)
-     clip(ctx)
+
+
           if isdefined(path.border, :color) && length(path.border.color) > 2
-                setcolor( ctx, path.border.color...)
+              thickness = setClipPath(ctx, GetPath(shape))
+              # setPath(ctx, path)
+              # rectangle(ctx, getBorderOuter(shape)...)
+              setClip(ctx, "DrawShape")
+              setcolor( ctx, path.border.color...)
                 # TODO: add clipping for the border path as well to clean up edges.
-                #if clipPath !== nothing
-                    # rectangle(ctx, clipPath... )
-                    # clip(ctx)
-                #end
-                #clip_preserve()
-                # save(ctx)
                         set_line_type(ctx, path.border.style)
                         set_line_width(ctx, thickness);
-                        setborderPath(ctx::CairoContext, path)
+                        setborderPath(ctx, path)
                         stroke(ctx)
-                # restore(ctx)
-
-                # reset_clip(ctx)
+              resetClip(ctx, "DrawShape")
           end
-        reset_clip(ctx)
 end
 # ======================================================================================
 # Temporary shortcut: draw the virticle scroll bar
 # ======================================================================================
-function VScroller(ctx::CairoContext, document::Page, node::Element, shape::Draw, clipPath)
+function VScroller(ctx::CairoContext, document::Page, node::Element, shape::Draw)
 
-    canvas = document.canvas
-    ctx = getgc(canvas)
-    winHeight = document.height # height(canvas)
+    ctx = getgc(document.canvas)
+    l,t,w,h = getBorderBox(shape)
 
-        border = get(shape.border,  Border(0,0,0,0,0,0, 0,[],[0,0,0,0]))
-        padding = get(shape.padding, BoxOutline(0,0,0,0,0,0))
-        l,t,w,h = getBorderBox(shape, border, padding)
-        h/node.scroll.contentHeight
+
         r, b = l+w-12, t+h-12
 
-        realTop = abs(t)
-
-        setcolor(ctx, .3,.3,.3, .3)
+        setcolor(ctx, .3, .3, .3, .3)
         rectangle(ctx,r,t,12,h )
         fill(ctx);
-        #.............................................................
-         height       = node.shape.height - node.shape.top    # Height of the viewport and of the scrollbarArea
+
+
+        contentHeight = node.shape.height #- node.shape.top
          scrollHeight = node.scroll.contentHeight     # Height of the content
          scrollTop    = node.scroll.y      # Scrolled position of the content from the top
          #.............................................................
-         scrollButHeight = height / (scrollHeight / height)
-         y = scrollTop / (scrollHeight / height)
+         scrollButHeight = contentHeight / (scrollHeight/contentHeight)
+         y = -(scrollTop / (scrollHeight/contentHeight))
          #.............................................................
          #.............................................................
-
         setcolor(ctx, .4,.4,.4, 1)
-        rectangle(ctx,r+1,t-y,10,scrollButHeight )
+        rectangle(ctx,r+1,t-y,10, scrollButHeight )
         fill(ctx);
+
 end
-
-
+# ======================================================================================
+# Temporary shortcut: draw the virticle scroll bar
+# ======================================================================================
 #type
 # ('m',1,2)
 # ('m',1,2) M = moveto
@@ -301,7 +285,10 @@ paint(cr);
 
 
 
-
+#-======================================================================================
+# The advantage, I guess, is that there is an instance of the needed values.
+# I suspect this needs rethinking...
+#-======================================================================================
 mutable struct NQCircle
     border::Border
     radius::Float64
@@ -324,7 +311,6 @@ mutable struct NQBox
 end
 
 # ======================================================================================
-
 # Draw the background image at 100% width and height.
 # ======================================================================================
 function BackgroundImage(ctx::CairoContext, wide::Float64, tall::Float64, l::Float64, t::Float64, path)
@@ -332,9 +318,10 @@ function BackgroundImage(ctx::CairoContext, wide::Float64, tall::Float64, l::Flo
      image = read_from_png(path);
      w = image.width;  # w = (image.width/2);
      h = image.height; # h = (image.height/2);
+     scX, scY = wide/w, tall/h
 
-     scale(ctx, wide/w, tall/h);
-     translate(ctx,  (l*((w/wide)))-(l),  (t*(w/tall))-(t)); # 1029 >= w*2   l + l*(wide/w) + wide*(wide/w) =1014
+     scale(ctx, scX, scY);
+     translate(ctx,  l/scX -l, t/scY-t ); # 1029 >= w*2   l + l*(wide/w) + wide*(wide/w) =1014
      set_source_surface(ctx, image, l, t);
      paint(ctx);
      reset_transform(ctx)
@@ -372,20 +359,16 @@ end
 # ======================================================================================
 function GetPath(shape::NBox)
     b = NQBox()
-    b.border  = get(shape.border,  Border(0,0,0,0,0,0, "solid",[],[0,0,0,0]))
-    b.padding = get(shape.padding, BoxOutline(0,0,0,0,0,0))
-
-
-        # b.left = shape.left   - b.padding.left   - (b.border.left *.5)
-        # b.top  = shape.top    - b.padding.top    - (b.border.top *.5)
-        # b.wide = shape.width  + b.padding.width  + (b.border.width)
-        # b.tall = shape.height + b.padding.height + (b.border.height)
+    border  = get(shape.border,  Border(0,0,0,0,0,0, "solid",[],[0,0,0,0]))
+    padding = get(shape.padding, BoxOutline(0,0,0,0,0,0))
+    b.border, b.padding = border, padding
 
     b.left, b.top, b.wide, b.tall = getBorderBox(shape, b.border, b.padding)
     b.left  -= (b.border.left*.6)
     b.top   -= (b.border.top*.6)
     b.right  = b.left + b.wide
     b.bottom = b.top + b.tall
+
     return b
 end
 
@@ -401,15 +384,12 @@ function GetPath(shape::Circle)
     return c
 end
 # ======================================================================================#
-# Set circle path and fill with color
+# Set path for
 # ======================================================================================#
 function setPath(ctx::CairoContext, shape::NQBox)
     if shape.border != nothing #!isnull(shape.border.radius) #(TR + BR + BL + TL) > 0
         radius = shape.border.radius
-        TR = radius[1]
-        BR = radius[2]
-        BL = radius[3]
-        TL = radius[4]
+        TR,BR,BL,TL = radius
               rot   =   1.5707963    # 90 * degrees
           # TODO: see if curveTo() will work to simplify this.
                 new_sub_path(ctx);
@@ -441,10 +421,7 @@ function setClipPath(ctx::CairoContext, shape::NQBox)
 
   if shape.border.radius != nothing # !isnull(shape.border.radius) #(TR + BR + BL + TL) > 0
       radius = shape.border.radius
-      TR = radius[1]
-      BR = radius[2]
-      BL = radius[3]
-      TL = radius[4]
+      TR,BR,BL,TL = radius
             rot   =   1.5707963    # 90 * degrees
         # TODO: see if curveTo() will work to simplify this.
         borderWidth = max(shape.border.left, shape.border.top, shape.border.right,shape.border.bottom)
@@ -468,20 +445,29 @@ end
 function setborderPath(ctx::CairoContext, shape::NQBox)
 
   # TODO: see if curveTo() will work to simplify this.
+  # b  = get(shape.border,  Border(0,0,0,0,0,0, "solid",[],[0,0,0,0]))
   borderWidth = max(shape.border.left,shape.border.top,shape.border.right,shape.border.bottom)
-  line = (borderWidth/2)
-  t = shape.top - (line - shape.border.top)
-  l = shape.left - (line - shape.border.left)
-  r = shape.right - (shape.border.right - line)
-  b = shape.bottom - (shape.border.bottom - line)
+line = (borderWidth/2)
+t = shape.top - (line - shape.border.top)
+l = shape.left - (line - shape.border.left)
+r = shape.right - (shape.border.right - line)
+b = shape.bottom - (shape.border.bottom - line)
+
+  # l,t,r,b = getBorderBox(shape)
+  # r += l
+  # b += t
+# l,t,r,b = getContentBox(shape)
+  # borderWidth = max(shape.border.left,shape.border.top,shape.border.right,shape.border.bottom)
+  # borderHeight = max(shape.border.top,shape.border.right,shape.border.bottom)
+  Xline = (shape.border.width/2)
+  Yline = (shape.border.height/2)
+  # t = shape.top - (Xline - shape.border.top)
+  # l = shape.left - (Yline - shape.border.left)
+  # r = ceil(shape.width - (shape.border.width - Xline))
+  # b = ceil(shape.height - (shape.border.height - Yline))
 
     if shape.border.radius != nothing # !isnull(shape.border.radius) #(TR + BR + BL + TL) > 0
-      radius = shape.border.radius
-      # radius = border.radius,[0,0,0,0])
-      TR = radius[1]
-      BR = radius[2]
-      BL = radius[3]
-      TL = radius[4]
+      TR,BR,BL,TL = shape.border.radius
       rot   =   1.5707963    # 90 * degrees
               new_sub_path(ctx);
                 arc(ctx, r - TR, t + TR, TR,     -rot,   0   );    # topRight
@@ -496,4 +482,32 @@ end
 function setborderPath(ctx::CairoContext, shape::NQCircle)
         move_to(ctx, shape.left + shape.radius, shape.top)
         arc(ctx, shape.left, shape.top, shape.radius, 0, 2*pi);
+end
+
+
+
+
+
+
+
+
+
+
+
+# ======================================================================================
+function drawNode(ctx, document, node)
+
+    clipPaths = getClipContext(node)
+
+        for p in length(clipPaths):-1:1
+            rectangle(ctx, getBorderBox(clipPaths[p].shape)... )
+            setClip(ctx, "drawNode")
+        end
+
+                     DrawContent(ctx, document, node) # Now draw children
+
+        for p in length(clipPaths):-1:2
+            resetClip(ctx, "drawNode")
+        end
+
 end
