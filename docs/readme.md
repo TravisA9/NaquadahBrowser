@@ -1,6 +1,6 @@
 
 ## If you like this project please [give it a star or try it out](https://github.com/TravisA9/NaquadahBrowser/tree/master/src)
-![window](doc/figures/NaquadahMay2018.gif)
+![window](/doc/figures/NaquadahMay2018.gif)
 ---
 #### [Leer en español](/Español.md)
 
@@ -199,7 +199,7 @@ Note: you may also have to install Xclip for text copy/pasting just run somethin
 
 # Code overview: Warning, always changing!
 
-![window](doc/figures/projectMap.png) 
+![window](/doc/figures/projectMap.png) 
 
 # General Goals
 
@@ -215,6 +215,6 @@ Note: you may also have to install Xclip for text copy/pasting just run somethin
 
 ### Take a look at the old version
 
-![window](doc/figures/browser-1.gif)
+![window](/doc/figures/browser-1.gif)
 
 travisashworth2007@gmail.com
