@@ -1,6 +1,6 @@
 
 ## If you like this project please [give it a star or try it out](https://github.com/TravisA9/NaquadahBrowser/tree/master/src)
-![window](/doc/figures/NaquadahMay2018.gif)
+![window](NaquadahMay2018.gif)
 ---
 #### [Leer en español](/Español.md)
 
@@ -23,7 +23,7 @@ One of the principal experimental features of Naquadah is a consolidation of the
 
 
 Take a look at a more recent image:
-![window](figures/Naquadah-sml.png)
+![window](Naquadah-sml.png)
 
 ## Why You should donate?
 A project like this takes many hundreds of hours to get up and running and thousands of hours to polish and mantain. If no one invests the time to develop and test new ideas like this no one will benefit from them. The time I spend on this project could well be spent on other activities, but if you think this project is worth investing in, you can donate so that I can afford to spend more time developing NaquadahBrowser.
@@ -199,7 +199,7 @@ Note: you may also have to install Xclip for text copy/pasting just run somethin
 
 # Code overview: Warning, always changing!
 
-![window](figures/projectMap.png) 
+![window](projectMap.png) 
 
 # General Goals
 
@@ -215,6 +215,6 @@ Note: you may also have to install Xclip for text copy/pasting just run somethin
 
 ### Take a look at the old version
 
-![window](figures/browser-1.gif)
+![window](browser-1.gif)
 
 travisashworth2007@gmail.com
