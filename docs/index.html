@@ -390,8 +390,9 @@ text {
 }
 
 </style>
-
+<div id="schematic"></div>
 <script src="https://d3js.org/d3.v3.min.js"></script>
+	      <div id="schematic"><\div>
 <script>
 
 // http://blog.thomsonreuters.com/index.php/mobile-patent-suits-graphic-of-the-day/
@@ -501,7 +502,7 @@ var force = d3.layout.force()
     .on("tick", tick)
     .start();
 
-var svg = d3.select("body").append("svg")
+var svg = d3.select("#schematic").append("svg")
     .attr("width", width)
     .attr("height", height);
 
