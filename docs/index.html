@@ -402,25 +402,30 @@ var links = [
   {folder:"Naq", source: "main", target: "DrawANode", type: "suit"},
   {folder:"Naq", source: "Win", target: "FetchPage", type: "licensing"},
   {folder:"Naq", source: "DrawANode", target: "setUpWindow", type: "suit"},
-  {folder:"Naq", source: "DrawANode", target: "AtributesToLayout", type: "suit"},
+  {folder:"Naq", source: "DrawANode", target: "allAtributesToLayout", type: "suit"},
   {folder:"Naq", source: "DrawANode", target: "AttatchEvents", type: "suit"},
   {folder:"Naq", source: "DrawANode", target: "CreateLayoutTree", type: "suit"},
   {folder:"Naq", source: "DrawANode", target: "VmoveAllChildren", type: "suit"},
-  {folder:"Naq", source: "DrawANode", target: "DrawViewport", type: "suit"},
+  {folder:"Naq", source: "DrawANode", target: "DrawContent", type: "suit"},
 
   // DOM: AtributesToLayout, CopyDict FetchPage CreateDomTree CreateControls
-  {folder:"DOM", source: "AtributesToLayout", target: "CreateShape", type: "suit"},
-  {folder:"DOM", source: "AtributesToLayout", target: "AtributesToLayout", type: "suit"},
+  {folder:"DOM", source: "allAtributesToLayout", target: "AtributesToLayout", type: "suit"},
+  {folder:"DOM", source: "allAtributesToLayout", target: "allAtributesToLayout", type: "suit"},
   {folder:"DOM", source: "AtributesToLayout", target: "CopyDict", type: "suit"},
-  {folder:"DOM", source: "FetchPage", target: "Page", type: "licensing"},
-  {folder:"DOM", source: "FetchPage", target: "CreateControls", type: "suit"},
+  {folder:"DOM", source: "AtributesToLayout", target: "CreateShape", type: "suit"},
+  {folder:"DOM", source: "DomToLayout", target: "AtributesToLayout", type: "suit"},
+  {folder:"DOM", source: "FetchPage", target: "url2Dict", type: "suit"},
   {folder:"DOM", source: "FetchPage", target: "CreateDomTree", type: "suit"},
+	
+  {folder:"DOM", source: "url2Dict", target: "readSml", type: "suit"},
+ 
   {folder:"DOM", source: "CreateDomTree", target: "CreateDomTree", type: "suit"},
+	
   {folder:"DOM", source: "CreateShape", target: "Circle", type: "suit"},
   {folder:"DOM", source: "CreateShape", target: "arc", type: "suit"},
   {folder:"DOM", source: "CreateShape", target: "NBox", type: "suit"},
   {folder:"DOM", source: "CreateShape", target: "Font", type: "suit"},
-  {folder:"DOM", source: "CreateShape", target: "Text", type: "suit"},
+  {folder:"DOM", source: "CreateShape", target: "TextElement", type: "suit"},
   {folder:"DOM", source: "CreateShape", target: "TextLine", type: "suit"},
 
   // Events: AttatchEvents
@@ -428,23 +433,36 @@ var links = [
   {folder:"Events", source: "AttatchEvents", target: "MouseDownEvent", type: "suit"},
   {folder:"Events", source: "AttatchEvents", target: "ClickEvent", type: "suit"},
   {folder:"Events", source: "AttatchEvents", target: "ScrollEvent", type: "suit"},
+  {folder:"Events", source: "AttatchEvents", target: "Hover", type: "suit"},
+  {folder:"Events", source: "AttatchEvents", target: "keypress", type: "suit"},
+  {folder:"Events", source: "AttatchEvents", target: "...other events", type: "suit"},
+	
   {folder:"Events", source: "VmoveAllChildren", target: "VmoveAllChildren", type: "suit"},
+	
   {folder:"Events", source: "selectText", target: "findNodesInBox", type: "suit"},
+  {folder:"Events", source: "selectText", target: "inheritColor", type: "suit"},
   {folder:"Events", source: "selectText", target: "DrawText", type: "suit"},
   {folder:"Events", source: "selectText", target: "DrawSelectedText", type: "suit"},
+	
   {folder:"Events", source: "ScrollEvent", target: "VmoveAllChildren", type: "suit"},
-  {folder:"Events", source: "ScrollEvent", target: "DrawViewport", type: "suit"},
+  {folder:"Events", source: "ScrollEvent", target: "drawNode", type: "suit"},
 
   // Graphics: DrawViewport, DrawContent, DrawBox, DrawShape,
   //           DrawText, DrawSelectedText, setcolor, drawNode,
   //           lastClipParent, GetlastColor, setTextContext
   {folder:"Graphics", source: "DrawViewport", target: "DrawContent", type: "suit"},
-  {folder:"Graphics", source: "DrawContent", target: "drawNode", type: "suit"},
-  {folder:"Graphics", source: "DrawContent", target: "VScroller", type: "suit"},
+	
+  {folder:"Graphics", source: "DrawContent", target: "DrawShape", type: "suit"},
+  {folder:"Graphics", source: "DrawContent", target: "DrawText", type: "suit"},
+  {folder:"Graphics", source: "DrawContent", target: "DrawContent", type: "suit"},
+	
   {folder:"Graphics", source: "DrawShape", target: "BackgroundImage", type: "suit"},
   {folder:"Graphics", source: "DrawShape", target: "linearGrad", type: "suit"},
   {folder:"Graphics", source: "DrawShape", target: "radialGrad", type: "suit"},
+  {folder:"Graphics", source: "DrawShape", target: "fill", type: "suit"}, // and more.
+  {folder:"Graphics", source: "DrawShape", target: "setClipPath", type: "suit"}, // and more.
   {folder:"Graphics", source: "DrawShape", target: "setborderPath", type: "suit"}, // and more.
+	
   {folder:"Graphics", source: "DrawSelectedText", target: "DrawText", type: "suit"},
   {folder:"Graphics", source: "drawNode", target: "DrawText", type: "suit"},
   {folder:"Graphics", source: "drawNode", target: "DrawShape", type: "suit"},
