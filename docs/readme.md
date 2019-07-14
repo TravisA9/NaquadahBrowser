@@ -3,6 +3,7 @@
 ![window](NaquadahMay2018-med.gif)
 ---
 #### [Leer en español](Español.md)
+ [Leer en español](index.html)
 
 ## What is Naquadah?
 
