@@ -1,6 +1,6 @@
 
 ## If you like this project please [give it a star or try it out](https://github.com/TravisA9/NaquadahBrowser/tree/master/src)
-![window](docs/NaquadahMay2018.gif)
+![window](/docs/NaquadahMay2018.gif)
 ---
 #### [Leer en español](docs/Español.md)
 
