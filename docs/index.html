@@ -330,6 +330,256 @@
 <p>Note: you may also have to install Xclip for text copy/pasting just run something like <code class="highlighter-rouge">sudo apt install xclip</code> if you are running linux.</p>
 
 <h1 id="code-overview-warning-always-changing">Code overview: Warning, always changing!</h1>
+	      
+	      
+	      
+	      
+	      
+	      
+	      
+	      
+	      
+	      
+	      
+	      
+	      
+	      
+	      
+	      
+	      
+	      
+	      
+	      
+	      
+	      
+	      
+<style>
+
+.link {
+  fill: none;
+  stroke: #666;
+  stroke-width: 1.5px;
+}
+
+#licensing {
+  fill: green;
+}
+
+.link.licensing {
+  stroke: green;
+}
+
+.link.resolved {
+  stroke-dasharray: 0,2 1;
+}
+
+circle {
+  fill: #ccc;
+  stroke: #333;
+  stroke-width: 1.5px;
+}
+.DOM { fill: red;}
+.Naq {fill:green;}
+.Events {fill:purple;}
+.Graphics {fill:orange;}
+.Layout{fill:blue;}
+text {
+  font: 10px sans-serif;
+  pointer-events: none;
+  text-shadow: 0 1px 0 #fff, 1px 0 0 #fff, 0 -1px 0 #fff, -1px 0 0 #fff;
+}
+
+</style>
+
+<script src="https://d3js.org/d3.v3.min.js"></script>
+<script>
+
+// http://blog.thomsonreuters.com/index.php/mobile-patent-suits-graphic-of-the-day/
+var links = [
+// licensing suit resolved
+// NaquadahCore.jl:    Win DrawANode main
+  {folder:"Naq", source: "main", target: "Win", type: "suit"},
+  {folder:"Naq", source: "main", target: "DrawANode", type: "suit"},
+  {folder:"Naq", source: "Win", target: "FetchPage", type: "licensing"},
+  {folder:"Naq", source: "DrawANode", target: "setUpWindow", type: "suit"},
+  {folder:"Naq", source: "DrawANode", target: "AtributesToLayout", type: "suit"},
+  {folder:"Naq", source: "DrawANode", target: "AttatchEvents", type: "suit"},
+  {folder:"Naq", source: "DrawANode", target: "CreateLayoutTree", type: "suit"},
+  {folder:"Naq", source: "DrawANode", target: "VmoveAllChildren", type: "suit"},
+  {folder:"Naq", source: "DrawANode", target: "DrawViewport", type: "suit"},
+
+  // DOM: AtributesToLayout, CopyDict FetchPage CreateDomTree CreateControls
+  {folder:"DOM", source: "AtributesToLayout", target: "CreateShape", type: "suit"},
+  {folder:"DOM", source: "AtributesToLayout", target: "AtributesToLayout", type: "suit"},
+  {folder:"DOM", source: "AtributesToLayout", target: "CopyDict", type: "suit"},
+  {folder:"DOM", source: "FetchPage", target: "Page", type: "licensing"},
+  {folder:"DOM", source: "FetchPage", target: "CreateControls", type: "suit"},
+  {folder:"DOM", source: "FetchPage", target: "CreateDomTree", type: "suit"},
+  {folder:"DOM", source: "CreateDomTree", target: "CreateDomTree", type: "suit"},
+  {folder:"DOM", source: "CreateShape", target: "Circle", type: "suit"},
+  {folder:"DOM", source: "CreateShape", target: "arc", type: "suit"},
+  {folder:"DOM", source: "CreateShape", target: "NBox", type: "suit"},
+  {folder:"DOM", source: "CreateShape", target: "Font", type: "suit"},
+  {folder:"DOM", source: "CreateShape", target: "Text", type: "suit"},
+  {folder:"DOM", source: "CreateShape", target: "TextLine", type: "suit"},
+
+  // Events: AttatchEvents
+  {folder:"Events", source: "AttatchEvents", target: "selectText", type: "suit"},
+  {folder:"Events", source: "AttatchEvents", target: "MouseDownEvent", type: "suit"},
+  {folder:"Events", source: "AttatchEvents", target: "ClickEvent", type: "suit"},
+  {folder:"Events", source: "AttatchEvents", target: "ScrollEvent", type: "suit"},
+  {folder:"Events", source: "VmoveAllChildren", target: "VmoveAllChildren", type: "suit"},
+  {folder:"Events", source: "selectText", target: "findNodesInBox", type: "suit"},
+  {folder:"Events", source: "selectText", target: "DrawText", type: "suit"},
+  {folder:"Events", source: "selectText", target: "DrawSelectedText", type: "suit"},
+  {folder:"Events", source: "ScrollEvent", target: "VmoveAllChildren", type: "suit"},
+  {folder:"Events", source: "ScrollEvent", target: "DrawViewport", type: "suit"},
+
+  // Graphics: DrawViewport, DrawContent, DrawBox, DrawShape,
+  //           DrawText, DrawSelectedText, setcolor, drawNode,
+  //           lastClipParent, GetlastColor, setTextContext
+  {folder:"Graphics", source: "DrawViewport", target: "DrawContent", type: "suit"},
+  {folder:"Graphics", source: "DrawContent", target: "drawNode", type: "suit"},
+  {folder:"Graphics", source: "DrawContent", target: "VScroller", type: "suit"},
+  {folder:"Graphics", source: "DrawShape", target: "BackgroundImage", type: "suit"},
+  {folder:"Graphics", source: "DrawShape", target: "linearGrad", type: "suit"},
+  {folder:"Graphics", source: "DrawShape", target: "radialGrad", type: "suit"},
+  {folder:"Graphics", source: "DrawShape", target: "setborderPath", type: "suit"}, // and more.
+  {folder:"Graphics", source: "DrawSelectedText", target: "DrawText", type: "suit"},
+  {folder:"Graphics", source: "drawNode", target: "DrawText", type: "suit"},
+  {folder:"Graphics", source: "drawNode", target: "DrawShape", type: "suit"},
+  {folder:"Graphics", source: "drawNode", target: "DrawContent", type: "suit"},
+  {folder:"Graphics", source: "drawNode", target: "lastClipParent", type: "suit"},
+  {folder:"Graphics", source: "DrawSelectedText", target: "lastClipParent", type: "suit"},
+  {folder:"Graphics", source: "DrawSelectedText", target: "GetlastColor", type: "suit"},
+  {folder:"Graphics", source: "DrawSelectedText", target: "setTextContext", type: "suit"},
+
+
+  // Layout: VmoveAllChildren, MoveAll, MoveNodeToLeft, MoveNodeToRight
+  //         setUpWindow, PushToRow, FinalizeRow, fontSlant, fontWeight
+  {folder:"Layout", source: "MoveAll", target: "MoveAll", type: "suit"},
+  {folder:"Layout", source: "PushToRow", target: "LastRow", type: "suit"},
+  {folder:"Layout", source: "PushToRow", target: "setNodePosition", type: "suit"},
+  {folder:"Layout", source: "FinalizeRow", target: "MoveAll", type: "suit"},
+  {folder:"Layout", source: "FinalizeRow", target: "MoveNodeToLeft", type: "suit"},
+  {folder:"Layout", source: "CreateLayoutTree", target: "FinalizeRow", type: "suit"},
+  {folder:"Layout", source: "CreateLayoutTree", target: "setNodePosition", type: "suit"},
+  {folder:"Layout", source: "CreateLayoutTree", target: "AtributesToLayout", type: "suit"},
+  {folder:"Layout", source: "CreateLayoutTree", target: "PushToRow", type: "suit"},
+  {folder:"Layout", source: "CreateLayoutTree", target: "CreateLayoutTree", type: "suit"},
+  {folder:"Layout", source: "CreateLayoutTree", target: "MoveAll", type: "suit"}
+  //,{folder:"", source: "", target: "", type: "suit"},
+  //{folder:"", source: "", target: "", type: "suit"}
+
+];
+
+var nodes = {};
+var classes = {};
+// Compute the distinct nodes from the links.
+links.forEach(function(link) {
+  link.source = nodes[link.source] || (nodes[link.source] = {name: link.source, folder:link.folder});
+  link.target = nodes[link.target] || (nodes[link.target] = {name: link.target});
+});
+
+links.forEach(function(link) {
+  var node = nodes[link.source.name];
+  if(!node.hasOwnProperty('folder')){
+    console.log(node)
+    node.folder = link.folder;
+  }
+});
+
+var width = 1500,
+    height = 800;
+
+var force = d3.layout.force()
+    .nodes(d3.values(nodes))
+    .links(links)
+    .size([width, height])
+    .linkDistance(60)
+    .charge(-300)
+    .on("tick", tick)
+    .start();
+
+var svg = d3.select("body").append("svg")
+    .attr("width", width)
+    .attr("height", height);
+
+// Per-type markers, as they don't inherit styles.
+svg.append("defs").selectAll("marker")
+    .data(["suit", "licensing", "resolved"])
+  .enter().append("marker")
+    .attr("id", function(d) { return d; })
+    .attr("viewBox", "0 -5 10 10")
+    .attr("refX", 15)
+    .attr("refY", -1.5)
+    .attr("markerWidth", 6)
+    .attr("markerHeight", 6)
+    .attr("orient", "auto")
+  .append("path")
+    .attr("d", "M0,-5L10,0L0,5");
+
+var path = svg.append("g").selectAll("path")
+    .data(force.links())
+  .enter().append("path")
+    .attr("class", function(d) { return "link " + d.type; })
+    .attr("marker-end", function(d) { return "url(#" + d.type + ")"; });
+
+var circle = svg.append("g").selectAll("circle")
+    .data(force.nodes())
+  .enter().append("circle")
+    .attr("class", function(d) { return d.folder; })
+    .attr("r", 6)
+    .call(force.drag);
+
+var text = svg.append("g").selectAll("text")
+    .data(force.nodes())
+  .enter().append("text")
+    .attr("x", 8)
+    .attr("y", ".31em")
+    .text(function(d) { return d.name; });
+
+// Use elliptical arc path segments to doubly-encode directionality.
+function tick() {
+  path.attr("d", linkArc);
+  circle.attr("transform", transform);
+  text.attr("transform", transform);
+}
+
+function linkArc(d) {
+  var dx = d.target.x - d.source.x,
+      dy = d.target.y - d.source.y,
+      dr = Math.sqrt(dx * dx + dy * dy);
+  return "M" + d.source.x + "," + d.source.y + "A" + dr + "," + dr + " 0 0,1 " + d.target.x + "," + d.target.y;
+}
+
+function transform(d) {
+  return "translate(" + d.x + "," + d.y + ")";
+}
+
+</script>
+	      
+	      
+	      
+	      
+	      
+	      
+	      
+	      
+	      
+	      
+	      
+	      
+	      
+	      
+	      
+	      
+	      
+	      
+	      
+	      
+	      
+	      
 
 <p><img src="projectMap.png" alt="window" /></p>
 
