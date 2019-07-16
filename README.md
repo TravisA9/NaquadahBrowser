@@ -1,5 +1,5 @@
 
-## [Overview of this project](https://github.com/TravisA9/NaquadahBrowser/tree/master/src)
+## [Overview and documentation of](https://github.com/TravisA9/NaquadahBrowser/tree/master/src) this project
 ![window](doc/figures/NaquadahMay2018.gif)
 ---
 #### [Leer en español](/Español.md)
